@@ -22,7 +22,7 @@
 const projectsData = [
   {
     id: "bara-el-salfa",
-    name: "برا السالفة",
+    name: "برا السالف    ة",
     tagline: "Game • Web",
     category: "games",
     icon: "🎮",
@@ -40,7 +40,7 @@ const projectsData = [
     ],
     links: {
       play: "https://bara-el-salfa.wasmer.app/",
-      download: "files/bara-el-salfa.apk",
+      download: "Apk/bara-el-salfa.apk",
       source: null
     }
   },

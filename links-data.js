@@ -42,7 +42,7 @@ const linksData = [
   icon: "🎮",
   name: "برا السالفة — Android",
   description: "تحميل ملف APK 15 MB",
-  url: "files/bara-el-salfa.apk",
+  url: "Apk/bara-el-salfa.apk",
   type: "download"
 },
 
@@ -50,7 +50,7 @@ const linksData = [
   icon: "💸",
   name: "Flosy",
   description: "تطبيق ذكي لإدارة المصروفات وتتبع دخلك ونفقاتك بسهولة 💰📊",
-  url: "files/Flosy.apk",
+  url: "Apk/Flosy.apk",
   type: "download"
 },
       {
