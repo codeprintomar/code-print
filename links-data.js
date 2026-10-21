@@ -23,7 +23,13 @@ const linksData = [
         description: "تطبيق ذكي لإدارة المصروفات وتتبع دخلك ونفقاتك بسهولة 💰📊",
         url: "https://mahfsa.wasmer.app/"
       },
-
+      
+      {
+        icon: "🎓",
+        name: "GradeOS",
+        description: "موقع لمتابعة درجاتك وحضورك وجدولك ومذاكرتك في مكان واحد 📚📈",
+        url: "https://gradeos.wasmer.app/"
+      },
       
       {
         icon: "🌊",
@@ -53,6 +59,15 @@ const linksData = [
   url: "Apk/Flosy.apk",
   type: "download"
 },
+
+           {
+        icon: "🎓",
+        name: "GradeOS — Android",
+        description: "تحميل تطبيق GradeOS لأندرويد (ملف APK)",
+        url: "Apk/GradeOS.apk",
+        type: "download"
+      },
+      
       {
         icon: "🎙️",
         name: "Voice Controller",

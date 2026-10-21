@@ -22,7 +22,7 @@
 const projectsData = [
   {
     id: "bara-el-salfa",
-    name: "برا السالف    ة",
+    name: "برا السالفة",
     tagline: "Game • Web",
     category: "games",
     icon: "🎮",
@@ -44,6 +44,55 @@ const projectsData = [
       source: null
     }
   },
+    {
+    id: "flosy",
+    name: "Flosy",
+    tagline: "App • Web",
+    category: "tools",
+    icon: "💸",
+    status: "live",
+    progress: null,
+    eta: null,
+    shortDesc: "تطبيق ذكي لإدارة المصروفات وتتبع دخلك ونفقاتك بسهولة، متاح من المتصفح وكمان كملف APK لأندرويد.",
+    description: [
+      "Flosy تطبيق بيساعدك تسجل دخلك ومصروفاتك وتتابعهم في مكان واحد، بشكل بسيط وسريع من غير تعقيد.",
+      "شغال على الويب مباشرة، وكمان متاح كملف APK لتحميله وتشغيله على أندرويد."
+    ],
+    screenshots: [],
+    changelog: [
+      { version: "1.0", date: "2026-10", notes: "الإصدار الأول — نسخة الويب ونسخة أندرويد." }
+    ],
+    links: {
+      play: "https://mahfsa.wasmer.app/",
+      download: "Apk/Flosy.apk",
+      source: null
+    }
+  },
+  {
+    id: "gradeos",
+    name: "GradeOS",
+    tagline: "Web • App",
+    category: "tools",
+    icon: "🎓",
+    status: "live",
+    progress: null,
+    eta: null,
+    shortDesc: "موقع عربي لمتابعة الدرجات والحضور والجدول والمذاكرة في مكان واحد، متاح من المتصفح وكمان كتطبيق.",
+    description: [
+      "GradeOS (متابعة درجاتك) موقع عربي بيجمع متابعة الدرجات والحضور وجدول الحصص ومخطط المذاكرة والشات وقائمة المنصات التعليمية.",
+      "اتبنى بـ HTML وCSS وJavaScript مع Chart.js للرسوم البيانية، وFirebase للتسجيل وتخزين البيانات، وتصميمه متظبط للموبايل."
+    ],
+    screenshots: [],
+    changelog: [
+      { version: "1.0", date: "2026-10", notes: "الإصدار الأول — نسخة الويب ونسخة أندرويد." }
+    ],
+    links: {
+      play: "ضع_لينك_الموقع_هنا",
+      download: "Apk/GradeOS.apk",
+      source: null
+    }
+  },
+  
   {
     id: "wave",
     name: "Wave",
