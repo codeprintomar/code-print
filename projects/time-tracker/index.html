@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>⏱️ Daily Time Tracker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;700;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080810;--surface:#0f0f1a;--surface2:#16162a;--surface3:#1e1e35;
+  --border:#1e1e35;--border2:#2a2a45;--text:#e2e8f0;--muted:#4a5268;--accent:#7c8cf8;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding:24px 16px 60px;}
+
+.header{text-align:center;margin-bottom:28px;}
+.header-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:5px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+.header h1{font-size:clamp(24px,5vw,40px);font-weight:900;letter-spacing:-1px;background:linear-gradient(135deg,#00ff88 0%,#7c8cf8 50%,#f97316 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.header-sub{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:6px;}
+.wrapper{max-width:700px;margin:0 auto;}
+
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.toolbar-left{flex:1;display:flex;gap:8px;align-items:center;}
+.mode-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:99px;border:1px solid;transition:all .2s;}
+.mode-badge.view{border-color:var(--border2);color:var(--muted);}
+.mode-badge.edit{border-color:#f97316;color:#f97316;background:rgba(249,115,22,.08);}
+.btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:7px 16px;border-radius:8px;border:1px solid;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.btn-ghost{background:transparent;border-color:var(--border2);color:var(--muted);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-edit{background:transparent;border-color:#f97316;color:#f97316;}
+.btn-edit:hover{background:rgba(249,115,22,.1);}
+.btn-done{background:#00ff88;border-color:#00ff88;color:#080810;font-weight:700;}
+.btn-done:hover{background:#00e07a;}
+.btn-add{background:transparent;border-color:#7c8cf8;color:#7c8cf8;}
+.btn-add:hover{background:rgba(124,140,248,.1);}
+
+.progress-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px;transition:border-color .3s,box-shadow .3s;}
+.progress-card.exact{border-color:#00ff88;box-shadow:0 0 24px rgba(0,255,136,.12);}
+.progress-card.over{border-color:#ef4444;box-shadow:0 0 24px rgba(239,68,68,.15);}
+.bar-section{flex:1;}
+.bar-labels{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:1px;}
+.bar-total{font-weight:700;transition:color .3s;}
+.bar-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#7c8cf8,#00ff88);transition:width .4s cubic-bezier(.4,0,.2,1),background .3s;}
+.bar-fill.over{background:linear-gradient(90deg,#ef4444,#dc2626);}
+.bar-fill.exact{background:linear-gradient(90deg,#00ff88,#22d3ee);}
+.status-box{min-width:72px;text-align:right;}
+.status-box span{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;}
+.status-exact{color:#00ff88;}.status-over{color:#ef4444;}.status-left{color:var(--accent);}
+
+.table-header{display:grid;grid-template-columns:1fr 170px 80px;gap:12px;padding:8px 16px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border);margin-bottom:4px;}
+.table-header span:nth-child(2){text-align:center;}
+.table-header span:nth-child(3){text-align:right;}
+
+.row{display:grid;grid-template-columns:1fr 170px 80px;gap:12px;padding:10px 16px;border-radius:10px;align-items:center;transition:background .2s;}
+.row:hover{background:var(--surface);}
+.row-name{display:flex;align-items:center;gap:10px;}
+.row-stripe{width:3px;height:26px;border-radius:99px;flex-shrink:0;transition:background .3s;}
+.row-icon-display{font-size:16px;line-height:1;}
+.row-label{font-size:13px;font-weight:500;transition:color .3s;}
+.row-label.inactive{color:var(--muted);}
+.stepper{display:flex;align-items:center;gap:8px;justify-content:center;}
+.step-btn{width:30px;height:30px;background:var(--surface2);border:none;border-radius:7px;color:#94a3b8;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;user-select:none;flex-shrink:0;}
+.step-btn:hover{background:#2d2d45;color:#fff;}
+.step-btn:active{transform:scale(.93);}
+.hour-input{width:54px;text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:17px;font-weight:700;font-family:'Space Mono',monospace;padding:5px 0;outline:none;transition:border-color .3s,color .3s;-moz-appearance:textfield;}
+.hour-input::-webkit-outer-spin-button,.hour-input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.hour-input:focus{border-color:var(--accent);}
+.row-pct{text-align:right;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;transition:color .3s;}
+
+/* EDIT PANEL */
+.edit-row{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;transition:border-color .2s;cursor:default;}
+.edit-row:hover{border-color:var(--accent);}
+.edit-row.dragging{opacity:.4;border-color:var(--accent);}
+.edit-row.drag-over{border-color:#00ff88;background:rgba(0,255,136,.05);}
+.drag-handle{color:var(--muted);cursor:grab;font-size:16px;padding:0 4px;user-select:none;flex-shrink:0;line-height:1;}
+.drag-handle:active{cursor:grabbing;}
+.emoji-btn{width:42px;height:42px;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:border-color .2s;flex-shrink:0;}
+.emoji-btn:hover{border-color:var(--accent);}
+.edit-name-input{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;padding:9px 12px;outline:none;transition:border-color .2s;min-width:0;}
+.edit-name-input:focus{border-color:var(--accent);}
+.color-dots{display:flex;gap:5px;flex-wrap:wrap;max-width:110px;flex-shrink:0;}
+.color-dot{width:20px;height:20px;border-radius:50%;border:2px solid transparent;cursor:pointer;flex-shrink:0;transition:transform .15s,border-color .15s;}
+.color-dot:hover,.color-dot.active{transform:scale(1.3);border-color:#fff;}
+.del-btn{width:32px;height:32px;background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--muted);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.del-btn:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.08);}
+
+/* EMOJI POPUP */
+.emoji-popup{position:fixed;background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:12px;z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,.7);width:300px;display:none;}
+.emoji-popup.open{display:block;}
+.emoji-search{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;padding:8px 12px;outline:none;margin-bottom:10px;}
+.emoji-search::placeholder{color:var(--muted);}
+.emoji-search:focus{border-color:var(--accent);}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;max-height:200px;overflow-y:auto;}
+.emoji-grid::-webkit-scrollbar{width:4px;}
+.emoji-grid::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
+.emoji-item{width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:18px;border-radius:7px;cursor:pointer;transition:background .15s;}
+.emoji-item:hover{background:var(--surface2);}
+
+.total-row{display:grid;grid-template-columns:1fr 170px 80px;gap:12px;padding:14px 16px;border-top:1px solid var(--border);margin-top:6px;align-items:center;}
+.total-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
+.total-hours{text-align:center;font-family:'Space Mono',monospace;}
+.total-hours .big{font-size:28px;font-weight:700;transition:color .3s;}
+.total-hours .of{font-size:13px;color:var(--muted);}
+.total-pct{text-align:right;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;transition:color .3s;}
+.footer-note{text-align:center;margin-top:20px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:#1e1e35;text-transform:uppercase;}
+.save-banner{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#00ff88;color:#080810;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;padding:11px 24px;border-radius:99px;opacity:0;transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s;pointer-events:none;white-space:nowrap;}
+.save-banner.show{transform:translateX(-50%) translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <div class="header-label">Routine Weekday</div>
+    <h1>TIME ALLOCATION</h1>
+    <div class="header-sub">24 Hours · Interactive Tracker</div>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="mode-badge view" id="modeBadge">● VIEW MODE</div>
+    </div>
+    <button class="btn btn-ghost" onclick="resetAll()">↺ Reset</button>
+    <button class="btn btn-edit" id="editToggleBtn" onclick="toggleEdit()">✏ Edit Activities</button>
+  </div>
+
+  <div class="progress-card" id="progressCard">
+    <div class="bar-section">
+      <div class="bar-labels"><span>Used</span><span class="bar-total" id="barLabel">0h / 24h</span></div>
+      <div class="bar-track"><div class="bar-fill" id="barFill" style="width:0%"></div></div>
+    </div>
+    <div class="status-box" id="statusBox"></div>
+  </div>
+
+  <div id="viewTable">
+    <div class="table-header"><span>Activity</span><span>Hours</span><span>Share</span></div>
+    <div id="viewRows"></div>
+    <div class="total-row">
+      <div class="total-label">Total</div>
+      <div class="total-hours"><span class="big" id="totalBig">0</span><span class="of"> / 24h</span></div>
+      <div class="total-pct" id="totalPct">0.0%</div>
+    </div>
+  </div>
+
+  <div id="editPanel" style="display:none;">
+    <div id="editRows"></div>
+    <button class="btn btn-add" style="width:100%;justify-content:center;margin-top:10px;" onclick="addActivity()">+ Add Activity</button>
+    <div style="margin-top:16px;display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="cancelEdit()">Cancel</button>
+      <button class="btn btn-done" onclick="saveEdit()">✓ Save &amp; Done</button>
+    </div>
+  </div>
+
+  <div class="footer-note" id="footerNote">Total fixed at 24 hours · Auto-saved</div>
+</div>
+
+<div class="emoji-popup" id="emojiPopup">
+  <input class="emoji-search" id="emojiSearch" placeholder="Search emoji..." oninput="filterEmoji()"/>
+  <div class="emoji-grid" id="emojiGrid"></div>
+</div>
+
+<div class="save-banner" id="saveBanner">✓ SAVED</div>
+
+<script>
+const MAX = 24;
+const COLORS = ['#00ff88','#7c8cf8','#f97316','#06b6d4','#eab308','#ec4899','#a855f7','#14b8a6','#94a3b8','#f43f5e','#fb923c','#22d3ee','#84cc16','#e879f9'];
+const ALL_EMOJI = [
+  '💼','🌙','📡','🚗','🍽️','🏋️','🧘','👥','🔧','📖','🎮','⚽','🏀','🎵','🎨','✈️',
+  '🏠','💊','🐕','🐈','☕','🍎','🏃','🚴','🧹','📱','💻','📚','🎯','💡','🔬','🌿',
+  '🌊','🔥','⭐','💰','🛒','🎬','🎧','🛁','🪴','🧠','❤️','🤝','🎁','🏆','⚡','🌅',
+  '☀️','🌈','🏔️','🌴','🎓','🔑','📝','🗓️','⏰','🚀','🍕','🍜','🥗','🧃','🏖️','🎭',
+  '🖥️','🎲','🎸','🏊','🧗','🤸','🏇','🥊','🤾','🎾','🏸','⛷️','🏄','🤿','🎿','🛹'
+];
+
+const DEFAULT = [
+  {id:1,  name:'Work',                   icon:'💼', hours:8, color:'#00ff88'},
+  {id:2,  name:'Sleep',                  icon:'🌙', hours:7, color:'#7c8cf8'},
+  {id:3,  name:'Internet',               icon:'📡', hours:3, color:'#f97316'},
+  {id:4,  name:'Commuting',              icon:'🚗', hours:2, color:'#06b6d4'},
+  {id:5,  name:'Eating',                 icon:'🍽️',hours:2, color:'#eab308'},
+  {id:6,  name:'Fitness / Sports',       icon:'🏋️',hours:0, color:'#ec4899'},
+  {id:7,  name:'Meditation',             icon:'🧘', hours:0, color:'#a855f7'},
+  {id:8,  name:'Socialization / Family', icon:'👥', hours:2, color:'#14b8a6'},
+  {id:9,  name:'Other (Chores, etc…)',   icon:'🔧', hours:0, color:'#94a3b8'},
+  {id:10, name:'Reading',                icon:'📖', hours:0, color:'#f43f5e'},
+  {id:11, name:'Leisure',                icon:'🎮', hours:0, color:'#fb923c'},
+];
+
+let activities = JSON.parse(localStorage.getItem('tt_v2')||'null') || DEFAULT.map(a=>({...a}));
+let editBuffer = [];
+let nextId = Math.max(...activities.map(a=>a.id)) + 1;
+let activeEmojiId = null;
+let dragSrc = null;
+
+// SAVE
+let saveT;
+function scheduleSave(){
+  clearTimeout(saveT);
+  saveT = setTimeout(()=>{
+    localStorage.setItem('tt_v2', JSON.stringify(activities));
+    showBanner();
+  }, 600);
+}
+function showBanner(){
+  const b = document.getElementById('saveBanner');
+  b.classList.add('show');
+  setTimeout(()=>b.classList.remove('show'), 1800);
+}
+
+function getTotal(){ return activities.reduce((s,a)=>s+a.hours,0); }
+function deepCopy(arr){ return arr.map(a=>({...a})); }
+
+// PROGRESS
+function renderProgress(src){
+  const list = src || activities;
+  const total = list.reduce((s,a)=>s+a.hours,0);
+  const pct = (total/MAX)*100;
+  const isOver=total>MAX, isExact=total===MAX;
+  const card=document.getElementById('progressCard');
+  card.className='progress-card'+(isOver?' over':isExact?' exact':'');
+  const lbl=document.getElementById('barLabel');
+  lbl.textContent=`${total}h / 24h`;
+  lbl.style.color=isOver?'#ef4444':isExact?'#00ff88':'#94a3b8';
+  const fill=document.getElementById('barFill');
+  fill.style.width=Math.min(100,pct)+'%';
+  fill.className='bar-fill'+(isOver?' over':isExact?' exact':'');
+  const sb=document.getElementById('statusBox');
+  if(isOver) sb.innerHTML=`<span class="status-over">+${total-MAX}h over!</span>`;
+  else if(isExact) sb.innerHTML=`<span class="status-exact">✓ PERFECT</span>`;
+  else sb.innerHTML=`<span class="status-left">${MAX-total}h</span><span style="color:var(--muted);font-size:10px"> left</span>`;
+  const big=document.getElementById('totalBig');
+  if(big){ big.textContent=total; big.style.color=isOver?'#ef4444':isExact?'#00ff88':'#e2e8f0'; }
+  const tp=document.getElementById('totalPct');
+  if(tp){ tp.textContent=pct.toFixed(1)+'%'; tp.style.color=isExact?'#00ff88':'var(--muted)'; }
+}
+
+// VIEW TABLE
+function renderViewRows(){
+  const c=document.getElementById('viewRows');
+  c.innerHTML='';
+  activities.forEach(a=>{
+    const pct=((a.hours/MAX)*100).toFixed(1);
+    const div=document.createElement('div');
+    div.className='row';
+    div.innerHTML=`
+      <div class="row-name">
+        <div class="row-stripe" style="background:${a.hours>0?a.color:'var(--border)'}"></div>
+        <span class="row-icon-display">${a.icon}</span>
+        <span class="row-label${a.hours>0?'':' inactive'}">${esc(a.name)}</span>
+      </div>
+      <div class="stepper">
+        <button class="step-btn" onclick="step(${a.id},-1)">−</button>
+        <input class="hour-input" id="inp-${a.id}" type="number" min="0" max="24" value="${a.hours}"
+          style="border-color:${a.hours>0?a.color+'55':'var(--border)'};color:${a.hours>0?a.color:'var(--muted)'}"
+          oninput="handleInput(${a.id},this.value)" onblur="handleBlur(${a.id},this.value)"/>
+        <button class="step-btn" onclick="step(${a.id},1)">+</button>
+      </div>
+      <div class="row-pct" style="color:${a.hours>0?a.color:'#1e1e35'}">${pct}%</div>
+    `;
+    c.appendChild(div);
+  });
+  renderProgress();
+}
+
+function step(id,delta){
+  const a=activities.find(x=>x.id===id);
+  const total=getTotal();
+  const nv=a.hours+delta;
+  if(nv<0) return;
+  if(delta>0 && total>=MAX) return;
+  a.hours=nv;
+  renderViewRows();
+  scheduleSave();
+}
+function handleInput(id,val){
+  const a=activities.find(x=>x.id===id);
+  a.hours=Math.max(0,Math.min(24,parseInt(val)||0));
+  renderProgress();
+  scheduleSave();
+}
+function handleBlur(id,val){
+  const a=activities.find(x=>x.id===id);
+  a.hours=Math.max(0,Math.min(24,parseInt(val)||0));
+  renderViewRows();
+  scheduleSave();
+}
+function resetAll(){
+  activities=DEFAULT.map(a=>({...a}));
+  nextId=Math.max(...activities.map(a=>a.id))+1;
+  renderViewRows();
+  scheduleSave();
+}
+
+// EDIT MODE
+function toggleEdit(){
+  editBuffer=deepCopy(activities);
+  document.getElementById('viewTable').style.display='none';
+  document.getElementById('editPanel').style.display='block';
+  document.getElementById('editToggleBtn').style.display='none';
+  document.getElementById('modeBadge').className='mode-badge edit';
+  document.getElementById('modeBadge').textContent='✏ EDIT MODE';
+  document.getElementById('footerNote').style.display='none';
+  renderEditRows();
+}
+function cancelEdit(){
+  closeEmojiPopup();
+  document.getElementById('editPanel').style.display='none';
+  document.getElementById('viewTable').style.display='block';
+  document.getElementById('editToggleBtn').style.display='';
+  document.getElementById('modeBadge').className='mode-badge view';
+  document.getElementById('modeBadge').textContent='● VIEW MODE';
+  document.getElementById('footerNote').style.display='';
+}
+function saveEdit(){
+  // flush name inputs
+  editBuffer.forEach(a=>{
+    const ni=document.getElementById('ename-'+a.id);
+    if(ni) a.name=(ni.value.trim()||'Unnamed');
+  });
+  activities=deepCopy(editBuffer);
+  scheduleSave();
+  cancelEdit();
+  renderViewRows();
+}
+
+function renderEditRows(){
+  const c=document.getElementById('editRows');
+  c.innerHTML='';
+  editBuffer.forEach(a=>{
+    const div=document.createElement('div');
+    div.className='edit-row';
+    div.dataset.id=a.id;
+    div.draggable=true;
+
+    const colorDotsHtml=COLORS.map(col=>`<div class="color-dot${a.color===col?' active':''}" style="background:${col}" onclick="setColor(${a.id},'${col}')"></div>`).join('');
+
+    div.innerHTML=`
+      <span class="drag-handle" title="Drag to reorder">⠿</span>
+      <button class="emoji-btn" id="ebtn-${a.id}" onclick="openEmojiPicker(${a.id},event)">${a.icon}</button>
+      <input class="edit-name-input" id="ename-${a.id}" value="${esc(a.name)}" placeholder="Activity name" oninput="syncName(${a.id},this.value)"/>
+      <div class="color-dots">${colorDotsHtml}</div>
+      <button class="del-btn" onclick="deleteActivity(${a.id})" title="Delete">✕</button>
+    `;
+
+    div.addEventListener('dragstart',e=>{ dragSrc=div; div.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+    div.addEventListener('dragend',  ()=>{ div.classList.remove('dragging'); clearDragOver(); });
+    div.addEventListener('dragover', e=>{ e.preventDefault(); clearDragOver(); div.classList.add('drag-over'); });
+    div.addEventListener('drop',     e=>{ e.preventDefault(); reorderDrop(div); });
+
+    c.appendChild(div);
+  });
+}
+
+function syncName(id,val){ const a=editBuffer.find(x=>x.id===id); if(a) a.name=val; }
+function setColor(id,color){ const a=editBuffer.find(x=>x.id===id); if(a){ a.color=color; renderEditRows(); } }
+function deleteActivity(id){ editBuffer=editBuffer.filter(x=>x.id!==id); renderEditRows(); }
+function addActivity(){
+  const color=COLORS[Math.floor(Math.random()*COLORS.length)];
+  editBuffer.push({id:nextId++, name:'New Activity', icon:'⭐', hours:0, color});
+  renderEditRows();
+  setTimeout(()=>{
+    const last=editBuffer[editBuffer.length-1];
+    const inp=document.getElementById('ename-'+last.id);
+    if(inp){inp.focus();inp.select();}
+  },50);
+}
+
+// DRAG REORDER
+function clearDragOver(){ document.querySelectorAll('.edit-row').forEach(r=>r.classList.remove('drag-over')); }
+function reorderDrop(target){
+  if(!dragSrc||dragSrc===target) return;
+  const si=editBuffer.findIndex(x=>x.id===parseInt(dragSrc.dataset.id));
+  const ti=editBuffer.findIndex(x=>x.id===parseInt(target.dataset.id));
+  const [item]=editBuffer.splice(si,1);
+  editBuffer.splice(ti,0,item);
+  renderEditRows();
+}
+
+// EMOJI PICKER
+function buildEmojiGrid(q=''){
+  const grid=document.getElementById('emojiGrid');
+  grid.innerHTML='';
+  (q?ALL_EMOJI.filter(e=>e.includes(q)):ALL_EMOJI).forEach(e=>{
+    const btn=document.createElement('div');
+    btn.className='emoji-item';
+    btn.textContent=e;
+    btn.onclick=()=>selectEmoji(e);
+    grid.appendChild(btn);
+  });
+}
+function openEmojiPicker(id,evt){
+  evt.stopPropagation();
+  activeEmojiId=id;
+  const popup=document.getElementById('emojiPopup');
+  popup.classList.add('open');
+  document.getElementById('emojiSearch').value='';
+  buildEmojiGrid();
+  const btn=document.getElementById('ebtn-'+id);
+  const r=btn.getBoundingClientRect();
+  let left=r.left, top=r.bottom+8;
+  if(left+300>window.innerWidth) left=window.innerWidth-308;
+  if(top+280>window.innerHeight) top=r.top-288;
+  popup.style.left=Math.max(8,left)+'px';
+  popup.style.top=Math.max(8,top)+'px';
+}
+function closeEmojiPopup(){ document.getElementById('emojiPopup').classList.remove('open'); activeEmojiId=null; }
+function selectEmoji(e){
+  if(activeEmojiId===null) return;
+  const a=editBuffer.find(x=>x.id===activeEmojiId);
+  if(a){ a.icon=e; const btn=document.getElementById('ebtn-'+activeEmojiId); if(btn) btn.textContent=e; }
+  closeEmojiPopup();
+}
+function filterEmoji(){ buildEmojiGrid(document.getElementById('emojiSearch').value); }
+document.addEventListener('click',e=>{ if(!document.getElementById('emojiPopup').contains(e.target)&&!e.target.classList.contains('emoji-btn')) closeEmojiPopup(); });
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// INIT
+renderViewRows();
+</script>
+</body>
+</html>

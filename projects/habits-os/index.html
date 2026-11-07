@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Habits OS</title>
+<style>
+:root{--bg:#f4f1fb;--card:#fff;--ink:#22203a;--mu:#746f94;--line:#e4e0f3;--g:#22c58b;--gl:#d3f5e8;--w0:#dff4fb;--w1:#ece6fb;--a:#7c5cff;--sb:linear-gradient(180deg,#2b1f5c,#1a2f5a);--sh:0 2px 12px rgba(60,40,120,.09);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14121f;--card:#1e1b30;--ink:#ece9fb;--mu:#a29dc4;--line:#322e4d;--gl:#1f4a3d;--w0:#17303a;--w1:#2a2350;--sb:linear-gradient(180deg,#171236,#0f1d38)}}
+:root[data-theme="dark"]{--bg:#14121f;--card:#1e1b30;--ink:#ece9fb;--mu:#a29dc4;--line:#322e4d;--gl:#1f4a3d;--w0:#17303a;--w1:#2a2350;--sb:linear-gradient(180deg,#171236,#0f1d38)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 "Trebuchet MS","Segoe UI",system-ui,sans-serif}
+h1,h2,h3{font-family:Georgia,serif;margin:0 0 10px}h1{font-size:26px;background:linear-gradient(90deg,#7c5cff,#22c58b);-webkit-background-clip:text;background-clip:text;color:transparent}h3{font-size:17px}
+#app{display:flex;min-height:100vh}
+nav{width:190px;background:var(--sb);color:#e8f3ea;padding:18px 10px;position:sticky;top:0;align-self:flex-start;height:100vh;display:flex;flex-direction:column;gap:4px}
+.logo{font:700 20px Georgia,serif;padding:0 12px 14px}
+nav button{background:none;border:0;color:inherit;text-align:left;padding:10px 12px;border-radius:8px;display:flex;gap:10px;font:inherit;cursor:pointer}
+nav .on{background:linear-gradient(90deg,#7c5cff,#5b8cff)}
+main{flex:1;min-width:0;padding:18px 18px 90px;max-width:1000px}
+button,input,select{font:inherit;color:var(--ink)}
+main button,dialog button{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+.pri{background:linear-gradient(90deg,#7c5cff,#5b8cff)!important;color:#fff!important;border-color:transparent!important;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--sh)}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:14px}
+.st{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.st b{display:block;font:700 28px Georgia,serif;color:var(--a)}.st span,.mu,small{color:var(--mu);font-size:13px}
+.bar{height:20px;background:var(--gl);border-radius:6px;overflow:hidden;position:relative;flex:1}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#22c58b,#3ad7d0)}.bar em{position:absolute;inset:0;text-align:center;font:12px/20px inherit;font-style:normal}
+.br{display:flex;gap:8px;align-items:center;margin:6px 0}.br span{width:110px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.br b{width:42px;text-align:right;font-size:13px}
+.row{display:flex;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--g);margin:0;cursor:pointer}
+.moods{display:flex;gap:8px;flex-wrap:wrap}.moods button{font-size:24px;display:flex;flex-direction:column;align-items:center;padding:6px 10px}.moods small{font-size:11px}
+.moods .on{border-color:var(--g);background:var(--gl)}
+.mn{display:flex;gap:10px;align-items:center;justify-content:center;margin-bottom:12px}.mn b{min-width:150px;text-align:center}
+.sc{overflow-x:auto}table{border-collapse:collapse;min-width:100%}
+th,td{border:1px solid var(--line);text-align:center;padding:3px;font-size:12px}
+.h{background:var(--w1);text-align:left;padding:8px;min-width:200px;position:sticky;left:0;z-index:1}
+td.n{position:sticky;left:0;background:var(--card);text-align:left;padding:4px 8px;z-index:1}
+.nm{display:flex;justify-content:space-between;gap:6px;align-items:center;font-size:14px}.nm button{padding:0 5px!important;border:0!important;background:none!important;color:var(--mu)}
+.w0{background:var(--w0)}.w1{background:var(--w1)}.dim{opacity:.3}
+tfoot td{background:var(--gl);font-weight:700}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px}
+.cal div{min-height:52px;border:1px solid var(--line);border-radius:8px;padding:4px;font-size:12px;cursor:pointer;background:var(--card)}
+.cal .hd{border:0;min-height:0;text-align:center;color:var(--mu);cursor:default;background:none}
+.cal .sel{outline:2px solid var(--a)}.cal .fu{opacity:.45}
+.bd{text-align:center}.bd i{font-size:38px;font-style:normal;display:block}
+.lock{filter:grayscale(1);opacity:.4}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:18px;width:340px;max-width:92vw}
+dialog label{display:block;margin:10px 0 4px}dialog input[type=text],dialog select{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+#hd{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}#hd label{display:flex;gap:4px;margin:0;font-size:13px}
+.acts{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+@media(max-width:720px){#app{flex-direction:column}
+nav{position:fixed;bottom:0;left:0;right:0;width:auto;height:auto;flex-direction:row;padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));z-index:5;gap:0}
+nav button{flex:1;flex-direction:column;align-items:center;gap:0;font-size:10px;padding:6px 0}.logo{display:none}.br span{width:80px}}
+</style></head><body>
+<div id="app"><nav id="nav"></nav><main id="main"></main></div>
+<dialog id="dlg"><h3 id="dt">Habit</h3><label>Name<input type="text" id="hn" maxlength="40"></label>
+<label>Frequency<select id="hf"><option value="daily">Every day</option><option value="weekdays">Weekdays</option><option value="3">3 times/week</option><option value="5">5 times/week</option><option value="custom">Custom days</option></select></label>
+<div id="hd"></div><div class="acts"><button id="hc">Cancel</button><button id="hs" class="pri">Save habit</button></div></dialog>
+<input id="file" type="file" accept=".json" hidden>
+<script>
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,"0");
+const ds=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const pd=s=>{const[a,b,c]=s.split("-");return new Date(+a,b-1,+c)};
+const add=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const mon=d=>add(d,-((d.getDay()+6)%7));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const FL={daily:"Every day",weekdays:"Weekdays","3":"3×/week","5":"5×/week",custom:"Custom"};
+const ME={5:"😄",4:"🙂",3:"😐",2:"😞",1:"😫"},MN={5:"Great",4:"Good",3:"Normal",2:"Bad",1:"Terrible"};
+const DEF=["Gym (30 min)","Journaling (15 min)","Publish 1 Video","Build Digital Product (2 hrs)","Reading (20 min)","Learn a Course (30 min)","Drink 3L Water","Only 2 Meals","No Bad Sugar"];
+let S={name:"Omar",habits:[],log:{},mood:{},theme:""},V="dash",cm=new Date(),sel=ds(today()),editId=null;
+cm.setDate(1);
+function defaults(){S.habits=DEF.map((n,i)=>({id:"h"+i,name:n,f:"daily",days:[],start:ds(today())}))}
+function migrate(o){const ks=Object.keys(o.data||{}).sort(),st=ks.length?ks[0]+"-01":ds(today());
+S.habits=o.habits.map((n,i)=>({id:"m"+i,name:n,f:"daily",days:[],start:st}));S.log={};
+ks.forEach(k=>{const m=o.data[k];for(const i in m)for(const d in m[i])if(m[i][d]){const t=k+"-"+pad(d);(S.log[t]=S.log[t]||[]).push("m"+i)}})}
+try{const r=localStorage.getItem("habitsos2");if(r)Object.assign(S,JSON.parse(r));else{const o=JSON.parse(localStorage.getItem("habitsos")||"null");if(o&&o.habits)migrate(o);else defaults()}}catch(e){defaults()}
+const save=()=>{try{localStorage.setItem("habitsos2",JSON.stringify(S))}catch(e){}};
+const isFlex=h=>h.f==="3"||h.f==="5";
+function dueOn(h,d){if(ds(d)<h.start)return false;const w=d.getDay();return h.f==="daily"||(h.f==="weekdays"&&w>0&&w<6)||(h.f==="custom"&&h.days.includes(w))}
+const done=(h,k)=>(S.log[k]||[]).includes(h.id);
+function dayStats(d){const k=ds(d);let due=0,dn=0;S.habits.forEach(h=>{const dn1=done(h,k);if(dueOn(h,d)){due++;if(dn1)dn++}else if(isFlex(h)&&k>=h.start&&dn1){due++;dn++}});return{due,dn}}
+function runs(a){let c=0,b=0;a.forEach(x=>{c=x?c+1:0;if(c>b)b=c});return{cur:c,best:b}}
+function hStreak(h){const t=today(),a=[];let d=pd(h.start);
+if(isFlex(h)){for(let w=mon(d);w<=t;w=add(w,7)){let c=0;for(let i=0;i<7;i++)if(done(h,ds(add(w,i))))c++;const ok=c>=+h.f;if(ok||add(w,6)<t)a.push(ok)}}
+else for(;d<=t;d=add(d,1))if(dueOn(h,d)){const ok=done(h,ds(d));if(ok||d<t)a.push(ok)}
+return runs(a)}
+function global(){const P=new Set();if(!S.habits.length)return{cur:0,best:0,P};const t=today(),a=[];
+for(let d=pd(S.habits.map(h=>h.start).sort()[0]);d<=t;d=add(d,1)){const s=dayStats(d);if(!s.due)continue;const ok=s.dn>=s.due;if(ok)P.add(ds(d));if(ok||d<t)a.push(ok)}
+return{...runs(a),P}}
+function hstat(h,a,b){const s=pd(h.start),f=a<s?s:a,t=b>today()?today():b;if(f>t)return{e:0,d:0};let dn=0,e=0;
+for(let d=f;d<=t;d=add(d,1)){if(!isFlex(h)&&dueOn(h,d))e++;if(done(h,ds(d)))dn++}
+if(isFlex(h))e=Math.round(+h.f*(Math.round((t-f)/864e5)+1)/7);return{e,d:Math.min(dn,e)}}
+const totalDone=()=>{const ids=new Set(S.habits.map(h=>h.id));let n=0;for(const k in S.log)n+=S.log[k].filter(i=>ids.has(i)).length;return n};
+function badges(){const g=global(),tot=totalDone();let pw=false,pm=false;
+g.P.forEach(k=>{const d=pd(k),w=mon(d);if([0,1,2,3,4,5,6].every(i=>g.P.has(ds(add(w,i)))))pw=true;
+const n=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();if(Array.from({length:n},(_,i)=>g.P.has(k.slice(0,8)+pad(i+1))).every(Boolean))pm=true});
+return[["🏅","First Step","Complete your first habit",tot>=1],["🔥","7 Day Streak","Finish every habit 7 days in a row",g.best>=7],["🔥🔥","30 Day Streak","Finish every habit 30 days in a row",g.best>=30],["💯","100 Completions","Check off 100 habits in total",tot>=100],["🌟","Perfect Week","Finish every habit Monday to Sunday",pw],["👑","Perfect Month","Finish every habit every day of a month",pm]]}
+const bar=p=>`<div class="bar"><i style="width:${p}%"></i><em>${Math.round(p)}%</em></div>`;
+const brow=(l,p)=>`<div class="br"><span>${l}</span><div class="bar"><i style="width:${p}%"></i></div><b>${Math.round(p)}%</b></div>`;
+const sc=(l,v,s)=>`<div class="card"><span>${l}</span><b>${v}</b>${s?`<small>${s}</small>`:""}</div>`;
+function dayPanel(k){const d=pd(k),hs=S.habits.filter(x=>dueOn(x,d)||isFlex(x)||done(x,k));
+return`<div class="card"><h3>${d.toLocaleDateString("en",{weekday:"long",month:"short",day:"numeric"})}</h3>${hs.map(x=>`<label class="row"><input type="checkbox" data-t="${x.id}|${k}" ${done(x,k)?"checked":""}> ${esc(x.name)}</label>`).join("")||'<p class="mu">No habits scheduled.</p>'}
+<p class="mu">How was your day?</p><div class="moods">${[5,4,3,2,1].map(n=>`<button data-m="${n}|${k}" class="${S.mood[k]==n?"on":""}">${ME[n]}<small>${MN[n]}</small></button>`).join("")}</div></div>`}
+const mnav=()=>`<div class="mn"><button data-mm="-1" aria-label="Previous month">‹</button><b>${cm.toLocaleString("en",{month:"long",year:"numeric"})}</b><button data-mm="1" aria-label="Next month">›</button></div>`;
+function area(y,m){const D=new Date(y,m+1,0).getDate(),t=today(),v=[];
+for(let d=1;d<=D;d++){const dt=new Date(y,m,d),s=dayStats(dt);v.push(dt>t||!s.due?0:s.dn/s.due*100)}
+const l=v.map((p,i)=>(i/(D-1)*600).toFixed(1)+","+(130-p*1.2).toFixed(1)).join(" ");
+return`<div class="card"><h3>Daily completion</h3><svg viewBox="0 0 600 140" preserveAspectRatio="none" style="width:100%;height:150px"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22c58b" stop-opacity=".7"/><stop offset="1" stop-color="#22c58b" stop-opacity=".05"/></linearGradient></defs><polygon points="0,130 ${l} 600,130" fill="url(#ag)"/><polyline points="${l}" fill="none" stroke="#22c58b" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg><small>Share of habits done on each day of ${new Date(y,m,1).toLocaleString("en",{month:"long"})}</small></div>`}
+function vDash(){const t=today(),s=dayStats(t),g=global(),p=s.due?s.dn/s.due*100:0,hr=new Date().getHours(),gr=hr<12?"Good morning":hr<18?"Good afternoon":"Good evening";
+let bars="";for(let i=6;i>=0;i--){const d=add(t,-i),q=dayStats(d),v=q.due?q.dn/q.due*100:0;bars+=`<rect x="${(6-i)*44+8}" y="${100-v}" width="30" height="${v}" rx="4" fill="#22c58b"/><text x="${(6-i)*44+23}" y="114" text-anchor="middle" font-size="11" fill="currentColor">${"SMTWTFS"[d.getDay()]}</text>`}
+const bg=badges().filter(b=>b[3]);
+return`<h1>${gr}, ${esc(S.name)} 👋</h1><div class="st">${sc("Today's progress",Math.round(p)+"%",s.dn+" of "+s.due+" done")}${sc("Current streak","🔥 "+g.cur,"days with every habit done")}${sc("Best streak",g.best,"days")}</div>${bar(p)}<br>
+<div class="g2"><div>${dayPanel(ds(t))}</div><div class="card"><h3>Weekly performance</h3><svg viewBox="0 0 316 120" style="width:100%;height:auto">${bars}</svg>
+<h3>Achievements</h3>${bg.length?bg.slice(0,4).map(b=>`<div>${b[0]} ${b[1]}</div>`).join(""):'<p class="mu">Check off a habit to unlock your first badge.</p>'}</div></div>${area(t.getFullYear(),t.getMonth())}`}
+function vHabits(){const y=cm.getFullYear(),m=cm.getMonth(),D=new Date(y,m+1,0).getDate(),ws=Math.ceil(D/7);
+let E=0,Dn=0;S.habits.forEach(x=>{const r=hstat(x,new Date(y,m,1),new Date(y,m+1,0));E+=r.e;Dn+=r.d});
+const top=`<div class="g2"><div class="card"><div class="st" style="margin:0"><div><span>✓ Done</span><b>${Dn}</b></div><div><span>✗ Missed</span><b>${E-Dn}</b></div></div><br>${bar(E?Dn/E*100:0)}</div>${area(y,m)}</div>`;
+let h=mnav()+top+`<div class="card sc"><table><thead><tr><th class="h" rowspan="2">Daily habits</th>`;
+for(let w=0;w<ws;w++)h+=`<th class="w${w%2}" colspan="${Math.min(7,D-w*7)}">Week ${w+1}</th>`;
+h+="</tr><tr>";for(let d=1;d<=D;d++)h+=`<th class="w${Math.floor((d-1)/7)%2}">${"SMTWTFS"[new Date(y,m,d).getDay()]}<br>${d}</th>`;
+h+="</tr></thead><tbody>";
+S.habits.forEach(x=>{const st=hStreak(x);h+=`<tr><td class="n"><div class="nm"><span><b>${esc(x.name)}</b><br><small>${FL[x.f]} · 🔥 ${st.cur}${isFlex(x)?" wk":" d"} (best ${st.best})</small></span><span><button data-edit="${x.id}" aria-label="Edit">✎</button><button data-del="${x.id}" aria-label="Delete">✕</button></span></div></td>`;
+for(let d=1;d<=D;d++){const k=y+"-"+pad(m+1)+"-"+pad(d),off=!isFlex(x)&&!dueOn(x,new Date(y,m,d));h+=`<td class="${off?"dim":""}"><input type="checkbox" data-t="${x.id}|${k}" ${done(x,k)?"checked":""}></td>`}h+="</tr>"});
+h+='</tbody><tfoot><tr><td class="n" style="background:var(--gl)">Total per day</td>';
+for(let d=1;d<=D;d++){const k=y+"-"+pad(m+1)+"-"+pad(d);h+=`<td>${S.habits.filter(x=>done(x,k)).length}</td>`}
+return h+`</tr></tfoot></table></div><p><button class="pri" data-add>Add habit</button></p>`}
+function vCal(){const y=cm.getFullYear(),m=cm.getMonth(),D=new Date(y,m+1,0).getDate(),f=(new Date(y,m,1).getDay()+6)%7,t=today();
+let h=mnav()+'<div class="cal">'+["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="hd">${d}</div>`).join("");
+for(let i=0;i<f;i++)h+='<div class="hd"></div>';
+for(let d=1;d<=D;d++){const dt=new Date(y,m,d),k=ds(dt),s=dayStats(dt),p=s.due?s.dn/s.due:0;
+h+=`<div data-day="${k}" class="${k===sel?"sel":""} ${dt>t?"fu":""}" style="background:rgba(34,197,139,${(p*.7).toFixed(2)})">${d}<br>${S.mood[k]?ME[S.mood[k]]:""}</div>`}
+return h+"</div>"+dayPanel(sel)}
+function vStats(){const t=today(),H=S.habits;if(!H.length)return'<p class="mu">Add a habit to see statistics.</p>';
+const first=pd(H.map(x=>x.start).sort()[0]),y=t.getFullYear(),m=t.getMonth();
+const R=(a,b)=>{let e=0,d=0;H.forEach(x=>{const r=hstat(x,a,b);e+=r.e;d+=r.d});return{e,d,p:e?d/e*100:0}};
+const all=R(first,t),wk=R(mon(t),t),mo=R(new Date(y,m,1),t),pm=R(new Date(y,m-1,1),new Date(y,m,0)),g=global(),dl=mo.p-pm.p;
+const per=H.map(x=>{const r=hstat(x,first,t);return{n:x.name,e:r.e,p:r.e?r.d/r.e*100:0,s:hStreak(x)}}),ranked=per.filter(x=>x.e>0).sort((a,b)=>b.p-a.p);
+let wb="",mb="";for(let i=5;i>=0;i--){const a=add(mon(t),-7*i);wb+=brow(a.toLocaleDateString("en",{month:"short",day:"numeric"}),R(a,add(a,6)).p);
+mb+=brow(new Date(y,m-i,1).toLocaleString("en",{month:"short"}),R(new Date(y,m-i,1),new Date(y,m-i+1,0)).p)}
+let hi=[],lo=[];for(const k in S.mood){const s=dayStats(pd(k));if(s.due)(s.dn/s.due>=.8?hi:lo).push(S.mood[k])}
+const av=a=>(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1);
+const mi=hi.length>=3&&lo.length>=3?`On days you finish 80%+ of your habits, mood averages <b>${av(hi)}/5</b> (${hi.length} days) versus <b>${av(lo)}/5</b> on other days (${lo.length} days). ${av(hi)>av(lo)?"Your habits and mood move together.":"No clear link yet."}`:"Log your mood for at least 3 strong days and 3 weaker days to see how habits affect it.";
+return`<h1>Statistics</h1><div class="st">${sc("Overall completion",Math.round(all.p)+"%")}${sc("This week",Math.round(wk.p)+"%")}${sc("This month",Math.round(mo.p)+"%")}${sc("Total completed",totalDone())}${sc("Total missed",all.e-all.d)}${sc("Longest streak",g.best+" days","all habits done")}${sc("Best habit",ranked.length?esc(ranked[0].n):"-",ranked.length?Math.round(ranked[0].p)+"%":"")}${sc("Worst habit",ranked.length>1?esc(ranked[ranked.length-1].n):"-",ranked.length>1?Math.round(ranked[ranked.length-1].p)+"%":"")}</div>
+<div class="g2"><div class="card"><h3>Weekly completion</h3>${wb}</div><div class="card"><h3>Monthly completion</h3>${mb}<p class="mu">This month vs last month: <b>${dl>=0?"+":""}${dl.toFixed(1)} points</b> (${Math.round(mo.p)}% vs ${Math.round(pm.p)}%, month to date)</p></div></div>
+<div class="g2"><div class="card"><h3>Per habit</h3>${per.map(x=>brow(esc(x.n),x.p)+`<small>🔥 ${x.s.cur} now · best ${x.s.best}</small>`).join("")}</div><div class="card"><h3>Mood and habits</h3><p>${mi}</p></div></div>`}
+function vAch(){return`<h1>Achievements</h1><div class="g2">${badges().map(b=>`<div class="card bd ${b[3]?"":"lock"}"><i>${b[3]?b[0]:"🔒"}</i><b>${b[1]}</b><br><small>${b[2]}</small></div>`).join("")}</div>`}
+function vSet(){return`<h1>Settings</h1><div class="card" style="max-width:420px"><label>Your name<br><input type="text" id="nm2" value="${esc(S.name)}" style="width:100%;padding:8px;margin:4px 0 12px;border:1px solid var(--line);border-radius:8px;background:var(--card)"></label>
+<label>Theme<br><select id="th" style="padding:8px;margin:4px 0 12px"><option value="">Auto</option><option value="light" ${S.theme==="light"?"selected":""}>Light</option><option value="dark" ${S.theme==="dark"?"selected":""}>Dark</option></select></label>
+<p><button data-exp>Export data</button> <button data-imp>Import data</button> <button data-reset>Reset all</button></p><p class="mu">Data stays in this browser. Export a backup to move it to another device.</p></div>`}
+const NAV=[["dash","Dashboard","🏠"],["habits","Habits","✅"],["cal","Calendar","📅"],["stats","Statistics","📊"],["ach","Achievements","🏆"],["set","Settings","⚙️"]];
+function render(){const o=$(".sc"),l=o?o.scrollLeft:0;
+if(S.theme)document.documentElement.dataset.theme=S.theme;else delete document.documentElement.dataset.theme;
+$("#nav").innerHTML='<div class="logo">Habits OS</div>'+NAV.map(n=>`<button data-nav="${n[0]}" class="${V===n[0]?"on":""}"><span>${n[2]}</span>${n[1]}</button>`).join("");
+$("#main").innerHTML={dash:vDash,habits:vHabits,cal:vCal,stats:vStats,ach:vAch,set:vSet}[V]();
+const n=$(".sc");if(n)n.scrollLeft=l}
+function openH(id){editId=id;const x=S.habits.find(h=>h.id===id)||{name:"",f:"daily",days:[]};
+$("#dt").textContent=id?"Edit habit":"New habit";$("#hn").value=x.name;$("#hf").value=x.f;
+$("#hd").innerHTML=[["Mon",1],["Tue",2],["Wed",3],["Thu",4],["Fri",5],["Sat",6],["Sun",0]].map(d=>`<label><input type="checkbox" value="${d[1]}" ${x.days.includes(d[1])?"checked":""}>${d[0]}</label>`).join("");
+$("#hd").hidden=x.f!=="custom";$("#dlg").showModal()}
+$("#hf").onchange=()=>{$("#hd").hidden=$("#hf").value!=="custom"};
+$("#hc").onclick=()=>$("#dlg").close();
+$("#hs").onclick=()=>{const n=$("#hn").value.trim(),f=$("#hf").value,days=[...document.querySelectorAll("#hd input:checked")].map(c=>+c.value);
+if(!n)return alert("Enter a habit name.");if(f==="custom"&&!days.length)return alert("Pick at least one day.");
+if(editId){const x=S.habits.find(h=>h.id===editId);Object.assign(x,{name:n,f,days})}else S.habits.push({id:"h"+Date.now(),name:n,f,days,start:ds(today())});
+save();$("#dlg").close();render()};
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const D=b.dataset;
+if(D.nav){V=D.nav;render()}
+else if(D.mm){cm=new Date(cm.getFullYear(),cm.getMonth()+ +D.mm,1);render()}
+else if(D.m){const[n,k]=D.m.split("|");if(S.mood[k]==n)delete S.mood[k];else S.mood[k]=+n;save();render()}
+else if(D.edit)openH(D.edit);else if(D.add!==undefined)openH(null);
+else if(D.del){const x=S.habits.find(h=>h.id===D.del);if(confirm(`Delete "${x.name}" and its history?`)){S.habits=S.habits.filter(h=>h!==x);for(const k in S.log)S.log[k]=S.log[k].filter(i=>i!==x.id);save();render()}}
+else if(D.exp!==undefined){const a=document.createElement("a");a.href="data:application/json,"+encodeURIComponent(JSON.stringify(S));a.download="habits-os.json";a.click()}
+else if(D.imp!==undefined)$("#file").click();
+else if(D.reset!==undefined&&confirm("Delete all habits and history?")){S={name:S.name,habits:[],log:{},mood:{},theme:S.theme};defaults();save();render()}});
+$("#main").addEventListener("click",e=>{const c=e.target.closest("[data-day]");if(c){sel=c.dataset.day;render()}});
+document.addEventListener("change",e=>{const t=e.target;
+if(t.dataset.t){const[id,k]=t.dataset.t.split("|");let a=S.log[k]||[];a=t.checked?(a.includes(id)?a:a.concat(id)):a.filter(i=>i!==id);S.log[k]=a;save();render()}
+else if(t.id==="th"){S.theme=t.value;save();render()}
+else if(t.id==="nm2"){S.name=t.value.trim()||"Omar";save()}});
+$("#file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(o.log&&o.habits)Object.assign(S,o);else if(o.habits&&o.data)migrate(o);else return alert("Not a Habits OS file.");save();render()}catch(x){alert("Could not read that file.")}};r.readAsText(f)};
+render();
+</script></body></html>

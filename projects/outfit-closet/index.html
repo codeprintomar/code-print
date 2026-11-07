@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#F6F3EC">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Outfit Closet">
+<title>My Outfit Closet</title>
+<style>
+:root{
+  --bg:#F6F3EC; --card:#FFFFFF; --ink:#221F1A; --ink-soft:#665E52;
+  --line:#E4DDCF; --pine:#2B4C48; --pine-dim:#3E635E; --brass:#C79A45;
+  --brass-soft:#F1E2BC; --danger:#B5453A; --good:#3E7A52; --shadow:0 1px 0 rgba(34,31,26,.06);
+  --radius-tag:4px 12px 4px 12px; --radius-card:14px; --font: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono: ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+[data-theme="dark"]{
+  --bg:#18160F; --card:#232019; --ink:#F3EEE2; --ink-soft:#B7AD98;
+  --line:#3A3527; --pine:#7FC2B4; --pine-dim:#5B958A; --brass:#E5B95C;
+  --brass-soft:#3A2F16; --shadow:0 1px 0 rgba(0,0,0,.3);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font);}
+body{padding-bottom:76px; min-height:100vh; transition:background .2s;}
+h1,h2,h3{margin:0 0 6px; font-weight:700; letter-spacing:-.01em;}
+p{margin:0;}
+button{font-family:inherit;}
+.hide{display:none !important;}
+.wrap{padding:14px 16px 8px;}
+.topbar{position:sticky; top:0; z-index:20; background:var(--bg); padding:14px 16px 10px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line);}
+.topbar h1{font-size:20px;}
+.icon-btn{background:none; border:none; color:var(--ink); font-size:20px; padding:6px; cursor:pointer; line-height:1;}
+.tagbadge{display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:12px; font-weight:700; background:var(--brass-soft); color:var(--pine); padding:3px 9px; border-radius:var(--radius-tag); border:1px dashed var(--brass);}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius-card); box-shadow:var(--shadow); padding:12px; margin-bottom:10px;}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:10px; padding:11px 16px; font-size:14.5px; font-weight:600; cursor:pointer;}
+.btn-primary{background:var(--pine); color:#fff;}
+.btn-brass{background:var(--brass); color:#241c05;}
+.btn-ghost{background:transparent; color:var(--pine); border:1px solid var(--pine-dim);}
+.btn-danger{background:transparent; color:var(--danger); border:1px solid var(--danger);}
+.btn-sm{padding:7px 10px; font-size:13px; border-radius:8px;}
+.btn-block{width:100%;}
+.row{display:flex; align-items:center; gap:8px;}
+.row-between{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+input,select,textarea{width:100%; background:var(--bg); border:1px solid var(--line); color:var(--ink); border-radius:9px; padding:10px 11px; font-size:14.5px; font-family:inherit;}
+textarea{resize:vertical; min-height:56px;}
+label.field{display:block; font-size:12.5px; color:var(--ink-soft); margin:10px 0 4px; font-weight:600;}
+.section-title{font-size:15px; font-weight:700; margin:18px 0 8px; color:var(--ink);}
+.muted{color:var(--ink-soft); font-size:13px;}
+.empty{text-align:center; padding:34px 14px; color:var(--ink-soft);}
+.empty .big{font-size:34px; margin-bottom:6px;}
+
+/* bottom nav */
+.navbar{position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--line); display:flex; z-index:30;}
+.navbar button{flex:1; background:none; border:none; padding:9px 2px 8px; display:flex; flex-direction:column; align-items:center; gap:2px; color:var(--ink-soft); font-size:10.5px; cursor:pointer;}
+.navbar button .ic{font-size:19px;}
+.navbar button.active{color:var(--pine); font-weight:700;}
+
+.page{display:none;}
+.page.active{display:block;}
+
+/* closet item card */
+.item-card{display:flex; gap:10px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:8px; margin-bottom:8px;}
+.item-thumb{width:56px; height:56px; border-radius:9px; object-fit:cover; background:var(--brass-soft); flex-shrink:0;}
+.item-thumb.empty-thumb{display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--brass);}
+.item-info{flex:1; min-width:0;}
+.item-name{font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.item-meta{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+.status-pill{font-size:10.5px; padding:2px 7px; border-radius:8px; font-weight:700;}
+.status-available{background:#E1F0E4; color:var(--good);}
+.status-laundry{background:#FCEBD3; color:#8A5A12;}
+.status-notavailable{background:#EEE; color:#777;}
+.status-damaged{background:#F6DEDA; color:var(--danger);}
+[data-theme="dark"] .status-available{background:#1E3324;}
+[data-theme="dark"] .status-laundry{background:#3A2A0E;}
+[data-theme="dark"] .status-notavailable{background:#333;}
+[data-theme="dark"] .status-damaged{background:#3A2020;}
+
+/* modal */
+.modal-overlay{position:fixed; inset:0; background:rgba(20,17,10,.5); z-index:50; display:flex; align-items:flex-end; justify-content:center;}
+.modal-overlay.hide{display:none;}
+.modal{background:var(--bg); width:100%; max-width:520px; max-height:92vh; overflow-y:auto; border-radius:18px 18px 0 0; padding:16px; animation:slideup .18s ease-out;}
+@keyframes slideup{from{transform:translateY(24px); opacity:0;} to{transform:translateY(0); opacity:1;}}
+.modal-handle{width:36px; height:4px; background:var(--line); border-radius:3px; margin:0 auto 10px;}
+.modal-title{font-size:17px; font-weight:700; margin-bottom:12px;}
+.close-x{position:absolute; left:16px; top:16px; background:var(--line); border:none; width:30px; height:30px; border-radius:50%; font-size:15px; cursor:pointer; color:var(--ink);}
+
+.chip-select{display:flex; flex-wrap:wrap; gap:6px;}
+.chip{padding:6px 12px; border-radius:20px; border:1px solid var(--line); background:var(--card); font-size:13px; cursor:pointer; color:var(--ink);}
+.chip.active{background:var(--pine); border-color:var(--pine); color:#fff;}
+
+.imgpick{border:2px dashed var(--line); border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:18px; gap:8px; cursor:pointer; color:var(--ink-soft); position:relative; overflow:hidden;}
+.imgpick img{max-width:100%; max-height:180px; border-radius:8px;}
+
+.tabbar{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; margin-bottom:8px;}
+.tabbar button{white-space:nowrap; padding:7px 13px; border-radius:18px; border:1px solid var(--line); background:var(--card); color:var(--ink-soft); font-size:13px; cursor:pointer;}
+.tabbar button.active{background:var(--pine); color:#fff; border-color:var(--pine);}
+
+.builder-slot{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px; margin-bottom:8px; display:flex; align-items:center; gap:10px;}
+.builder-slot .slot-label{width:74px; font-size:12px; font-weight:700; color:var(--ink-soft); flex-shrink:0;}
+.builder-slot .slot-value{flex:1; font-size:13.5px;}
+.builder-slot .slot-thumb{width:38px; height:38px; border-radius:7px; object-fit:cover; background:var(--brass-soft);}
+
+.piece-pick{display:flex; gap:8px; overflow-x:auto; padding:4px 0;}
+.piece-pick .p{flex-shrink:0; width:76px; text-align:center; cursor:pointer; border:2px solid transparent; border-radius:10px; padding:4px;}
+.piece-pick .p.sel{border-color:var(--pine);}
+.piece-pick img{width:68px; height:68px; object-fit:cover; border-radius:8px; background:var(--brass-soft);}
+.piece-pick .p .code{font-family:var(--mono); font-size:10.5px; font-weight:700; margin-top:3px;}
+
+.warn-box{background:#FCEBD3; color:#8A5A12; border-radius:10px; padding:9px 12px; font-size:13px; margin:8px 0;}
+[data-theme="dark"] .warn-box{background:#3A2A0E; color:#E5B95C;}
+
+.stars{display:flex; gap:3px; font-size:20px; cursor:pointer;}
+.stars span{color:var(--line);}
+.stars span.on{color:var(--brass);}
+
+.stat-box{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; text-align:center;}
+.stat-box .n{font-size:22px; font-weight:800; color:var(--pine);}
+.stat-box .l{font-size:11.5px; color:var(--ink-soft); margin-top:2px;}
+
+.outfit-card{background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; margin-bottom:12px;}
+.outfit-card img{width:100%; display:block; background:var(--brass-soft);}
+.outfit-card .of-body{padding:10px 12px;}
+.outfit-card .of-title{font-weight:700; font-size:14.5px;}
+.outfit-card .of-meta{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+.of-grid{display:grid; gap:8px;}
+.of-tile{background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; cursor:pointer; position:relative;}
+.of-tile img{width:100%; aspect-ratio:1/1; object-fit:contain; display:block; background:var(--brass-soft);}
+.of-tile .t{padding:5px 6px 6px; font-size:11.5px; font-weight:700; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.of-tile .fav{position:absolute; top:4px; right:4px; font-size:12px;}
+.of-tile .worn{position:absolute; bottom:26px; left:4px; background:rgba(20,17,10,.6); color:#fff; font-size:10px; padding:1px 6px; border-radius:8px;}
+.of-size{display:flex; gap:6px; align-items:center; margin-bottom:8px;}
+.of-size button{padding:4px 11px; border-radius:14px; border:1px solid var(--line); background:var(--card); color:var(--ink-soft); font-size:12.5px; cursor:pointer;}
+.of-size button.active{background:var(--pine); color:#fff; border-color:var(--pine);}
+.color-palette{display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px; max-height:230px; overflow-y:auto;}
+.cchip{display:flex; align-items:center; gap:7px; padding:6px 8px; border:1px solid var(--line); border-radius:10px; background:var(--card); font-size:12.5px; line-height:1.2; cursor:pointer;}
+.cchip small{color:var(--ink-soft); font-size:11px;}
+.cchip .sw{width:20px; height:20px; border-radius:50%; border:1px solid rgba(0,0,0,.3); flex-shrink:0;}
+.cchip.sel{border-color:var(--pine); box-shadow:0 0 0 1.5px var(--pine);}
+.cal-cell.planned{border:2px dashed var(--pine);}
+.cal-cell .pb{position:absolute; bottom:2px; right:3px; font-size:11px; z-index:1; background:rgba(255,255,255,.85); border-radius:6px; padding:0 3px; line-height:1.3;}
+.cal-strip{display:flex; gap:8px; overflow-x:auto; padding-bottom:4px;}
+.cal-strip .s{flex:0 0 78px; text-align:center; font-size:11px; cursor:pointer;}
+.cal-strip .s img{width:76px; height:76px; object-fit:cover; border-radius:8px; display:block; margin-bottom:3px; background:var(--brass-soft);}
+.of-actions{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+
+.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+.cal-cell{aspect-ratio:1; border:1px solid var(--line); border-radius:8px; font-size:11px; padding:4px; background:var(--card); position:relative; overflow:hidden;}
+.cal-cell .dnum{font-weight:700;}
+.cal-cell.has-outfit{background:var(--brass-soft); border-color:var(--brass);}
+.cal-cell .dot{font-size:9px; color:var(--pine); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+
+.toast{position:fixed; bottom:88px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--bg); padding:9px 18px; border-radius:20px; font-size:13.5px; z-index:100; opacity:0; transition:opacity .2s; pointer-events:none;}
+.toast.show{opacity:1;}
+
+.searchbar{display:flex; gap:8px; margin-bottom:8px;}
+.rule-row{display:flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:9px 10px; margin-bottom:6px; font-size:13px;}
+.rule-row .del{margin-inline-start:auto; background:none; border:none; color:var(--danger); font-size:16px; cursor:pointer;}
+
+/* ===== PHONE-NATIVE FEEL ===== */
+html{-webkit-text-size-adjust:100%;}
+body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px)); min-height:100dvh; overscroll-behavior-y:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;}
+input,select,textarea{font-size:16px; -webkit-user-select:text; user-select:text;}
+.topbar{padding-top:calc(12px + env(safe-area-inset-top,0px));}
+.btn{min-height:44px; touch-action:manipulation;} .btn-sm{min-height:38px;}
+.icon-btn{min-width:44px; min-height:44px;}
+.navbar{padding-bottom:env(safe-area-inset-bottom,0px); align-items:flex-end;}
+.navbar button{min-height:56px; justify-content:center; touch-action:manipulation;}
+.navbar .cam-fab{flex:0 0 68px; padding:0; position:relative; overflow:visible;}
+.navbar .fab-circle{width:58px; height:58px; border-radius:50%; background:var(--brass); color:#241c05; font-size:26px; display:flex; align-items:center; justify-content:center; margin-top:-28px; border:4px solid var(--bg); box-shadow:0 4px 14px rgba(0,0,0,.28);}
+.navbar .cam-fab:active .fab-circle{transform:scale(.92);}
+.toast{bottom:calc(96px + env(safe-area-inset-bottom,0px));}
+.modal{max-height:92dvh; padding-bottom:calc(18px + env(safe-area-inset-bottom,0px)); overscroll-behavior:contain;}
+.cal-grid .wd{text-align:center; font-size:11px; color:var(--ink-soft); font-weight:700; padding-bottom:2px;}
+.cal-cell{aspect-ratio:3/4; padding:3px; touch-action:manipulation;}
+.cal-cell.today{border:2px solid var(--pine);}
+.cal-cell .dnum{position:relative; z-index:1; display:inline-block; line-height:1.3;}
+.cal-cell.has-img .dnum{background:rgba(255,255,255,.82); color:#221F1A; border-radius:6px; padding:0 4px;}
+
+/* ===== LIVE CAMERA ===== */
+.cam{position:fixed; inset:0; z-index:200; background:#000; color:#fff; direction:ltr;}
+.cam video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000;}
+.cam-top{position:absolute; top:0; left:0; right:0; display:flex; align-items:center; justify-content:space-between; padding:calc(12px + env(safe-area-inset-top,0px)) 14px 22px; background:linear-gradient(rgba(0,0,0,.55),transparent);}
+.cam-title{font-weight:700; font-size:15px; text-shadow:0 1px 4px rgba(0,0,0,.7);}
+.cam-btn{background:rgba(0,0,0,.45); border:none; color:#fff; min-width:48px; height:48px; border-radius:24px; font-size:20px; padding:0 14px; cursor:pointer; backdrop-filter:blur(6px);}
+.cam-bottom{position:absolute; bottom:0; left:0; right:0; display:flex; align-items:center; justify-content:space-around; padding:28px 20px calc(26px + env(safe-area-inset-bottom,0px)); background:linear-gradient(transparent,rgba(0,0,0,.55));}
+.shutter{width:80px; height:80px; border-radius:50%; background:#fff; border:6px solid rgba(255,255,255,.5); background-clip:padding-box; cursor:pointer; transition:transform .1s;}
+.shutter:active{transform:scale(.9);}
+.cam-count{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:140px; font-weight:800; text-shadow:0 2px 16px rgba(0,0,0,.6); pointer-events:none;}
+.cam-fallback{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:30px; text-align:center; background:#111; font-size:14px; line-height:1.5;}
+.cam-fallback .btn{width:100%; max-width:280px;}
+.cam.nostream .cam-bottom, .cam.nostream .cam-timer{display:none;}
+</style>
+</head>
+<body data-theme="light">
+
+<div class="topbar">
+  <h1 id="pageTitle">My Outfit Closet</h1>
+  <div class="row">
+    <button class="icon-btn" onclick="toggleTheme()">🌓</button>
+    <button class="icon-btn" onclick="openMore()">☰</button>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="wrap">
+    <div class="card">
+      <div class="row-between"><h3>Today's Outfit</h3><span class="muted" id="todayDate"></span></div>
+      <div id="todayOutfitBox" class="muted" style="margin-top:6px;">No outfit logged for today yet.</div>
+      <button class="btn btn-brass btn-block" style="margin-top:10px;" onclick="quickSnapToday()">📸 Snap today's outfit</button>
+    </div>
+    <div class="grid2">
+      <button class="btn btn-primary btn-block" onclick="quickOutfit()">⚡ Quick Outfit</button>
+      <button class="btn btn-brass btn-block" onclick="suggestOutfit()">✨ Suggest Outfit</button>
+    </div>
+    <div class="section-title">Recently Added</div>
+    <div id="recentAdded" class="piece-pick"></div>
+    <div class="section-title">Most Worn</div>
+    <div id="mostWorn" class="piece-pick"></div>
+    <div class="section-title">Favorite Outfits</div>
+    <div id="favOutfits"></div>
+  </div>
+</div>
+
+<!-- CLOSET -->
+<div class="page" id="page-closet">
+  <div class="wrap">
+    <div class="searchbar">
+      <input id="closetSearch" placeholder="Search: code, color, name..." oninput="renderCloset()">
+      <button class="btn btn-brass" onclick="quickAddItem()" aria-label="Photo a new piece">📷</button>
+      <button class="btn btn-primary" onclick="openItemModal()">+</button>
+    </div>
+    <div class="tabbar" id="closetCatTabs"></div>
+    <div class="row" style="margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+      <select id="filterFit" onchange="renderCloset()" style="width:auto;"><option value="">Any fit</option><option>Wide</option><option>Regular</option><option>Slim</option></select>
+      <select id="filterSeason" onchange="renderCloset()" style="width:auto;"><option value="">Any season</option><option>Summer</option><option>Winter</option><option>All Season</option></select>
+      <select id="filterStatus" onchange="renderCloset()" style="width:auto;"><option value="">Any status</option><option>Available</option><option>In Laundry</option><option>Not Available</option><option>Damaged</option></select>
+      <label class="row" style="width:auto; font-size:12.5px;"><input type="checkbox" id="filterFav" style="width:auto;" onchange="renderCloset()"> ❤️ only</label>
+    </div>
+    <div id="closetList"></div>
+  </div>
+</div>
+
+<!-- BUILDER -->
+<div class="page" id="page-builder">
+  <div class="wrap">
+    <div class="card">
+      <label class="field">Quick code entry (e.g. T1 P4 S1 W3 C1 G1)</label>
+      <div class="row"><input id="quickCodeInput" placeholder="T1 P4 S1 W3"><button class="btn btn-primary" onclick="applyQuickCode()">Fill</button></div>
+    </div>
+    <div id="builderSlots"></div>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:8px;" onclick="addExtraSlot()">+ Add Another Piece (open shirt over a tee, jacket, scarf...)</button>
+    <div id="compatWarnBox"></div>
+    <label class="field">Outfit name (optional — auto-named if empty)</label>
+    <input id="builderName" placeholder="e.g. Friday Night Look" style="margin-bottom:10px;">
+    <button class="btn btn-primary btn-block" onclick="generateOutfitImage()">🖼️ Generate Outfit</button>
+    <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="generateMultipleOutfits()">✨ Generate 5 Outfits</button>
+    <div class="muted" style="margin-top:6px;">Pick at least one piece above (e.g. a Top), then tap to get 5 matching combinations picked from your closet.</div>
+    <div id="generatedBox" style="margin-top:12px;"></div>
+  </div>
+</div>
+
+<!-- MY OUTFITS -->
+<div class="page" id="page-outfits">
+  <div class="wrap">
+    <div class="searchbar">
+      <input id="outfitSearch" placeholder="Search outfits..." oninput="renderOutfits()">
+    </div>
+    <div class="of-size"><span class="muted" id="ofCount"></span><span style="flex:1"></span><button data-c="2" onclick="setOfCols(2)">2</button><button data-c="3" onclick="setOfCols(3)">3</button><button data-c="4" onclick="setOfCols(4)">4</button><button data-c="5" onclick="setOfCols(5)">5</button></div>
+    <div id="outfitsList"></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="page" id="page-stats">
+  <div class="wrap">
+    <div class="grid3" id="statBoxes" style="margin-bottom:14px;"></div>
+    <div class="card"><h3>Most Worn Item</h3><div id="statMostWorn" class="muted"></div></div>
+    <div class="card"><h3>Least Worn Item</h3><div id="statLeastWorn" class="muted"></div></div>
+    <div class="card"><h3>Favorite Outfit</h3><div id="statFavOutfit" class="muted"></div></div>
+    <div class="card"><h3>Most Used Color</h3><div id="statColor" class="muted"></div></div>
+    <div class="card"><h3>Most Used Shoes</h3><div id="statShoes" class="muted"></div></div>
+  </div>
+</div>
+
+<!-- MORE MENU pages -->
+<div class="page" id="page-rules">
+  <div class="wrap">
+    <div class="card">
+      <h3>Structured rules (used by Suggest Outfit)</h3>
+      <div class="muted" style="margin-bottom:8px;">Example: Category "Top" Fit "Wide" + Category "Bottom" style "Jeans" → Don't suggest</div>
+      <div class="grid2">
+        <select id="ruleA_cat"><option value="Category:Tops">Top</option><option value="Category:Bottoms">Bottom</option></select>
+        <select id="ruleA_attr"><option value="fit:Wide">Wide fit</option><option value="fit:Regular">Regular fit</option><option value="fit:Slim">Slim fit</option><option value="material:Denim">Denim/Jeans</option></select>
+      </div>
+      <div class="grid2" style="margin-top:8px;">
+        <select id="ruleB_cat"><option value="Category:Bottoms">Bottom</option><option value="Category:Tops">Top</option></select>
+        <select id="ruleB_attr"><option value="material:Denim">Denim/Jeans</option><option value="fit:Wide">Wide fit</option><option value="fit:Regular">Regular fit</option><option value="fit:Slim">Slim fit</option></select>
+      </div>
+      <div class="grid2" style="margin-top:8px;">
+        <select id="ruleAction"><option value="avoid">Don't suggest together</option><option value="prefer">Prefer together</option></select>
+        <button class="btn btn-primary" onclick="addStructRule()">Add rule</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Built-in style behavior</h3>
+      <p class="muted">Regular Jeans are already picked less often by Suggest/Quick Outfit and the 5-outfit generator. "Ripped Jeans" is treated as its own type and used normally for Casual looks, without that penalty.</p>
+    </div>
+    <div id="structRulesList"></div>
+
+    <div class="card">
+      <h3>My Style Notes (freeform)</h3>
+      <textarea id="freeNotes" placeholder="I don't like jeans with wide T-shirts..."></textarea>
+      <button class="btn btn-primary btn-block" style="margin-top:8px;" onclick="saveFreeNotes()">Save notes</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-calendar">
+  <div class="wrap">
+    <div class="row-between" style="margin-bottom:8px;">
+      <button class="btn btn-ghost btn-sm" onclick="calShift(-1)">‹ Prev</button>
+      <h3 id="calLabel"></h3>
+      <button class="btn btn-ghost btn-sm" onclick="calShift(1)">Next ›</button>
+    </div>
+    <div class="grid2" style="margin-bottom:8px;">
+      <button class="btn btn-primary btn-block" onclick="openWeekPlanner()">🗓 Plan the week</button>
+      <button class="btn btn-brass btn-block" onclick="quickSnapToday()">📸 Snap today</button>
+    </div>
+    <div class="row" style="margin-bottom:10px;">
+      <span class="muted" style="white-space:nowrap;">Avoid repeating an outfit within</span>
+      <select id="repeatGapSel" onchange="setRepeatGap(this.value)" style="width:auto;">
+        <option value="0">Off</option><option value="7">7 days</option><option value="14">14 days</option><option value="30">30 days</option>
+      </select>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="muted" style="margin-top:8px; text-align:center;">📌 planned (dashed) · ⭐ has an event · solid = worn. Tap any day.</div>
+    <div class="section-title">Upcoming plans</div>
+    <div id="calUpcoming" class="cal-strip"></div>
+    <div class="section-title">Recently worn</div>
+    <div id="calWorn" class="cal-strip"></div>
+  </div>
+</div>
+
+<div class="page" id="page-packing">
+  <div class="wrap">
+    <div class="card">
+      <h3>Trip / Packing</h3>
+      <div class="chip-select" id="packDays">
+        <button class="chip" onclick="setPackDays(3)">3 Days</button>
+        <button class="chip" onclick="setPackDays(5)">5 Days</button>
+        <button class="chip" onclick="setPackDays(7)">7 Days</button>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top:10px;" onclick="generatePackingList()">Generate packing list</button>
+    </div>
+    <div id="packingResult"></div>
+  </div>
+</div>
+
+<div class="page" id="page-backup">
+  <div class="wrap">
+    <div class="card">
+      <h3>Export Backup</h3>
+      <p class="muted">Saves all clothes, images, outfits, style rules and settings into one local file.</p>
+      <button class="btn btn-primary btn-block" style="margin-top:10px;" onclick="exportBackup()">⬇️ Export Backup</button>
+    </div>
+    <div class="card">
+      <h3>Import Backup</h3>
+      <p class="muted">Restores data from a previously exported backup file. This replaces current data.</p>
+      <input type="file" id="importFile" accept="application/json" style="margin-top:10px;">
+      <button class="btn btn-danger btn-block" style="margin-top:10px;" onclick="importBackup()">⬆️ Import Backup</button>
+    </div>
+  </div>
+</div>
+
+<div class="navbar">
+  <button data-page="home" class="active" onclick="showPage('home')"><span class="ic">🏠</span>Home</button>
+  <button data-page="closet" onclick="showPage('closet')"><span class="ic">👕</span>Closet</button>
+  <button class="cam-fab" onclick="quickSnapToday()" aria-label="Snap today's outfit"><span class="fab-circle">📸</span></button>
+  <button data-page="builder" onclick="showPage('builder')"><span class="ic">✨</span>Builder</button>
+  <button data-page="outfits" onclick="showPage('outfits')"><span class="ic">❤️</span>Outfits</button>
+  <button data-page="calendar" onclick="showPage('calendar')"><span class="ic">📅</span>Calendar</button>
+</div>
+
+<!-- MORE menu overlay -->
+<div class="modal-overlay hide" id="moreMenu" onclick="if(event.target===this)closeMore()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">More</div>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:8px;" onclick="closeMore();showPage('rules')">📏 My Style Rules</button>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:8px;" onclick="closeMore();showPage('stats')">📊 Statistics</button>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:8px;" onclick="closeMore();showPage('packing')">🧳 Packing Mode</button>
+    <button class="btn btn-ghost btn-block" onclick="closeMore();showPage('backup')">💾 Backup / Restore</button>
+  </div>
+</div>
+
+<!-- ITEM MODAL -->
+<div class="modal-overlay hide" id="itemModal" onclick="if(event.target===this)closeItemModal()">
+  <div class="modal" style="position:relative;">
+    <button class="close-x" onclick="closeItemModal()">✕</button>
+    <div class="modal-title" id="itemModalTitle">Add Clothing Item</div>
+    <div class="imgpick" id="imgPickBox" onclick="openItemCamera()">
+      <div id="imgPickPlaceholder">📷<br><span style="font-size:12.5px;">Tap to take a photo</span></div>
+      <img id="imgPickPreview" class="hide">
+    </div>
+        <div class="row" style="margin-top:6px;">
+      <button class="btn btn-ghost btn-sm" onclick="itemFromGallery()">🖼 Gallery</button>
+      <button class="btn btn-ghost btn-sm" onclick="rotatePreview()">↻ Rotate</button>
+      <button class="btn btn-ghost btn-sm" onclick="removePreviewImg()">🗑 Remove image</button>
+    </div>
+
+    <label class="field">Code (unique)</label>
+    <input id="f_code" placeholder="T1">
+    <div id="codeWarn" class="warn-box hide">This code already exists.</div>
+
+    <label class="field">Name</label>
+    <input id="f_name" placeholder="Beige wide T-shirt">
+
+    <label class="field">Category</label>
+    <select id="f_category" onchange="fillSubcats()"></select>
+
+    <label class="field">Type</label>
+    <select id="f_subcategory" onchange="autoSuggestBeltLoops()"></select>
+
+    <label class="field">Color</label>
+    <div id="colorPalette" class="color-palette"></div>
+    <input id="f_color" placeholder="Or type a custom color" oninput="syncPalette()">
+
+    <div class="grid2">
+      <div><label class="field">Fit</label>
+        <select id="f_fit"><option value="">-</option><option>Wide</option><option>Regular</option><option>Slim</option></select></div>
+      <div><label class="field">Material</label>
+        <select id="f_material"><option value="">-</option><option>Cotton</option><option>Linen</option><option>Denim</option><option>Other</option></select></div>
+    </div>
+    <div id="beltLoopsRow" class="hide">
+      <label class="field">Belt loops (can a belt be worn with this?)</label>
+      <select id="f_beltloops"><option value="yes">Yes</option><option value="no">No</option></select>
+    </div>
+    <div class="grid2">
+      <div><label class="field">Season</label>
+        <select id="f_season"><option value="">-</option><option>Summer</option><option>Winter</option><option>All Season</option></select></div>
+      <div><label class="field">Condition</label>
+        <select id="f_condition"><option>New</option><option selected>Good</option><option>Old</option><option>Damaged</option></select></div>
+    </div>
+    <div class="grid2">
+      <div><label class="field">Status</label>
+        <select id="f_status"><option>Available</option><option>In Laundry</option><option>Not Available</option><option>Damaged</option></select></div>
+      <div><label class="field">Favorite</label>
+        <select id="f_favorite"><option value="0">No</option><option value="1">Yes</option></select></div>
+    </div>
+    <label class="field">Notes</label>
+    <textarea id="f_notes"></textarea>
+
+    <div class="row" style="margin-top:14px;">
+      <button class="btn btn-primary btn-block" onclick="saveItem()">Save</button>
+    </div>
+    <div id="itemDeleteRow" class="hide" style="margin-top:8px;">
+      <button class="btn btn-danger btn-block" onclick="deleteItemConfirm()">Delete item</button>
+    </div>
+  </div>
+</div>
+
+<!-- OUTFIT DETAIL MODAL -->
+<div class="modal-overlay hide" id="outfitModal" onclick="if(event.target===this)closeOutfitModal()">
+  <div class="modal" style="position:relative;">
+    <button class="close-x" onclick="closeOutfitModal()">✕</button>
+    <div class="modal-title" id="outfitModalTitle">Outfit</div>
+    <img id="outfitModalImg" style="width:100%; border-radius:12px; margin-bottom:10px;">
+    <label class="field">Name</label>
+    <input id="of_name">
+    <label class="field">Occasion</label>
+    <select id="of_occasion"><option>Casual</option><option>School</option><option value="درس">درس</option><option value="خروج">خروج</option><option>Family</option><option>Formal</option><option>Sport</option><option>Home</option></select>
+    <label class="field">Rating</label>
+    <div class="stars" id="of_stars"></div>
+    <label class="field">Notes</label>
+    <textarea id="of_notes"></textarea>
+    <label class="row" style="margin-top:10px;"><input type="checkbox" id="of_fav" style="width:auto;"> ❤️ Favorite</label>
+    <div class="of-actions" style="margin-top:14px;">
+      <button class="btn btn-primary btn-sm" onclick="saveOutfitDetail()">Save</button>
+      <button class="btn btn-brass btn-sm" onclick="woreToday()">👕 Wore Today</button>
+      <button class="btn btn-ghost btn-sm" onclick="duplicateOutfit()">⧉ Duplicate</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportOutfitImage()">⬇️ Export Image</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteOutfitConfirm()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="galleryInput" accept="image/*" class="hide" onchange="handleGalleryPick(event)">
+<input type="file" id="nativeCamInput" accept="image/*" capture="environment" class="hide" onchange="handleNativeCam(event)">
+
+<!-- LIVE CAMERA -->
+<div id="cam" class="cam hide">
+  <video id="camVideo" autoplay playsinline muted></video>
+  <div id="camFallback" class="cam-fallback hide">
+    <div style="font-size:44px;">📷</div>
+    <div id="camFallbackMsg">Live camera isn't available (it needs HTTPS and camera permission). Use your phone's camera instead - it will save as soon as you confirm the shot.</div>
+    <button class="btn btn-brass" onclick="nativeCapture()">📷 Open phone camera</button>
+    <button class="btn btn-ghost" style="color:#fff; border-color:#fff;" onclick="camGallery()">🖼 Choose from gallery</button>
+  </div>
+  <div class="cam-top">
+    <button class="cam-btn" onclick="closeCamera()" aria-label="Close">✕</button>
+    <div id="camTitle" class="cam-title"></div>
+    <button class="cam-btn cam-timer" id="camTimerBtn" onclick="cycleTimer()">⏱ Off</button>
+  </div>
+  <div id="camCount" class="cam-count hide"></div>
+  <div class="cam-bottom">
+    <button class="cam-btn" onclick="camGallery()" aria-label="Gallery">🖼</button>
+    <button class="shutter" onclick="shutterTap()" aria-label="Capture"></button>
+    <button class="cam-btn" onclick="flipCamera()" aria-label="Flip camera">🔄</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= DATA LAYER (IndexedDB) ================= */
+const DB_NAME='outfitCloset', DB_VER=1;
+let db;
+function openDB(){
+  return new Promise((res,rej)=>{
+    const req=indexedDB.open(DB_NAME,DB_VER);
+    req.onupgradeneeded=e=>{
+      const d=e.target.result;
+      if(!d.objectStoreNames.contains('items')) d.createObjectStore('items',{keyPath:'id'});
+      if(!d.objectStoreNames.contains('outfits')) d.createObjectStore('outfits',{keyPath:'id'});
+      if(!d.objectStoreNames.contains('history')) d.createObjectStore('history',{keyPath:'id'});
+      if(!d.objectStoreNames.contains('settings')) d.createObjectStore('settings',{keyPath:'key'});
+    };
+    req.onsuccess=e=>{db=e.target.result; res(db);};
+    req.onerror=e=>rej(e);
+  });
+}
+function txStore(name,mode='readonly'){ return db.transaction(name,mode).objectStore(name); }
+function idbGetAll(store){ return new Promise((res,rej)=>{ const r=txStore(store).getAll(); r.onsuccess=()=>res(r.result); r.onerror=rej; }); }
+function idbPut(store,val){ return new Promise((res,rej)=>{ const r=txStore(store,'readwrite').put(val); r.onsuccess=()=>res(); r.onerror=rej; }); }
+function idbDelete(store,id){ return new Promise((res,rej)=>{ const r=txStore(store,'readwrite').delete(id); r.onsuccess=()=>res(); r.onerror=rej; }); }
+function idbGet(store,id){ return new Promise((res,rej)=>{ const r=txStore(store).get(id); r.onsuccess=()=>res(r.result); r.onerror=rej; }); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+
+let STATE={items:[], outfits:[], history:[], settings:{theme:'light', structRules:[], freeNotes:''}};
+
+async function loadAll(){
+  STATE.items = await idbGetAll('items');
+  STATE.outfits = await idbGetAll('outfits');
+  STATE.history = await idbGetAll('history');
+  const s = await idbGet('settings','app');
+  if(s) STATE.settings = Object.assign(STATE.settings, s);
+  if(!STATE.settings.defaultsSeeded){
+    STATE.settings.defaultsSeeded = true;
+    STATE.settings.structRules = (STATE.settings.structRules||[]).concat([
+      {id:uid(), a1:'Category:Tops', a2:'fit:Wide', b1:'Category:Bottoms', b2:'material:Denim', action:'avoid', label:"Wide Top + Jeans = DON'T SUGGEST"},
+      {id:uid(), a1:'Category:Tops', a2:'fit:Wide', b1:'Category:Bottoms', b2:'fit:Wide', action:'prefer', label:'Wide Top + Wide Pants = PREFER'}
+    ]);
+    await saveSettings();
+  }
+  applyTheme();
+}
+async function saveSettings(){ await idbPut('settings', Object.assign({key:'app'}, STATE.settings)); }
+
+/* ================= CATEGORY MODEL ================= */
+const CATEGORIES = {
+  Tops:['T-shirt','Polo','Shirt','Overshirt'],
+  Bottoms:['Pants','Jeans','Ripped Jeans','Wide Pants','Linen Pants','Shorts'],
+  Shoes:['Sneakers','Casual Shoes','Formal Shoes'],
+  Accessories:['Watch','Belt','Cap','Sunglasses','Ring'],
+  Other:['Perfume','Bag','Other']
+};
+const SLOT_DEFS = [
+  {key:'top',label:'Top',cat:'Tops'},
+  {key:'bottom',label:'Bottom',cat:'Bottoms'},
+  {key:'shoes',label:'Shoes',cat:'Shoes'},
+  {key:'watch',label:'Watch',cat:'Accessories',sub:'Watch'},
+  {key:'belt',label:'Belt',cat:'Accessories',sub:'Belt'},
+  {key:'cap',label:'Cap',cat:'Accessories',sub:'Cap'},
+  {key:'sunglasses',label:'Sunglasses',cat:'Accessories',sub:'Sunglasses'},
+  {key:'ring',label:'Ring',cat:'Accessories',sub:'Ring'},
+  {key:'perfume',label:'Perfume',cat:'Other',sub:'Perfume'},
+  {key:'bag',label:'Bag',cat:'Other',sub:'Bag'}
+];
+let builderSel = {}; // key -> item id
+let extraSlots = []; // ids of dynamic "extra piece" slots, e.g. 'extra_xxx'
+let extraSlotCategory = {}; // extra slot id -> chosen category name
+function isExtraKey(key){ return typeof key==='string' && key.indexOf('extra_')===0; }
+function getSlotDef(key){
+  if(isExtraKey(key)) return {key, label: extraSlotCategory[key] || 'Extra Piece', cat: extraSlotCategory[key]||null, isExtra:true};
+  return SLOT_DEFS.find(s=>s.key===key);
+}
+function addExtraSlot(){
+  const key='extra_'+uid();
+  extraSlots.push(key);
+  builderOrder.push(key);
+  renderBuilder();
+}
+function removeExtraSlot(key){
+  extraSlots = extraSlots.filter(k=>k!==key);
+  builderOrder = builderOrder.filter(k=>k!==key);
+  delete builderSel[key];
+  delete extraSlotCategory[key];
+  renderBuilder();
+}
+
+/* ================= NAV ================= */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.navbar button').forEach(b=>b.classList.toggle('active', b.dataset.page===name));
+  const titles={home:'My Outfit Closet',closet:'My Closet',builder:'Outfit Builder',outfits:'My Outfits',stats:'Statistics',rules:'My Style Rules',calendar:'Outfit Calendar',packing:'Trip / Packing',backup:'Backup'};
+  document.getElementById('pageTitle').textContent = titles[name]||'My Outfit Closet';
+  if(name==='home') renderHome();
+  if(name==='closet') renderCloset();
+  if(name==='builder') renderBuilder();
+  if(name==='outfits') renderOutfits();
+  if(name==='stats') renderStats();
+  if(name==='rules') renderRules();
+  if(name==='calendar') renderCalendar();
+}
+function openMore(){ document.getElementById('moreMenu').classList.remove('hide'); }
+function closeMore(){ document.getElementById('moreMenu').classList.add('hide'); }
+function toggleTheme(){
+  STATE.settings.theme = STATE.settings.theme==='dark'?'light':'dark';
+  applyTheme(); saveSettings();
+}
+function applyTheme(){
+  const t=STATE.settings.theme||'light';
+  document.body.setAttribute('data-theme', t);
+  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute('content', t==='dark'?'#18160F':'#F6F3EC');
+}
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(window._toastT); window._toastT=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+/* ================= CLOSET ================= */
+let activeClosetCat='All';
+function renderCatTabs(){
+  const wrap=document.getElementById('closetCatTabs');
+  const cats=['All',...Object.keys(CATEGORIES)];
+  wrap.innerHTML = cats.map(c=>`<button class="${c===activeClosetCat?'active':''}" onclick="activeClosetCat='${c}';renderCloset()">${c}</button>`).join('');
+}
+function renderCloset(){
+  renderCatTabs();
+  const q=(document.getElementById('closetSearch').value||'').toLowerCase();
+  const fit=document.getElementById('filterFit').value;
+  const season=document.getElementById('filterSeason').value;
+  const status=document.getElementById('filterStatus').value;
+  const favOnly=document.getElementById('filterFav').checked;
+  let list = STATE.items.filter(it=>{
+    if(activeClosetCat!=='All' && it.category!==activeClosetCat) return false;
+    if(fit && it.fit!==fit) return false;
+    if(season && it.season!==season) return false;
+    if(status && it.status!==status) return false;
+    if(favOnly && !it.favorite) return false;
+    if(q){
+      const hay=[it.code,it.name,it.color,it.fit,it.subcategory,it.season].join(' ').toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  }).sort((a,b)=>a.code.localeCompare(b.code,undefined,{numeric:true}));
+  const box=document.getElementById('closetList');
+  if(list.length===0){ box.innerHTML=`<div class="empty"><div class="big">👕</div>No items yet. Tap + to add your first piece.</div>`; return; }
+  box.innerHTML = list.map(it=>`
+    <div class="item-card" onclick="openItemModal('${it.id}')">
+      ${it.image?`<img class="item-thumb" src="${it.image}">`:`<div class="item-thumb empty-thumb">👕</div>`}
+      <div class="item-info">
+        <div class="item-name">${it.favorite?'❤️ ':''}${it.name||it.code}</div>
+        <div class="item-meta">${colorDot(it.color)}${it.color||''} · ${it.subcategory||it.category} ${it.fit?'· '+it.fit:''}</div>
+        <span class="status-pill status-${it.status==='Available'?'available':it.status==='In Laundry'?'laundry':it.status==='Damaged'?'damaged':'notavailable'}">${it.status}</span>
+      </div>
+      <span class="tagbadge">${it.code}</span>
+    </div>`).join('');
+}
+
+function fillCategorySelect(){
+  const sel=document.getElementById('f_category');
+  sel.innerHTML = Object.keys(CATEGORIES).map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+function fillSubcats(){
+  const cat=document.getElementById('f_category').value;
+  document.getElementById('f_subcategory').innerHTML = (CATEGORIES[cat]||[]).map(s=>`<option value="${s}">${s}</option>`).join('');
+  document.getElementById('beltLoopsRow').classList.toggle('hide', cat!=='Bottoms');
+  autoSuggestBeltLoops();
+}
+function autoSuggestBeltLoops(){
+  const cat=document.getElementById('f_category').value;
+  if(cat!=='Bottoms') return;
+  const sub=document.getElementById('f_subcategory').value;
+  const sel=document.getElementById('f_beltloops');
+  if(editingItemId) return; // don't override an explicit edit
+  sel.value = (sub==='Wide Pants') ? 'no' : 'yes';
+}
+
+let editingItemId=null, previewRotation=0, previewDataUrl=null;
+function openItemModal(id){
+  editingItemId=id||null; previewRotation=0; previewDataUrl=null;
+  fillCategorySelect(); fillSubcats();
+  document.getElementById('codeWarn').classList.add('hide');
+  document.getElementById('itemModalTitle').textContent = id? 'Edit Item':'Add Clothing Item';
+  document.getElementById('itemDeleteRow').classList.toggle('hide', !id);
+  if(id){
+    const it=STATE.items.find(x=>x.id===id);
+    document.getElementById('f_code').value=it.code;
+    document.getElementById('f_name').value=it.name||'';
+    document.getElementById('f_category').value=it.category;
+    fillSubcats();
+    document.getElementById('f_subcategory').value=it.subcategory||'';
+    document.getElementById('f_color').value=it.color||''; syncPalette();
+    document.getElementById('f_fit').value=it.fit||'';
+    document.getElementById('f_material').value=it.material||'';
+    document.getElementById('beltLoopsRow').classList.toggle('hide', it.category!=='Bottoms');
+    document.getElementById('f_beltloops').value = it.hasBeltLoops===false? 'no':'yes';
+    document.getElementById('f_season').value=it.season||'';
+    document.getElementById('f_condition').value=it.condition||'Good';
+    document.getElementById('f_status').value=it.status||'Available';
+    document.getElementById('f_favorite').value=it.favorite?'1':'0';
+    document.getElementById('f_notes').value=it.notes||'';
+    previewDataUrl = it.image||null;
+    if(previewDataUrl){ document.getElementById('imgPickPreview').src=previewDataUrl; document.getElementById('imgPickPreview').classList.remove('hide'); document.getElementById('imgPickPlaceholder').classList.add('hide');}
+    else { document.getElementById('imgPickPreview').classList.add('hide'); document.getElementById('imgPickPlaceholder').classList.remove('hide'); }
+  } else {
+    ['f_code','f_name','f_color','f_notes'].forEach(f=>document.getElementById(f).value=''); syncPalette();
+    document.getElementById('f_fit').value=''; document.getElementById('f_material').value='';
+    document.getElementById('f_beltloops').value='yes'; document.getElementById('beltLoopsRow').classList.add('hide');
+    document.getElementById('f_season').value=''; document.getElementById('f_condition').value='Good';
+    document.getElementById('f_status').value='Available'; document.getElementById('f_favorite').value='0';
+    document.getElementById('imgPickPreview').classList.add('hide'); document.getElementById('imgPickPlaceholder').classList.remove('hide');
+  }
+  document.getElementById('itemModal').classList.remove('hide');
+}
+function closeItemModal(){ document.getElementById('itemModal').classList.add('hide'); }
+
+function handleImgPick(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      const maxW=800; const scale=Math.min(1, maxW/img.width);
+      canvas.width=img.width*scale; canvas.height=img.height*scale;
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      previewDataUrl = canvas.toDataURL('image/jpeg',0.85);
+      document.getElementById('imgPickPreview').src=previewDataUrl;
+      document.getElementById('imgPickPreview').classList.remove('hide');
+      document.getElementById('imgPickPlaceholder').classList.add('hide');
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function rotatePreview(){
+  if(!previewDataUrl) return;
+  const img=new Image();
+  img.onload=()=>{
+    const canvas=document.createElement('canvas');
+    canvas.width=img.height; canvas.height=img.width;
+    const ctx=canvas.getContext('2d');
+    ctx.translate(canvas.width/2,canvas.height/2);
+    ctx.rotate(Math.PI/2);
+    ctx.drawImage(img,-img.width/2,-img.height/2);
+    previewDataUrl=canvas.toDataURL('image/jpeg',0.85);
+    document.getElementById('imgPickPreview').src=previewDataUrl;
+  };
+  img.src=previewDataUrl;
+}
+function removePreviewImg(){
+  previewDataUrl=null;
+  document.getElementById('imgPickPreview').classList.add('hide');
+  document.getElementById('imgPickPlaceholder').classList.remove('hide');
+}
+
+async function saveItem(){
+  const code=document.getElementById('f_code').value.trim();
+  if(!code){ toast('Code is required'); return; }
+  const dup = STATE.items.find(x=>x.code.toLowerCase()===code.toLowerCase() && x.id!==editingItemId);
+  if(dup){ document.getElementById('codeWarn').classList.remove('hide'); return; }
+  document.getElementById('codeWarn').classList.add('hide');
+  const it = editingItemId ? STATE.items.find(x=>x.id===editingItemId) : {id:uid(), wornCount:0, lastWorn:null, createdAt:Date.now()};
+  it.code=code;
+  it.name=document.getElementById('f_name').value.trim();
+  it.category=document.getElementById('f_category').value;
+  it.subcategory=document.getElementById('f_subcategory').value;
+  it.color=document.getElementById('f_color').value.trim();
+  it.fit=document.getElementById('f_fit').value;
+  it.material=document.getElementById('f_material').value;
+  it.hasBeltLoops = it.category==='Bottoms' ? (document.getElementById('f_beltloops').value!=='no') : undefined;
+  it.season=document.getElementById('f_season').value;
+  it.condition=document.getElementById('f_condition').value;
+  it.status=document.getElementById('f_status').value;
+  it.favorite=document.getElementById('f_favorite').value==='1';
+  it.notes=document.getElementById('f_notes').value;
+  it.image=previewDataUrl;
+  await idbPut('items', it);
+  await loadAll();
+  closeItemModal();
+  renderCloset();
+  toast('Saved');
+}
+async function deleteItemConfirm(){
+  if(!editingItemId) return;
+  if(!confirm('Delete this item? This cannot be undone.')) return;
+  await idbDelete('items', editingItemId);
+  await loadAll();
+  closeItemModal();
+  renderCloset();
+  toast('Item deleted');
+}
+
+/* ================= BUILDER ================= */
+let builderOrder = SLOT_DEFS.map(s=>s.key);
+let builderAvailableOnly = true;
+function renderBuilder(){
+  builderSel = builderSel || {};
+  const box=document.getElementById('builderSlots');
+  box.innerHTML = builderOrder.map(key=>{
+    const sd = getSlotDef(key);
+    if(!sd) return '';
+    const selId=builderSel[key];
+    const it = selId ? STATE.items.find(x=>x.id===selId) : null;
+    return `<div class="builder-slot" data-key="${key}">
+      <span class="drag-handle" style="touch-action:none; cursor:grab; color:var(--ink-soft); font-size:16px; padding:0 2px;">⋮⋮</span>
+      <div class="slot-label">${sd.label}</div>
+      ${it? (it.image?`<img class="slot-thumb" src="${it.image}">`:'<div class="slot-thumb"></div>') : ''}
+      <div class="slot-value">${it? (it.code+' · '+(it.name||'')) : '<span class="muted">Not selected</span>'}${it && it.status!=='Available'?` <span class="status-pill status-${it.status==='In Laundry'?'laundry':it.status==='Damaged'?'damaged':'notavailable'}">${it.status}</span>`:''}</div>
+      <button class="btn btn-ghost btn-sm" onclick="pickSlot('${key}')">${it?'Change':'Pick'}</button>
+      ${it?`<button class="btn btn-ghost btn-sm" onclick="builderSel['${key}']=null;renderBuilder()">✕</button>`:''}
+      ${isExtraKey(key)?`<button class="btn btn-ghost btn-sm" onclick="removeExtraSlot('${key}')">🗑</button>`:''}
+    </div>`;
+  }).join('');
+  document.querySelectorAll('#builderSlots .builder-slot').forEach(row=>attachSlotDrag(row));
+  checkCompat();
+}
+let _dragRow=null;
+function attachSlotDrag(row){
+  const handle = row.querySelector('.drag-handle');
+  handle.onpointerdown = e=>{
+    e.preventDefault();
+    _dragRow = row;
+    row.setPointerCapture(e.pointerId);
+    row.style.zIndex=10; row.style.opacity='0.85'; row.style.boxShadow='0 4px 10px rgba(0,0,0,.15)';
+    handle.onpointermove = onSlotDragMove;
+    handle.onpointerup = ()=>onSlotDragEnd(row);
+    handle.onpointercancel = ()=>onSlotDragEnd(row);
+  };
+}
+function onSlotDragMove(e){
+  if(!_dragRow) return;
+  const rows = Array.from(document.querySelectorAll('#builderSlots .builder-slot')).filter(r=>r!==_dragRow);
+  const y = e.clientY;
+  for(const row of rows){
+    const rect=row.getBoundingClientRect();
+    const mid = rect.top + rect.height/2;
+    if(y>=rect.top && y<=rect.bottom){
+      if(y<mid) row.parentNode.insertBefore(_dragRow, row);
+      else row.parentNode.insertBefore(_dragRow, row.nextElementSibling);
+      break;
+    }
+  }
+}
+function onSlotDragEnd(row){
+  if(!_dragRow) return;
+  _dragRow.style.zIndex=''; _dragRow.style.opacity=''; _dragRow.style.boxShadow='';
+  builderOrder = Array.from(document.querySelectorAll('#builderSlots .builder-slot')).map(r=>r.dataset.key);
+  _dragRow=null;
+}
+function pickSlot(key){
+  if(isExtraKey(key) && !extraSlotCategory[key]){ pickExtraCategoryStep(key); return; }
+  const sd=getSlotDef(key);
+  let pool = STATE.items.filter(x=> sd.sub? (x.subcategory===sd.sub) : (x.category===sd.cat) );
+  if(builderAvailableOnly) pool = pool.filter(x=>x.status==='Available');
+  const toggleHtml = `<label class="row" style="font-size:12.5px; margin-bottom:10px;"><input type="checkbox" style="width:auto;" ${builderAvailableOnly?'checked':''} onchange="builderAvailableOnly=this.checked;pickSlot('${key}')"> Available only (hide items in laundry / unavailable / damaged)</label>`;
+  const changeCatHtml = isExtraKey(key)? `<button class="btn btn-ghost btn-sm" style="margin-bottom:10px;" onclick="pickExtraCategoryStep('${key}')">↺ Change category</button>` : '';
+  if(pool.length===0){
+    showPicker('Choose '+sd.label, toggleHtml+changeCatHtml+'<div class="muted">No matching items.</div>');
+    return;
+  }
+  const html = toggleHtml + changeCatHtml + `<div class="piece-pick">` + pool.map(it=>`
+      <div class="p ${builderSel[key]===it.id?'sel':''}" onclick="builderSel['${key}']='${it.id}';renderBuilder();closeMore();">
+        ${it.image?`<img src="${it.image}">`:'<div style="width:68px;height:68px;background:var(--brass-soft);border-radius:8px;"></div>'}
+        <div class="code">${it.code}</div>
+      </div>`).join('') + `</div>`;
+  showPicker('Choose '+sd.label, html);
+}
+function pickExtraCategoryStep(key){
+  const cats=Object.keys(CATEGORIES);
+  const html = `<div class="muted" style="margin-bottom:10px;">What kind of piece is this extra layer?</div><div class="chip-select">` + cats.map(c=>`<button class="chip" onclick="extraSlotCategory['${key}']='${c}';pickSlot('${key}')">${c}</button>`).join('') + `</div>`;
+  showPicker('Choose category', html);
+}
+function showPicker(title, html){
+  const overlay=document.getElementById('moreMenu');
+  overlay.querySelector('.modal').innerHTML = `<div class="modal-handle"></div><div class="modal-title">${title}</div>${html}<button class="btn btn-ghost btn-block" style="margin-top:12px;" onclick="restoreMoreMenu()">Close</button>`;
+  overlay.classList.remove('hide');
+}
+function restoreMoreMenu(){
+  document.getElementById('moreMenu').querySelector('.modal').innerHTML = `<div class="modal-handle"></div>
+    <div class="modal-title">More</div>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:8px;" onclick="closeMore();showPage('rules')">📏 My Style Rules</button>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:8px;" onclick="closeMore();showPage('stats')">📊 Statistics</button>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:8px;" onclick="closeMore();showPage('packing')">🧳 Packing Mode</button>
+    <button class="btn btn-ghost btn-block" onclick="closeMore();showPage('backup')">💾 Backup / Restore</button>`;
+  closeMore();
+}
+function applyQuickCode(){
+  const raw=document.getElementById('quickCodeInput').value.trim();
+  if(!raw) return;
+  const codes = raw.split(/\s+/).map(c=>c.toUpperCase());
+  builderSel={};
+  let unavailable=[];
+  codes.forEach(code=>{
+    const it=STATE.items.find(x=>x.code.toUpperCase()===code);
+    if(!it) return;
+    if(it.status!=='Available') unavailable.push(it.code);
+    let slot = SLOT_DEFS.find(s=>s.sub===it.subcategory) || SLOT_DEFS.find(s=>s.cat===it.category);
+    if(slot) builderSel[slot.key]=it.id;
+  });
+  renderBuilder();
+  if(unavailable.length) toast('Note: '+unavailable.join(', ')+' not marked Available');
+}
+function ruleAttrMatch(item, spec){
+  // spec like "Category:Tops" or "fit:Wide" or "material:Denim"
+  const [k,v]=spec.split(':');
+  if(k==='Category') return item.category===v;
+  if(k==='fit') return item.fit===v;
+  if(k==='material') return item.material===v || (v==='Denim' && (item.subcategory==='Jeans'||item.subcategory==='Ripped Jeans'));
+  return false;
+}
+function checkCompat(){
+  const box=document.getElementById('compatWarnBox');
+  const selectedItems = Object.values(builderSel).filter(Boolean).map(id=>STATE.items.find(x=>x.id===id)).filter(Boolean);
+  let warnings=[];
+  (STATE.settings.structRules||[]).forEach(r=>{
+    if(r.action!=='avoid') return;
+    const hasA = selectedItems.some(it=>ruleAttrMatch(it,r.a1)&&ruleAttrMatch(it,r.a2));
+    const hasB = selectedItems.some(it=>ruleAttrMatch(it,r.b1)&&ruleAttrMatch(it,r.b2));
+    if(hasA && hasB) warnings.push(`This combination conflicts with your style rule: ${r.label}`);
+  });
+  const bottomIt = selectedItems.find(it=>slotFor(it) && slotFor(it).key==='bottom');
+  const beltIt = selectedItems.find(it=>slotFor(it) && slotFor(it).key==='belt');
+  if(bottomIt && beltIt && bottomIt.hasBeltLoops===false){
+    warnings.push(`${bottomIt.code} doesn't have belt loops — the belt (${beltIt.code}) won't have anywhere to attach.`);
+  }
+  if(selectedItems.length>1 && outfitColorScore(selectedItems)<COLOR_RELAX) warnings.push('These colors may not go well together.');
+  box.innerHTML = warnings.length? warnings.map(w=>`<div class="warn-box">⚠️ ${w}</div>`).join('') : '';
+}
+
+async function generateOutfitImage(){
+  const selectedItems = builderOrder.map(key=>builderSel[key]).filter(Boolean).map(id=>STATE.items.find(x=>x.id===id)).filter(Boolean);
+  if(selectedItems.length===0){ toast('Pick at least one piece'); return; }
+  const typed=document.getElementById('builderName').value.trim();
+  const name = typed || autoOutfitName(selectedItems, STATE.outfits.map(o=>o.name));
+  const dataUrl = await drawCollage(selectedItems, name);
+  const ids=selectedItems.map(i=>i.id);
+  const dup=sameSetOutfit(ids);
+  window._lastGenerated = {dataUrl, items:ids, name};
+  document.getElementById('generatedBox').innerHTML = `${dup?`<div class="warn-box">⚠️ You already saved this exact outfit: ${esc(dup.name)}</div>`:''}
+    <img src="${dataUrl}" style="width:100%;border-radius:12px;">
+    <label class="field">Outfit name</label>
+    <div class="row"><input id="genName" value="${esc(name)}"><button class="btn btn-ghost btn-sm" onclick="rerollName('genName')">🔄</button></div>
+    <div class="row" style="margin-top:8px;">
+      <button class="btn btn-primary btn-block" onclick="saveGeneratedOutfit('genName')">💾 Save Outfit</button>
+    </div>`;
+}
+function slotFor(item){
+  let sd = SLOT_DEFS.find(s=>s.sub && s.sub===item.subcategory);
+  if(!sd) sd = SLOT_DEFS.find(s=>!s.sub && s.cat===item.category);
+  return sd || null;
+}
+function slotOrderIndex(item){ const sd=slotFor(item); return sd? SLOT_DEFS.indexOf(sd) : 99; }
+function sortBySlotOrder(items){ return items.slice().sort((a,b)=>slotOrderIndex(a)-slotOrderIndex(b)); }
+
+function loadImg(src){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=src; }); }
+async function drawOutfitCanvas(itemsIn, cols, title, preserveOrder){
+  let entries = itemsIn.map(x=> (x && x.item!==undefined) ? x : {item:x, label:null});
+  if(!preserveOrder) entries = entries.slice().sort((a,b)=>slotOrderIndex(a.item)-slotOrderIndex(b.item));
+  const items = entries;
+  const cell=180, pad=14, headerH=44, rowExtra=46;
+  const rows=Math.ceil(items.length/cols);
+  const W = cols*cell + pad*(cols+1);
+  const H = headerH + rows*(cell+rowExtra) + pad*(rows+1);
+  const canvas=document.createElement('canvas'); canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  const isDark = STATE.settings.theme==='dark';
+  ctx.fillStyle = isDark? '#18160F':'#F6F3EC'; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle = isDark? '#F3EEE2':'#221F1A';
+  ctx.font='bold 22px sans-serif'; ctx.textAlign='center';
+  ctx.fillText(title, W/2, 30);
+  for(let i=0;i<items.length;i++){
+    const it=items[i].item;
+    const labelText = items[i].label || (slotFor(it)? slotFor(it).label.toUpperCase() : it.category.toUpperCase());
+    const col=i%cols, row=Math.floor(i/cols);
+    const x = pad + col*(cell+pad);
+    const y = headerH + pad + row*(cell+rowExtra+pad);
+    ctx.fillStyle = isDark? '#232019':'#FFFFFF';
+    ctx.strokeStyle = isDark? '#3A3527':'#E4DDCF';
+    roundRect(ctx,x,y,cell,cell,10); ctx.fill(); ctx.stroke();
+    if(it.image){
+      const img = await loadImg(it.image);
+      if(img){
+        const s = Math.max(cell/img.width, cell/img.height);
+        const iw=img.width*s, ih=img.height*s;
+        ctx.save();
+        roundRect(ctx,x,y,cell,cell,10); ctx.clip();
+        ctx.drawImage(img, x+(cell-iw)/2, y+(cell-ih)/2, iw, ih);
+        ctx.restore();
+      }
+    } else {
+      ctx.fillStyle='#C79A45'; ctx.font='34px sans-serif'; ctx.fillText('👕', x+cell/2, y+cell/2+12);
+    }
+    ctx.fillStyle = '#C79A45';
+    ctx.font='bold 10.5px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(labelText, x+cell/2, y+cell+16);
+    ctx.fillStyle = isDark? '#F3EEE2':'#221F1A';
+    ctx.font='bold 13px monospace';
+    ctx.fillText(it.code + (it.name? ' · '+it.name.slice(0,14): ''), x+cell/2, y+cell+33);
+  }
+  return canvas.toDataURL('image/png');
+}
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath(); ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+}
+async function saveGeneratedOutfit(inputId){
+  const g=window._lastGenerated;
+  if(!g){ toast('Generate first'); return; }
+  const dup=sameSetOutfit(g.items);
+  if(dup){ toast('Already saved as "'+dup.name+'"'); return; }
+  const items=g.items.map(id=>STATE.items.find(x=>x.id===id)).filter(Boolean);
+  const inp=document.getElementById(inputId||'genName');
+  const name=(inp&&inp.value.trim()) || g.name || autoOutfitName(items, STATE.outfits.map(o=>o.name));
+  const image=await drawCollage(items,name);
+  const outfit = {
+    id:uid(), name, items:g.items, image, rating:0, favorite:false, notes:'', occasion:'Casual',
+    createdAt:Date.now(), lastWorn:null
+  };
+  await idbPut('outfits', outfit);
+  await loadAll();
+  const bn=document.getElementById('builderName'); if(bn) bn.value='';
+  const gb=document.getElementById('generatedBox'); if(gb) gb.innerHTML='';
+  restoreMoreMenu();
+  toast('Saved: '+name);
+  showPage('outfits');
+}
+
+/* ================= MY OUTFITS ================= */
+function setOfCols(n){ STATE.settings.outfitCols=n; saveSettings(); renderOutfits(); }
+function renderOutfits(){
+  const q=(document.getElementById('outfitSearch').value||'').toLowerCase();
+  let list=[...STATE.outfits].sort((a,b)=>b.createdAt-a.createdAt);
+  if(q) list=list.filter(o=> (o.name||'').toLowerCase().includes(q) || (o.occasion||'').toLowerCase().includes(q));
+  const cols=STATE.settings.outfitCols||3;
+  document.querySelectorAll('.of-size button').forEach(b=>b.classList.toggle('active', +b.dataset.c===cols));
+  document.getElementById('ofCount').textContent=list.length+' outfit'+(list.length===1?'':'s');
+  const box=document.getElementById('outfitsList');
+  if(list.length===0){ box.className=''; box.innerHTML=`<div class="empty"><div class="big">✨</div>No outfits saved yet. Build one in the Outfit Builder.</div>`; return; }
+  box.className='of-grid';
+  box.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+  box.innerHTML = list.map(o=>`<div class="of-tile" onclick="openOutfitModal('${o.id}')">
+      <img src="${o.image}" loading="lazy">
+      ${o.favorite?'<span class="fav">❤️</span>':''}
+      <div class="t">${esc(o.name)}</div>
+    </div>`).join('');
+}
+function daysAgoText(ts){
+  const days=Math.floor((Date.now()-ts)/86400000);
+  if(days<=0) return 'Worn today';
+  if(days===1) return 'Last worn yesterday';
+  return `Last worn ${days} days ago`;
+}
+let currentOutfitId=null;
+function openOutfitModal(id){
+  currentOutfitId=id;
+  const o=STATE.outfits.find(x=>x.id===id);
+  document.getElementById('outfitModalTitle').textContent='Outfit';
+  document.getElementById('outfitModalImg').src=o.image;
+  document.getElementById('of_name').value=o.name;
+  document.getElementById('of_occasion').value=o.occasion||'Casual';
+  document.getElementById('of_notes').value=o.notes||'';
+  document.getElementById('of_fav').checked=!!o.favorite;
+  renderStars(o.rating||0);
+  document.getElementById('outfitModal').classList.remove('hide');
+}
+function closeOutfitModal(){ document.getElementById('outfitModal').classList.add('hide'); }
+function renderStars(rating){
+  const box=document.getElementById('of_stars');
+  box.innerHTML='';
+  window._curRating=rating;
+  for(let i=1;i<=5;i++){
+    const s=document.createElement('span');
+    s.textContent='★'; s.className=i<=rating?'on':'';
+    s.onclick=()=>{ window._curRating=i; renderStars(i); };
+    box.appendChild(s);
+  }
+}
+async function saveOutfitDetail(){
+  const o=STATE.outfits.find(x=>x.id===currentOutfitId);
+  o.name=document.getElementById('of_name').value.trim()||o.name;
+  o.occasion=document.getElementById('of_occasion').value;
+  o.notes=document.getElementById('of_notes').value;
+  o.favorite=document.getElementById('of_fav').checked;
+  o.rating=window._curRating||0;
+  await idbPut('outfits', o);
+  await loadAll();
+  closeOutfitModal(); renderOutfits();
+  toast('Saved');
+}
+async function deleteOutfitConfirm(){
+  if(!confirm('Delete this outfit?')) return;
+  await idbDelete('outfits', currentOutfitId);
+  await loadAll();
+  closeOutfitModal(); renderOutfits();
+  toast('Outfit deleted');
+}
+async function duplicateOutfit(){
+  const o=STATE.outfits.find(x=>x.id===currentOutfitId);
+  const copy=Object.assign({}, o, {id:uid(), name:o.name+' (copy)', createdAt:Date.now(), lastWorn:null});
+  await idbPut('outfits', copy);
+  await loadAll();
+  closeOutfitModal(); renderOutfits();
+  toast('Duplicated');
+}
+function exportOutfitImage(){
+  const o=STATE.outfits.find(x=>x.id===currentOutfitId);
+  const a=document.createElement('a'); a.href=o.image; a.download=(o.name||'outfit')+(String(o.image).startsWith('data:image/jpeg')?'.jpg':'.png'); a.click();
+}
+function woreToday(){
+  openWearPhotoPrompt(currentOutfitId);
+}
+function woreTodayDirect(id){
+  openWearPhotoPrompt(id);
+}
+function resizeImageFile(file, maxW){
+  return new Promise(resolve=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{
+        const canvas=document.createElement('canvas');
+        const scale=Math.min(1, maxW/img.width);
+        canvas.width=img.width*scale; canvas.height=img.height*scale;
+        canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',0.85));
+      };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+let _pendingWearOutfit=null, _pendingWearPhoto=null;
+function openWearPhotoPrompt(outfitId){
+  _pendingWearOutfit=outfitId; _pendingWearPhoto=null;
+  const html=`
+    <div class="imgpick" id="wearPhotoBox" onclick="snapForWear()">
+      <div id="wearPhotoPlaceholder">📷<br><span style="font-size:12.5px;">Tap to take a photo of today's look (optional)</span></div>
+      <img id="wearPhotoPreview" class="hide">
+    </div>
+    <div class="row" style="margin-top:8px;"><button class="btn btn-ghost btn-sm" onclick="pickFromGallery(setWearPhoto)">🖼 Gallery</button></div>
+    <div class="row" style="margin-top:12px;">
+      <button class="btn btn-ghost btn-block" onclick="confirmWearToday(false)">Skip</button>
+      <button class="btn btn-primary btn-block" onclick="confirmWearToday(true)">Save</button>
+    </div>`;
+  showPicker('Wore Today', html);
+}
+function snapForWear(){ openCamera({title:"Today's look", key:'outfit', facing:'user', onShot:setWearPhoto}); }
+function setWearPhoto(url){
+  _pendingWearPhoto=url;
+  const prev=document.getElementById('wearPhotoPreview');
+  if(prev){ prev.src=url; prev.classList.remove('hide'); document.getElementById('wearPhotoPlaceholder').classList.add('hide'); }
+}
+async function confirmWearToday(save){
+  const o=STATE.outfits.find(x=>x.id===_pendingWearOutfit);
+  if(!o){ restoreMoreMenu(); return; }
+  await recordWear(o, save?_pendingWearPhoto:null);
+  restoreMoreMenu();
+  closeOutfitModal();
+  renderOutfits();
+}
+async function recordWear(o, photo){
+  o.lastWorn=Date.now();
+  await idbPut('outfits', o);
+  for(const itemId of o.items){
+    const it=STATE.items.find(x=>x.id===itemId);
+    if(it){ it.lastWorn=Date.now(); it.wornCount=(it.wornCount||0)+1; await idbPut('items', it); }
+  }
+  const today=localDate();
+  let hist=STATE.history.filter(h=>h.date===today && !h.outfitId).sort((a,b)=>b.ts-a.ts)[0];
+  if(hist){ hist.outfitId=o.id; hist.items=o.items.slice(); hist.photoOnly=false; if(photo) hist.wornPhoto=photo; hist.ts=Date.now(); }
+  else hist={id:uid(), date:today, outfitId:o.id, items:o.items, ts:Date.now(), wornPhoto:photo||null};
+  await idbPut('history', hist);
+  await loadAll();
+  toast('Marked as worn today');
+  renderHome();
+}
+
+/* ================= HOME ================= */
+function renderHome(){
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString();
+  const todayStr=localDate();
+  const todayHist = STATE.history.filter(h=>h.date===todayStr).sort((a,b)=>b.ts-a.ts)[0];
+  const box=document.getElementById('todayOutfitBox');
+  if(todayHist){
+    const o=todayHist.outfitId?STATE.outfits.find(x=>x.id===todayHist.outfitId):null;
+    const thumb=todayHist.wornPhoto || (o?o.image:null);
+    box.innerHTML=`<div class="row" style="cursor:pointer;" onclick="showDayDetail('${todayStr}')">${thumb?`<img src="${thumb}" style="width:60px;height:80px;border-radius:8px;object-fit:cover;">`:''}<div><b>${o?o.name:'Outfit photo saved ✓'}</b><div class="muted">${o?(o.occasion||''):'Tap to view or link it to a saved outfit'}</div></div></div>`;
+  } else {
+    const pl=getPlan(todayStr), po=pl&&STATE.outfits.find(x=>x.id===pl.outfitId);
+    if(po) box.innerHTML=`<div class="row" style="cursor:pointer;" onclick="showDayDetail('${todayStr}')"><img src="${po.image}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;"><div><b>📌 ${esc(po.name)}</b><div class="muted">${esc(pl.event||'Planned for today')} · tap to wear / change</div></div></div>`;
+    else box.textContent='No outfit logged for today yet.';
+  }
+
+  const recent=[...STATE.items].sort((a,b)=>b.createdAt-a.createdAt).slice(0,8);
+  document.getElementById('recentAdded').innerHTML = recent.length? recent.map(pieceThumb).join('') : '<span class="muted">Nothing yet</span>';
+
+  const most=[...STATE.items].filter(i=>i.wornCount>0).sort((a,b)=>(b.wornCount||0)-(a.wornCount||0)).slice(0,8);
+  document.getElementById('mostWorn').innerHTML = most.length? most.map(pieceThumb).join('') : '<span class="muted">No wear history yet</span>';
+
+  const favs=STATE.outfits.filter(o=>o.favorite).sort((a,b)=>b.createdAt-a.createdAt).slice(0,4);
+  document.getElementById('favOutfits').innerHTML = favs.length? favs.map(o=>`<div class="outfit-card"><img src="${o.image}" onclick="openOutfitModal('${o.id}')"><div class="of-body"><div class="of-title">${o.name}</div></div></div>`).join('') : '<div class="muted">No favorite outfits yet.</div>';
+}
+function pieceThumb(it){
+  return `<div class="p" onclick="openItemModal('${it.id}')">${it.image?`<img src="${it.image}">`:'<div style="width:68px;height:68px;background:var(--brass-soft);border-radius:8px;"></div>'}<div class="code">${it.code}</div></div>`;
+}
+
+/* ================= COLOR ENGINE ================= */
+function normAr(s){ return String(s||'').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه'); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+// [keywords, base color, family]  (English + Arabic)
+const COLOR_DEFS=[
+  [['black','اسود'],'black','neutral'],
+  [['white','off-white','ابيض'],'white','neutral'],
+  [['charcoal','فحمي'],'charcoal','neutral'],
+  [['gray','grey','silver','رمادي','فضي'],'gray','neutral'],
+  [['navy blue','navy','كحلي'],'navy','neutral'],
+  [['denim','jean','jeans','جينز'],'denim','neutral'],
+  [['beige','cream','ecru','بيج','كريمي','سمني'],'beige','earth'],
+  [['tan','sand','camel','جملي','رملي'],'tan','earth'],
+  [['khaki','كاكي'],'khaki','earth'],
+  [['brown','chocolate','بني','شيكولاته'],'brown','earth'],
+  [['olive','زيتي'],'olive','earth'],
+  [['mustard','gold','موستارده','دهبي'],'mustard','earth'],
+  [['sky blue','light blue','dark blue','blue','سماوي','ازرق'],'blue','blue'],
+  [['teal','turquoise','tiffany','تركواز','تيفاني','فيروزي','بترولي'],'teal','blue'],
+  [['dark green','green','emerald','mint','sage','اخضر','زمردي','نعناعي'],'green','green'],
+  [['burgundy','maroon','wine','نبيتي','بوردو'],'burgundy','bold'],
+  [['rust'],'rust','bold'],
+  [['red','احمر'],'red','bold'],
+  [['pink','وردي','بينك'],'pink','bold'],
+  [['purple','violet','lavender','بنفسجي','موف','لافندر'],'purple','bold'],
+  [['orange','برتقالي'],'orange','bold'],
+  [['yellow','اصفر'],'yellow','bold']
+];
+const COLOR_KEYS=(()=>{ const a=[]; COLOR_DEFS.forEach(([ks,base,fam])=>ks.forEach(k=>a.push({k:normAr(k),base,fam}))); return a.sort((x,y)=>y.k.length-x.k.length); })();
+const _ciCache=new Map();
+function colorInfos(str){
+  if(!str) return [];
+  if(_ciCache.has(str)) return _ciCache.get(str);
+  let s=' '+normAr(str)+' '; const out=[];
+  COLOR_KEYS.forEach(({k,base,fam})=>{
+    if(/^[a-z\- ]+$/.test(k)){
+      const re=new RegExp('(^|[^a-z])'+k.replace(/[- ]/g,'[- ]')+'s?(?![a-z])');
+      if(re.test(s)){ if(!out.some(o=>o.base===base)) out.push({base,fam}); s=s.replace(re,' '); }
+    } else if(s.includes(k)){
+      if(!out.some(o=>o.base===base)) out.push({base,fam}); s=s.split(k).join(' ');
+    }
+  });
+  _ciCache.set(str,out);
+  return out;
+}
+const BAD_PAIRS={'black|navy':0.5,'black|brown':0.5};
+function infoScore(a,b){
+  if(a.base===b.base) return a.fam==='bold'?0.8:0.9;
+  const bad=BAD_PAIRS[[a.base,b.base].sort().join('|')]; if(bad) return bad;
+  if(a.fam==='neutral'||b.fam==='neutral') return 1.0;
+  if(a.fam==='bold'&&b.fam==='bold') return 0.25;
+  if(a.fam===b.fam) return 0.9;
+  const has=f=>a.fam===f||b.fam===f;
+  if(has('bold')){
+    const bold=a.fam==='bold'?a:b;
+    if(has('earth')) return ['burgundy','rust'].includes(bold.base)?0.75:0.55;
+    if(has('blue')) return 0.45;
+    if(has('green')) return 0.3;
+  }
+  if(has('earth')&&has('blue')) return 0.8;
+  if(has('earth')&&has('green')) return 0.85;
+  if(has('blue')&&has('green')) return 0.5;
+  return 0.6;
+}
+function itemPairScore(x,y){
+  const A=colorInfos(x.color), B=colorInfos(y.color);
+  if(!A.length||!B.length) return 0.8;
+  let m=1; A.forEach(a=>B.forEach(b=>{ m=Math.min(m,infoScore(a,b)); }));
+  return m;
+}
+function outfitColorScore(items){
+  let m=1;
+  for(let i=0;i<items.length;i++) for(let j=i+1;j<items.length;j++) m=Math.min(m,itemPairScore(items[i],items[j]));
+  const infos=items.flatMap(it=>colorInfos(it.color));
+  const fams=new Set(infos.filter(i=>i.fam!=='neutral').map(i=>i.fam));
+  const bolds=new Set(infos.filter(i=>i.fam==='bold').map(i=>i.base));
+  if(bolds.size>1) m=Math.min(m,0.3);   // never two loud colors
+  if(fams.size>2) m=Math.min(m,0.5);    // max two non-neutral color families
+  return m;
+}
+const COLOR_MIN=0.7, COLOR_RELAX=0.55;
+
+/* ================= COLOR PALETTE (picker) ================= */
+const PALETTE=[
+  ['Black','#111111','أسود'],['White','#FFFFFF','أبيض'],['Gray','#8E8E8E','رمادي'],
+  ['Charcoal','#36454F','فحمي'],['Silver','#C0C0C0','فضي'],['Navy','#1F2A44','كحلي'],
+  ['Denim','#4A6A94','جينز'],['Beige','#D9C7A3','بيج'],['Cream','#F3EAD3','كريمي'],
+  ['Tan','#C8A57A','رملي'],['Khaki','#B5A36A','كاكي'],['Camel','#C19A6B','جملي'],
+  ['Brown','#6B4423','بني'],['Chocolate','#3E2A1E','شيكولاتة'],['Olive','#6B6B2A','زيتي'],
+  ['Mustard','#D4A017','موستردة'],['Light Blue','#9CC3E6','أزرق فاتح'],['Sky Blue','#87CEEB','سماوي'],
+  ['Blue','#2F6FD0','أزرق'],['Teal','#2A8C8C','بترولي'],['Turquoise','#30C5B8','تركواز'],
+  ['Tiffany','#81D8D0','تيفاني'],['Mint','#98E3C0','نعناعي'],['Green','#2E8B57','أخضر'],
+  ['Dark Green','#1E4D2B','أخضر غامق'],['Emerald','#50C878','زمردي'],['Red','#C62828','أحمر'],
+  ['Burgundy','#6D1A2B','نبيتي'],['Rust','#B7410E','صدأ'],['Orange','#F08A24','برتقالي'],
+  ['Yellow','#F2D14A','أصفر'],['Pink','#E88FB0','وردي'],['Purple','#6A3FA0','بنفسجي'],
+  ['Lavender','#B9A2DC','لافندر']
+];
+const BASE_HEX={black:'#111111',white:'#FFFFFF',charcoal:'#36454F',gray:'#8E8E8E',navy:'#1F2A44',denim:'#4A6A94',beige:'#D9C7A3',tan:'#C8A57A',khaki:'#B5A36A',brown:'#6B4423',olive:'#6B6B2A',mustard:'#D4A017',blue:'#2F6FD0',teal:'#2A8C8C',green:'#2E8B57',burgundy:'#6D1A2B',rust:'#B7410E',red:'#C62828',pink:'#E88FB0',purple:'#6A3FA0',orange:'#F08A24',yellow:'#F2D14A'};
+function colorHex(str){
+  if(!str) return null;
+  const p=PALETTE.find(x=>x[0].toLowerCase()===String(str).trim().toLowerCase());
+  if(p) return p[1];
+  const inf=colorInfos(str)[0];
+  return inf? BASE_HEX[inf.base]||null : null;
+}
+function colorDot(str){
+  const h=colorHex(str); if(!h) return '';
+  return `<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${h};border:1px solid rgba(0,0,0,.3);vertical-align:middle;margin:0 4px;"></span>`;
+}
+function syncPalette(){
+  const box=document.getElementById('colorPalette'); if(!box) return;
+  if(!box.innerHTML){
+    box.innerHTML=PALETTE.map(([n,h,ar])=>`<div class="cchip" data-n="${n}" onclick="pickColor('${n}')"><span class="sw" style="background:${h};"></span><span><b>${n}</b><br><small>${ar}</small></span></div>`).join('');
+  }
+  const cur=document.getElementById('f_color').value.trim().toLowerCase();
+  box.querySelectorAll('.cchip').forEach(c=>c.classList.toggle('sel', c.dataset.n.toLowerCase()===cur));
+}
+function pickColor(n){
+  const inp=document.getElementById('f_color');
+  inp.value=(inp.value.trim().toLowerCase()===n.toLowerCase())? '' : n;
+  syncPalette();
+}
+
+/* ================= SUGGEST / QUICK OUTFIT ================= */
+const CORE_KEYS=['top','bottom','shoes'];
+function slotKeyOf(it){ const sd=slotFor(it); return sd?sd.key:null; }
+function isCoreItem(it){ return CORE_KEYS.includes(slotKeyOf(it)); }
+function pickAvailable(cat,sub){
+  return STATE.items.filter(it=> (sub? it.subcategory===sub : it.category===cat) && it.status==='Available');
+}
+function corePool(key){
+  let pool=STATE.items.filter(it=>slotKeyOf(it)===key && it.status==='Available' && it.condition!=='Damaged');
+  if(key==='top'){ const base=pool.filter(it=>it.subcategory!=='Overshirt'); if(base.length) pool=base; } // layers are added by you, not suggested
+  return pool;
+}
+function comboHasConflict(items){
+  return (STATE.settings.structRules||[]).some(r=>{
+    if(r.action!=='avoid') return false;
+    const hasA=items.some(it=>ruleAttrMatch(it,r.a1)&&ruleAttrMatch(it,r.a2));
+    const hasB=items.some(it=>ruleAttrMatch(it,r.b1)&&ruleAttrMatch(it,r.b2));
+    return hasA&&hasB;
+  });
+}
+// a suggestion is a repeat if a saved outfit already contains the same top + bottom + shoes
+function isDuplicateCore(ids){ return STATE.outfits.some(o=>ids.every(id=>(o.items||[]).includes(id))); }
+function sameSetOutfit(ids){ const sig=ids.slice().sort().join(','); return STATE.outfits.find(o=>(o.items||[]).slice().sort().join(',')===sig); }
+function baseW(it,key){
+  let w=1/(1+(it.wornCount||0)*0.4);
+  if(key==='bottom' && it.subcategory==='Jeans') w*=0.3;
+  return w;
+}
+function genCoreCombos({lock={}, extra=[], min=COLOR_MIN, seen=null}={}){
+  const res={list:[], saved:0, seen:0};
+  const pools=CORE_KEYS.map(k=>lock[k]?[lock[k]]:corePool(k));
+  if(pools.some(p=>!p.length)) return res;
+  for(const t of pools[0]) for(const b of pools[1]) for(const s of pools[2]){
+    const items=[t,b,s,...extra];
+    if(comboHasConflict(items)) continue;
+    const cs=outfitColorScore(items);
+    if(cs<min) continue;
+    const ids=[t.id,b.id,s.id]; const sig=ids.slice().sort().join(',');
+    if(isDuplicateCore(ids)){ res.saved++; continue; }
+    if(seen && seen.has(sig)){ res.seen++; continue; }
+    let w=baseW(t,'top')*baseW(b,'bottom')*baseW(s,'shoes');
+    if(t.fit==='Wide' && b.fit==='Wide') w*=2.5;
+    w*=Math.pow(cs,3);
+    res.list.push({items,w,sig});
+  }
+  return res;
+}
+function sampleCombos(list,n){
+  const pool=list.map(c=>Object.assign({},c)); const out=[];
+  while(out.length<n && pool.length){
+    const total=pool.reduce((a,c)=>a+c.w,0); let r=Math.random()*total, idx=pool.length-1;
+    for(let i=0;i<pool.length;i++){ r-=pool[i].w; if(r<=0){ idx=i; break; } }
+    const pick=pool.splice(idx,1)[0]; out.push(pick);
+    pool.forEach(c=>{ if(c.items[0].id===pick.items[0].id) c.w*=0.5; if(c.items[1].id===pick.items[1].id) c.w*=0.7; });
+  }
+  return out;
+}
+function reasonMsg(){
+  switch(window._suggReason){
+    case 'missing': return 'Add at least one available top, bottom and pair of shoes first';
+    case 'allsaved': return 'You already saved every well-matched outfit — add new pieces for more';
+    case 'allseen': return 'No more new suggestions — that was all of them';
+    default: return 'No well-matched combo found with your current colors';
+  }
+}
+// Suggests ONLY the basics (top + bottom + shoes). Accessories are added by you after you accept.
+function buildSuggestion({includeAccessories=false, seen=null}={}){
+  window._suggReason=null; window._suggRelaxed=false;
+  if(!CORE_KEYS.every(k=>corePool(k).length)){ window._suggReason='missing'; return []; }
+  let r=genCoreCombos({min:COLOR_MIN, seen});
+  if(!r.list.length){
+    const r2=genCoreCombos({min:COLOR_RELAX, seen});
+    if(r2.list.length){ r=r2; window._suggRelaxed=true; }
+    else { r.saved=Math.max(r.saved,r2.saved); r.seen=Math.max(r.seen,r2.seen); }
+  }
+  if(!r.list.length){
+    window._suggReason = r.seen>0 ? 'allseen' : (r.saved>0 ? 'allsaved' : 'nomatch');
+    return [];
+  }
+  const pick=sampleCombos(r.list,1)[0];
+  if(seen) seen.add(pick.sig);
+  const items=pick.items.slice();
+  if(includeAccessories){ // only used by Packing Mode
+    const bottom=items.find(i=>slotKeyOf(i)==='bottom');
+    const accSlots=SLOT_DEFS.filter(s=>!CORE_KEYS.includes(s.key)).sort(()=>Math.random()-0.5);
+    for(const sd of accSlots){
+      if(sd.key==='belt' && bottom && bottom.hasBeltLoops===false) continue;
+      const pool=pickAvailable(sd.cat,sd.sub).filter(a=>outfitColorScore([...items,a])>=COLOR_MIN);
+      if(pool.length){ items.push(pool[Math.floor(Math.random()*pool.length)]); break; }
+    }
+  }
+  return items;
+}
+
+/* ---------- naming ---------- */
+function capWords(s){ return s.replace(/\b[a-z]/g,c=>c.toUpperCase()); }
+function primaryColorWord(it){
+  if(!it||!it.color) return '';
+  const s=it.color.trim().split(/[,\/&+]|\band\b/i)[0].trim();
+  return s.length>16? s.slice(0,16):s;
+}
+function autoOutfitName(items, taken){
+  taken=(taken||[]).map(n=>String(n||'').toLowerCase());
+  const get=k=>items.find(i=>slotKeyOf(i)===k);
+  const top=get('top'), bottom=get('bottom'), shoes=get('shoes');
+  let vibes=['Casual','Everyday','Easy','Street'];
+  if(shoes && shoes.subcategory==='Formal Shoes') vibes=['Smart','Classy','Clean'];
+  else if(bottom && bottom.subcategory==='Shorts') vibes=['Summer','Chill','Breezy'];
+  else if(top && bottom && top.fit==='Wide' && bottom.fit==='Wide') vibes=['Relaxed','Oversized','Street'];
+  else if(items.some(i=>i.season==='Winter')) vibes=['Cozy','Layered'];
+  const c1=primaryColorWord(top), c2=primaryColorWord(bottom);
+  let colorPart='';
+  if(c1&&c2&&c1.toLowerCase()!==c2.toLowerCase()) colorPart=capWords(c1)+' & '+capWords(c2);
+  else if(c1||c2) colorPart=capWords(c1||c2);
+  const shuffled=vibes.slice().sort(()=>Math.random()-0.5);
+  for(const v of shuffled){
+    const n=(colorPart+' '+v).trim();
+    if(!taken.includes(n.toLowerCase())) return n;
+  }
+  const base=(colorPart+' '+shuffled[0]).trim();
+  for(let i=2;i<99;i++){ if(!taken.includes((base+' #'+i).toLowerCase())) return base+' #'+i; }
+  return base;
+}
+function rerollName(inputId){
+  const g=window._lastGenerated; const inp=document.getElementById(inputId);
+  if(!g||!inp) return;
+  const items=g.items.map(id=>STATE.items.find(x=>x.id===id)).filter(Boolean);
+  inp.value=autoOutfitName(items, STATE.outfits.map(o=>o.name).concat([inp.value]));
+}
+
+/* ---------- merged collage image ---------- */
+async function drawCollage(itemsIn, name){
+  const isDark=STATE.settings.theme==='dark';
+  const C={bg:isDark?'#18160F':'#F6F3EC', card:isDark?'#232019':'#FFFFFF', line:isDark?'#3A3527':'#E4DDCF', ink:isDark?'#F3EEE2':'#221F1A', soft:isDark?'#B7AD98':'#665E52', brass:'#C79A45'};
+  const items=sortBySlotOrder(itemsIn);
+  const firstOf=k=>items.find(i=>slotKeyOf(i)===k);
+  const top=firstOf('top'), bottom=firstOf('bottom'), shoes=firstOf('shoes');
+  const used=new Set([top,bottom,shoes].filter(Boolean));
+  const W=720, pad=18, gap=6, headerH=92, footerH=52, innerW=W-pad*2;
+  let bodyH=640; const tiles=[];
+  if(top&&bottom){
+    const rest=items.filter(i=>!used.has(i));
+    const hasRight=!!shoes||rest.length>0;
+    const L=hasRight? Math.round((innerW-gap)*0.58) : innerW;
+    const R=innerW-L-gap;
+    const hh=(bodyH-gap)/2;
+    tiles.push({item:top,x:pad,y:headerH,w:L,h:hh},{item:bottom,x:pad,y:headerH+hh+gap,w:L,h:hh});
+    if(hasRight){
+      const rx=pad+L+gap; let ry=headerH, rh=bodyH;
+      if(shoes){
+        const sh=rest.length? Math.round(bodyH*0.46) : bodyH;
+        tiles.push({item:shoes,x:rx,y:headerH,w:R,h:sh});
+        ry=headerH+sh+gap; rh=bodyH-sh-gap;
+      }
+      if(rest.length){
+        const n=rest.length, cols=n===1?1:2, rows=Math.ceil(n/cols);
+        const th=(rh-(rows-1)*gap)/rows, tw=(R-(cols-1)*gap)/cols;
+        rest.forEach((it,i)=>{
+          const r=Math.floor(i/cols), c=i%cols, lastOdd=(cols===2 && i===n-1 && n%2===1);
+          tiles.push({item:it, x:rx+(lastOdd?0:c*(tw+gap)), y:ry+r*(th+gap), w:lastOdd?R:tw, h:th});
+        });
+      }
+    }
+  } else {
+    const n=items.length, cols=n<=1?1:(n<=4?2:3), rows=Math.ceil(n/cols);
+    const tw=(innerW-(cols-1)*gap)/cols, th=Math.round(tw*1.1);
+    bodyH=rows*th+(rows-1)*gap;
+    items.forEach((it,i)=>{ const r=Math.floor(i/cols), c=i%cols; tiles.push({item:it,x:pad+c*(tw+gap),y:headerH+r*(th+gap),w:tw,h:th}); });
+  }
+  const H=headerH+bodyH+footerH;
+  const canvas=document.createElement('canvas'); canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle=C.bg; ctx.fillRect(0,0,W,H);
+  // title (the outfit name)
+  ctx.fillStyle=C.ink; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  let fs=32; ctx.font='bold '+fs+'px sans-serif';
+  while(ctx.measureText(name).width>innerW && fs>16){ fs-=2; ctx.font='bold '+fs+'px sans-serif'; }
+  ctx.fillText(name,W/2,52);
+  ctx.fillStyle=C.brass; ctx.fillRect(W/2-24,68,48,3);
+  // tiles
+  for(const t of tiles){
+    const it=t.item;
+    ctx.save();
+    roundRect(ctx,t.x,t.y,t.w,t.h,14); ctx.clip();
+    ctx.fillStyle=C.card; ctx.fillRect(t.x,t.y,t.w,t.h);
+    const img=it.image? await loadImg(it.image) : null;
+    if(img){
+      const s=Math.max(t.w/img.width,t.h/img.height), iw=img.width*s, ih=img.height*s;
+      ctx.drawImage(img,t.x+(t.w-iw)/2,t.y+(t.h-ih)/2,iw,ih);
+    } else {
+      ctx.fillStyle='#F1E2BC'; ctx.fillRect(t.x,t.y,t.w,t.h);
+      ctx.fillStyle=C.brass; ctx.font='40px sans-serif'; ctx.textAlign='center'; ctx.fillText('👕',t.x+t.w/2,t.y+t.h/2+14);
+    }
+    ctx.restore();
+    // small label chip
+    const sd=slotFor(it); const label=(sd?sd.label:it.category)+' · '+it.code;
+    ctx.font='bold 12px sans-serif'; ctx.textAlign='left';
+    const tw=ctx.measureText(label).width+16;
+    ctx.fillStyle='rgba(20,17,10,.62)'; roundRect(ctx,t.x+8,t.y+t.h-30,tw,22,11); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.fillText(label,t.x+16,t.y+t.h-14);
+  }
+  // footer codes
+  const codes=items.map(i=>i.code).join('  +  ');
+  ctx.fillStyle=C.soft; ctx.textAlign='center';
+  let ff=15; ctx.font='bold '+ff+'px monospace';
+  while(ctx.measureText(codes).width>innerW && ff>9){ ff-=1; ctx.font='bold '+ff+'px monospace'; }
+  ctx.fillText(codes,W/2,headerH+bodyH+32);
+  return canvas.toDataURL('image/jpeg',0.9);
+}
+
+/* ---------- Quick / Suggest ---------- */
+let _seenSigs=new Set();
+async function quickOutfit(shuffle){
+  if(shuffle!==true) _seenSigs=new Set();
+  const items=buildSuggestion({seen:_seenSigs});
+  if(!items.length){ toast(reasonMsg()); return; }
+  if(window._suggRelaxed) toast('Closest color match available');
+  const name=autoOutfitName(items, STATE.outfits.map(o=>o.name));
+  const dataUrl=await drawCollage(items,name);
+  window._cur={items,name};
+  const html=`<img src="${dataUrl}" style="width:100%;border-radius:12px;">
+    <div class="muted" style="margin-top:8px;text-align:center;">Top + Bottom + Shoes — you pick the accessories next.</div>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn btn-brass btn-block" onclick="quickOutfit(true)">🔀 Shuffle</button>
+      <button class="btn btn-primary btn-block" onclick="openAccessoryStep()">✅ Accept</button>
+    </div>`;
+  window._backPicker={title:'Suggested Outfit', html};
+  showPicker('Suggested Outfit', html);
+}
+async function suggestOutfit(){ await quickOutfit(); }
+
+/* ---------- accessory step (after you accept) ---------- */
+function curCoreItems(){ return window._cur.items.filter(isCoreItem); }
+function openAccessoryStep(){
+  window._acc={}; window._keep=[];
+  window._cur.items.forEach(it=>{
+    if(isCoreItem(it)) return;
+    const k=slotKeyOf(it);
+    if(k && !window._acc[k]) window._acc[k]=it.id; else window._keep.push(it);
+  });
+  renderAccessoryStep();
+}
+function renderAccessoryStep(){
+  const core=curCoreItems();
+  const bottom=core.find(i=>slotKeyOf(i)==='bottom');
+  let sections='';
+  SLOT_DEFS.filter(s=>!CORE_KEYS.includes(s.key)).forEach(sd=>{
+    if(sd.key==='belt' && bottom && bottom.hasBeltLoops===false) return;
+    const pool=pickAvailable(sd.cat,sd.sub).map(it=>({it, ok:outfitColorScore([...core,it])>=COLOR_MIN})).sort((a,b)=>b.ok-a.ok);
+    if(!pool.length) return;
+    sections+=`<div class="section-title" style="margin:12px 0 6px;">${sd.label}</div><div class="piece-pick">`+pool.map(({it,ok})=>`
+      <div class="p ${window._acc[sd.key]===it.id?'sel':''}" style="${ok?'':'opacity:.55;'}" onclick="toggleAcc('${sd.key}','${it.id}',this)">
+        ${it.image?`<img src="${it.image}">`:'<div style="width:68px;height:68px;background:var(--brass-soft);border-radius:8px;"></div>'}
+        <div class="code">${esc(it.code)}${ok?'':' ⚠️'}</div>
+      </div>`).join('')+`</div>`;
+  });
+  const html=`<div class="muted">Like it? Add a watch or any accessory you want (optional). ⚠️ = may clash with the outfit colors.</div>
+    ${sections||'<div class="muted" style="margin-top:10px;">No accessories in your closet yet.</div>'}
+    <div class="row" style="margin-top:14px;">
+      <button class="btn btn-ghost btn-block" onclick="openFinalStep(true)">Skip</button>
+      <button class="btn btn-primary btn-block" onclick="openFinalStep(false)">Next ▶</button>
+    </div>
+    ${window._backPicker?`<button class="btn btn-ghost btn-sm btn-block" style="margin-top:8px;" onclick="showPicker(window._backPicker.title, window._backPicker.html)">◀ Back to suggestion</button>`:''}`;
+  showPicker('Add accessories', html);
+}
+function toggleAcc(key,id,el){
+  if(window._acc[key]===id) delete window._acc[key]; else window._acc[key]=id;
+  el.parentNode.querySelectorAll('.p').forEach(p=>p.classList.remove('sel'));
+  if(window._acc[key]) el.classList.add('sel');
+}
+async function openFinalStep(skip){
+  if(skip) window._acc={};
+  const acc=Object.values(window._acc).map(id=>STATE.items.find(x=>x.id===id)).filter(Boolean);
+  const items=sortBySlotOrder([...curCoreItems(), ...window._keep, ...acc]);
+  const name=autoOutfitName(items, STATE.outfits.map(o=>o.name));
+  const dataUrl=await drawCollage(items,name);
+  window._lastGenerated={dataUrl, items:items.map(i=>i.id), name};
+  showPicker('Name & Save', `<img src="${dataUrl}" style="width:100%;border-radius:12px;">
+    <label class="field">Outfit name</label>
+    <div class="row"><input id="genNameM" value="${esc(name)}"><button class="btn btn-ghost btn-sm" onclick="rerollName('genNameM')">🔄</button></div>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn btn-ghost btn-block" onclick="renderAccessoryStep()">◀ Back</button>
+      <button class="btn btn-primary btn-block" onclick="saveGeneratedOutfit('genNameM')">💾 Save</button>
+    </div>`);
+}
+
+/* ---------- Generate 5 (builder) ---------- */
+async function generateMultipleOutfits(){
+  const lockedKeys=Object.keys(builderSel).filter(k=>builderSel[k]);
+  if(lockedKeys.length===0){ toast('Pick at least one piece first (e.g. a Top)'); return; }
+  const lock={}, extra=[];
+  lockedKeys.forEach(k=>{
+    const it=STATE.items.find(x=>x.id===builderSel[k]); if(!it) return;
+    if(CORE_KEYS.includes(k)) lock[k]=it; else extra.push(it);
+  });
+  let r=genCoreCombos({lock,extra,min:COLOR_MIN}), relaxed=false;
+  if(!r.list.length){
+    const r2=genCoreCombos({lock,extra,min:COLOR_RELAX});
+    if(r2.list.length){ r=r2; relaxed=true; } else { r.saved=Math.max(r.saved,r2.saved); }
+  }
+  if(!r.list.length){
+    toast(r.saved>0 ? 'All matching outfits with these pieces are already saved' : 'No well-matched outfit found — try other pieces or add more items');
+    return;
+  }
+  const picks=sampleCombos(r.list,5);
+  const taken=STATE.outfits.map(o=>o.name);
+  const results=picks.map(p=>{ const name=autoOutfitName(p.items,taken); taken.push(name); return {items:p.items,name}; });
+  if(relaxed) toast('Few perfect color matches — showing the closest');
+  await showMultiResults(results);
+}
+async function showMultiResults(results){
+  let html='<div style="max-height:62vh;overflow-y:auto;">';
+  for(let i=0;i<results.length;i++){
+    const items=sortBySlotOrder(results[i].items);
+    const dataUrl=await drawCollage(items,results[i].name);
+    html+=`<div class="card"><div style="font-weight:700;margin-bottom:6px;">${esc(results[i].name)}</div><img src="${dataUrl}" style="width:100%;border-radius:10px;"><button class="btn btn-primary btn-sm btn-block" style="margin-top:8px;" onclick="acceptMulti(${i})">✅ Accept</button></div>`;
+  }
+  html+='</div>';
+  window._multiResults=results;
+  window._backPicker={title:'5 Outfit Ideas', html};
+  showPicker('5 Outfit Ideas', html);
+}
+function acceptMulti(i){
+  window._cur={items:window._multiResults[i].items, name:window._multiResults[i].name};
+  openAccessoryStep();
+}
+
+/* ================= STATS ================= */
+function renderStats(){
+  const totals = {Tops:0,Bottoms:0,Shoes:0,Accessories:0,Other:0};
+  STATE.items.forEach(i=>{ totals[i.category]=(totals[i.category]||0)+1; });
+  document.getElementById('statBoxes').innerHTML = `
+    <div class="stat-box"><div class="n">${STATE.items.length}</div><div class="l">Total Clothes</div></div>
+    <div class="stat-box"><div class="n">${totals.Tops||0}</div><div class="l">Tops</div></div>
+    <div class="stat-box"><div class="n">${totals.Bottoms||0}</div><div class="l">Pants</div></div>
+    <div class="stat-box"><div class="n">${totals.Shoes||0}</div><div class="l">Shoes</div></div>
+    <div class="stat-box"><div class="n">${STATE.items.filter(i=>i.subcategory==='Watch').length}</div><div class="l">Watches</div></div>
+    <div class="stat-box"><div class="n">${totals.Accessories||0}</div><div class="l">Accessories</div></div>`;
+  const worn=[...STATE.items].filter(i=>i.wornCount>0).sort((a,b)=>(b.wornCount||0)-(a.wornCount||0));
+  document.getElementById('statMostWorn').textContent = worn[0]? `${worn[0].code} · ${worn[0].name} (${worn[0].wornCount}x)` : 'No data yet';
+  const least=[...STATE.items].sort((a,b)=>(a.wornCount||0)-(b.wornCount||0));
+  document.getElementById('statLeastWorn').textContent = least[0]? `${least[0].code} · ${least[0].name} (${least[0].wornCount||0}x)` : 'No data yet';
+  const favOutfit=[...STATE.outfits].filter(o=>o.favorite).sort((a,b)=>(b.rating||0)-(a.rating||0))[0];
+  document.getElementById('statFavOutfit').textContent = favOutfit? favOutfit.name : 'No favorites yet';
+  const colorCount={};
+  STATE.items.forEach(i=>{ if(i.color){ colorCount[i.color]=(colorCount[i.color]||0)+(i.wornCount||0)+1; } });
+  const topColor=Object.entries(colorCount).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('statColor').textContent = topColor? topColor[0] : 'No data yet';
+  const shoeCount = STATE.items.filter(i=>i.category==='Shoes').sort((a,b)=>(b.wornCount||0)-(a.wornCount||0))[0];
+  document.getElementById('statShoes').textContent = shoeCount? `${shoeCount.code} · ${shoeCount.name}` : 'No data yet';
+}
+
+/* ================= RULES ================= */
+function addStructRule(){
+  const a1=document.getElementById('ruleA_cat').value, a2=document.getElementById('ruleA_attr').value;
+  const b1=document.getElementById('ruleB_cat').value, b2=document.getElementById('ruleB_attr').value;
+  const action=document.getElementById('ruleAction').value;
+  const label = `${a1.split(':')[1]}(${a2.split(':')[1]}) + ${b1.split(':')[1]}(${b2.split(':')[1]}) = ${action==='avoid'?"DON'T SUGGEST":'PREFER'}`;
+  STATE.settings.structRules = STATE.settings.structRules||[];
+  STATE.settings.structRules.push({id:uid(),a1,a2,b1,b2,action,label});
+  saveSettings(); renderRules();
+}
+function removeStructRule(id){
+  STATE.settings.structRules = (STATE.settings.structRules||[]).filter(r=>r.id!==id);
+  saveSettings(); renderRules();
+}
+function renderRules(){
+  const list=STATE.settings.structRules||[];
+  document.getElementById('structRulesList').innerHTML = list.length? list.map(r=>`<div class="rule-row"><span>${r.label}</span><button class="del" onclick="removeStructRule('${r.id}')">✕</button></div>`).join('') : '<div class="muted" style="margin-bottom:10px;">No structured rules yet.</div>';
+  document.getElementById('freeNotes').value = STATE.settings.freeNotes||'';
+}
+function saveFreeNotes(){
+  STATE.settings.freeNotes = document.getElementById('freeNotes').value;
+  saveSettings(); toast('Notes saved');
+}
+
+/* ================= CALENDAR ================= */
+/* ================= CALENDAR ================= */
+let calDate=new Date();
+function calShift(n){ calDate.setDate(1); calDate.setMonth(calDate.getMonth()+n); renderCalendar(); }
+function histForDate(ds){ return STATE.history.filter(h=>h.date===ds).sort((a,b)=>b.ts-a.ts)[0]; }
+function refreshViews(){ renderHome(); renderCalendar(); }
+function fmtDay(ds){ return new Date(ds+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'}); }
+function daysBetween(a,b){ return Math.round((new Date(a+'T12:00:00')-new Date(b+'T12:00:00'))/86400000); }
+
+/* ---- plans (stored in settings so they are included in Backup) ---- */
+function plansObj(){ return STATE.settings.plans || (STATE.settings.plans={}); }
+function getPlan(ds){ const p=plansObj()[ds]; if(!p) return null; return STATE.outfits.some(o=>o.id===p.outfitId)? p : null; }
+async function setPlan(ds,oid,ev){ plansObj()[ds]={outfitId:oid, event:(ev||'').trim()}; await saveSettings(); }
+async function clearPlan(ds){ delete plansObj()[ds]; await saveSettings(); }
+async function setRepeatGap(v){ STATE.settings.repeatGap=parseInt(v)||0; await saveSettings(); toast(STATE.settings.repeatGap? 'Avoiding repeats within '+STATE.settings.repeatGap+' days':'Repeat check off'); }
+
+/* ---- repeat logic ---- */
+function repeatInfo(oid, ds, extra){
+  const gap=STATE.settings.repeatGap||0; if(!gap) return null;
+  const skip=new Set([ds]); const used=[];
+  (extra||[]).forEach(e=>{ skip.add(e.ds); if(e.oid===oid) used.push(e.ds); });
+  STATE.history.forEach(h=>{ if(h.outfitId===oid && !skip.has(h.date)) used.push(h.date); });
+  Object.keys(plansObj()).forEach(d=>{ const p=plansObj()[d]; if(p.outfitId===oid && !skip.has(d)) used.push(d); });
+  let best=null;
+  used.forEach(d=>{ const n=Math.abs(daysBetween(d,ds)); if(n<gap && (!best||n<best.n)) best={n,d,before:daysBetween(ds,d)>0}; });
+  return best;
+}
+function repeatText(r){ return r.n===0? 'Already used that day' : (r.before? `Worn/planned ${r.n}d before` : `Planned ${r.n}d after`); }
+function lastWornDays(oid){
+  const today=localDate(); let best=null;
+  STATE.history.forEach(h=>{ if(h.outfitId===oid && h.date<=today){ const n=daysBetween(today,h.date); if(best===null||n<best) best=n; } });
+  return best===null? 9999 : best;
+}
+function lastWornLabel(oid){ const n=lastWornDays(oid); return n===9999?'Never worn': n===0?'Worn today': `Worn ${n}d ago`; }
+function outfitWearable(o){ return o.items.every(id=>{ const it=STATE.items.find(x=>x.id===id); return it && it.status==='Available'; }); }
+function outfitUnavailPieces(o){ return o.items.map(id=>STATE.items.find(x=>x.id===id)).filter(it=>it && it.status!=='Available'); }
+
+/* ---- calendar grid ---- */
+function renderCalendar(){
+  document.getElementById('calLabel').textContent = calDate.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+  const rg=document.getElementById('repeatGapSel'); if(rg) rg.value=String(STATE.settings.repeatGap||0);
+  const y=calDate.getFullYear(), m=calDate.getMonth();
+  const startDay=new Date(y,m,1).getDay();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const todayStr=localDate();
+  let cells=[];
+  for(let i=0;i<7;i++) cells.push(`<div class="wd">${new Date(2023,0,1+i).toLocaleDateString(undefined,{weekday:'narrow'})}</div>`);
+  for(let i=0;i<startDay;i++) cells.push('<div></div>');
+  for(let d=1; d<=daysInMonth; d++){
+    const dateStr = localDate(new Date(y,m,d));
+    const hist = histForDate(dateStr);
+    let thumb=null, planned=false, ev='';
+    if(hist){
+      const o=hist.outfitId?STATE.outfits.find(x=>x.id===hist.outfitId):null;
+      thumb = hist.wornPhoto || (o?o.image:null);
+    }
+    const plan=getPlan(dateStr);
+    if(plan){ ev=plan.event||''; if(!thumb){ const po=STATE.outfits.find(x=>x.id===plan.outfitId); thumb=po.image; planned=true; } }
+    const img = thumb ? `<img src="${thumb}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;${planned?'opacity:.7;':''}">` : '';
+    const badge = plan ? `<span class="pb">${ev?'⭐':'📌'}</span>` : '';
+    cells.push(`<div class="cal-cell ${hist?'has-outfit':''} ${thumb?'has-img':''} ${planned?'planned':''} ${dateStr===todayStr?'today':''}" onclick="showDayDetail('${dateStr}')">${img}<div class="dnum">${d}</div>${badge}</div>`);
+  }
+  document.getElementById('calGrid').innerHTML = cells.join('');
+  renderCalStrips();
+}
+function renderCalStrips(){
+  const today=localDate();
+  const up=Object.keys(plansObj()).filter(d=>d>=today && getPlan(d)).sort().slice(0,10);
+  document.getElementById('calUpcoming').innerHTML = up.length? up.map(d=>{
+    const p=getPlan(d), o=STATE.outfits.find(x=>x.id===p.outfitId);
+    return `<div class="s" onclick="showDayDetail('${d}')"><img src="${o.image}"><div><b>${fmtDay(d)}</b></div><div class="muted" style="font-size:10.5px;">${esc(p.event||o.name)}</div></div>`;
+  }).join('') : '<span class="muted">Nothing planned yet — tap a day or use “Plan week”.</span>';
+  const worn=STATE.history.filter(h=>h.date<=today && (h.outfitId||h.wornPhoto)).sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts).slice(0,12);
+  document.getElementById('calWorn').innerHTML = worn.length? worn.map(h=>{
+    const o=h.outfitId?STATE.outfits.find(x=>x.id===h.outfitId):null;
+    const im=h.wornPhoto||(o&&o.image);
+    return `<div class="s" onclick="showDayDetail('${h.date}')">${im?`<img src="${im}">`:'<div style="width:76px;height:76px;border-radius:8px;background:var(--brass-soft);"></div>'}<div><b>${fmtDay(h.date)}</b></div><div class="muted" style="font-size:10.5px;">${o?esc(o.name):'Photo'}</div></div>`;
+  }).join('') : '<span class="muted">No wear history yet.</span>';
+}
+async function addPhotoLog(ds, url){
+  let h=histForDate(ds); const had=!!(h && h.wornPhoto);
+  if(h){ h.wornPhoto=url; }
+  else h={id:uid(), date:ds, outfitId:null, items:[], ts:Date.now(), wornPhoto:url, photoOnly:true};
+  await idbPut('history', h);
+  await loadAll();
+  refreshViews();
+  toast(had ? 'Photo replaced ✓' : (ds===localDate() ? "Saved to today ✓" : 'Saved ✓'));
+}
+function quickSnapToday(){ snapDay(localDate()); }
+function snapDay(ds){
+  restoreMoreMenu();
+  openCamera({title: ds===localDate() ? "Today's outfit" : ds, key:'outfit', facing:'user', onShot:u=>addPhotoLog(ds,u)});
+}
+function galleryDay(ds){ restoreMoreMenu(); pickFromGallery(u=>addPhotoLog(ds,u)); }
+
+/* ---- day detail ---- */
+function showDayDetail(ds){
+  const hist=histForDate(ds);
+  const o=(hist&&hist.outfitId)?STATE.outfits.find(x=>x.id===hist.outfitId):null;
+  const photo=hist&&hist.wornPhoto;
+  const today=localDate();
+  const plan=getPlan(ds), po=plan&&STATE.outfits.find(x=>x.id===plan.outfitId);
+  const nice=new Date(ds+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+  let planHtml='';
+  if(po){
+    const miss=outfitUnavailPieces(po), rep=repeatInfo(po.id,ds);
+    planHtml=`<div class="card" style="margin-bottom:10px;">
+      <div class="muted" style="margin-bottom:6px;">📌 Planned${plan.event?' · <b>'+esc(plan.event)+'</b>':''}</div>
+      <div class="row"><img src="${po.image}" style="width:56px;height:56px;border-radius:8px;object-fit:cover;"><div><b>${esc(po.name)}</b>
+        ${rep?`<div class="muted" style="color:var(--danger);">⚠️ ${repeatText(rep)}</div>`:''}
+        ${miss.length?`<div class="muted" style="color:var(--danger);">⚠️ ${miss.map(i=>esc(i.code)).join(', ')} not available</div>`:''}</div></div>
+      <div class="grid2" style="margin-top:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="planDay('${ds}')">Change</button>
+        <button class="btn btn-danger btn-sm" onclick="removePlan('${ds}')">Remove plan</button>
+      </div>
+      ${(ds<=today && !o)?`<button class="btn btn-brass btn-block" style="margin-top:8px;" onclick="markPlanWorn('${ds}')">✅ I wore it</button>`:''}
+    </div>`;
+  } else {
+    planHtml=`<button class="btn btn-ghost btn-block" style="margin-bottom:10px;" onclick="planDay('${ds}')">📌 Plan an outfit${ds<today?' (for the record)':''}</button>`;
+    if(ds<=today && !o && STATE.outfits.length) planHtml+=`<button class="btn btn-ghost btn-block" style="margin-bottom:10px;" onclick="logWornOutfit('${ds}')">👕 Log what I wore</button>`;
+  }
+  const html=`
+    ${photo?`<img src="${photo}" style="width:100%;border-radius:12px;margin-bottom:10px;">`:''}
+    <div class="muted" style="margin-bottom:8px;">${nice}</div>
+    ${o?`<div class="row" style="margin-bottom:10px;"><img src="${o.image}" style="width:56px;height:56px;border-radius:8px;object-fit:cover;"><div><b>${esc(o.name)}</b><div class="muted">Worn · ${esc(o.occasion||'')}</div></div></div>`
+       : ''}
+    ${(!hist&&!po)?`<div class="muted" style="margin-bottom:10px;">Nothing logged or planned for this day.</div>`:''}
+    ${planHtml}
+    <div class="grid2">
+      <button class="btn btn-primary btn-block" onclick="snapDay('${ds}')">📷 ${photo?'Retake':'Take photo'}</button>
+      <button class="btn btn-ghost btn-block" onclick="galleryDay('${ds}')">🖼 Gallery</button>
+    </div>
+    ${(hist&&!o&&STATE.outfits.length)?`<button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="linkOutfitPicker('${ds}')">🔗 Link to a saved outfit</button>`:''}
+    ${o?`<button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="restoreMoreMenu();openOutfitModal('${o.id}');">View Outfit</button>`:''}
+    ${hist?`<button class="btn btn-danger btn-block" style="margin-top:8px;" onclick="removeDayEntry('${ds}')">Remove this day's log</button>`:''}`;
+  showPicker('Outfit log', html);
+}
+
+/* ---- outfit picker (with repeat warnings) ---- */
+function openOutfitPicker(opts){ window._opk=Object.assign({occ:'All'},opts); renderOutfitPicker(); }
+function setOpkOcc(i){ window._opk.occ=window._opkOccs[i]; renderOutfitPicker(); }
+function renderOutfitPicker(){
+  const k=window._opk;
+  if(!STATE.outfits.length){ showPicker(k.title,'<div class="muted">No saved outfits yet — build one in the Outfit Builder first.</div>'); return; }
+  const occs=['All',...new Set(STATE.outfits.map(o=>o.occasion).filter(Boolean))];
+  window._opkOccs=occs;
+  const extra=k.extra?k.extra():null;
+  const info=STATE.outfits.filter(o=>k.occ==='All'||o.occasion===k.occ)
+    .map(o=>({o, rep:repeatInfo(o.id,k.ds,extra), last:lastWornDays(o.id)}))
+    .sort((a,b)=>(!!a.rep-!!b.rep)||(b.last-a.last));
+  const evHtml=k.withEvent?`<label class="field" style="margin-top:0;">Event / occasion (optional)</label>
+    <input id="opkEvent" list="eventList" placeholder="e.g. Wedding, Interview, Trip" value="${esc(window._planEvent||'')}" oninput="window._planEvent=this.value">
+    <datalist id="eventList"><option>Wedding</option><option>Interview</option><option>Work</option><option>Date</option><option>Party</option><option>Trip</option><option>Eid</option><option>Meeting</option></datalist>`:'';
+  const chips=occs.length>2?`<div class="chip-select" style="margin:10px 0;">`+occs.map((c,i)=>`<button class="chip ${c===k.occ?'active':''}" onclick="setOpkOcc(${i})">${esc(c)}</button>`).join('')+`</div>`:'';
+  const grid=`<div class="grid3" style="margin-top:10px;max-height:50dvh;overflow:auto;">`+info.map(({o,rep})=>`
+    <div onclick="pickOutfitFromList('${o.id}')" style="cursor:pointer;${rep?'opacity:.55;':''}">
+      <img src="${o.image}" style="width:100%;aspect-ratio:1;object-fit:contain;background:var(--brass-soft);border-radius:8px;">
+      <div style="font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(o.name)}</div>
+      <div class="muted" style="font-size:10.5px;${rep?'color:var(--danger);':''}">${rep?'⚠️ '+repeatText(rep):lastWornLabel(o.id)}</div>
+    </div>`).join('')+`</div>`;
+  showPicker(k.title, evHtml+chips+grid);
+}
+function pickOutfitFromList(oid){
+  const k=window._opk;
+  const rep=repeatInfo(oid,k.ds,k.extra?k.extra():null);
+  if(rep && !confirm(`${repeatText(rep)} (limit: ${STATE.settings.repeatGap} days). Use it anyway?`)) return;
+  k.onPick(oid, window._planEvent||'');
+}
+
+/* ---- plan a single day ---- */
+function planDay(ds){
+  const cur=getPlan(ds); window._planEvent=cur?cur.event:'';
+  openOutfitPicker({ds, title:'Plan · '+fmtDay(ds), withEvent:true,
+    onPick:async(oid,ev)=>{ await setPlan(ds,oid,ev); restoreMoreMenu(); refreshViews(); toast('Planned 📌'); }});
+}
+async function removePlan(ds){ await clearPlan(ds); restoreMoreMenu(); refreshViews(); toast('Plan removed'); }
+function logWornOutfit(ds){
+  openOutfitPicker({ds, title:'What did you wear? · '+fmtDay(ds), withEvent:false,
+    onPick:async(oid)=>{ await setPlan(ds,oid,''); await markPlanWorn(ds); }});
+}
+async function markPlanWorn(ds){
+  const p=getPlan(ds); const o=p&&STATE.outfits.find(x=>x.id===p.outfitId); if(!o) return;
+  let h=histForDate(ds);
+  if(h && !h.outfitId){ h.outfitId=o.id; h.items=o.items.slice(); h.photoOnly=false; h.ts=Date.now(); }
+  else h={id:uid(), date:ds, outfitId:o.id, items:o.items.slice(), ts:Date.now(), wornPhoto:null};
+  await idbPut('history', h);
+  for(const id of o.items){ const it=STATE.items.find(x=>x.id===id); if(it){ it.lastWorn=Date.now(); it.wornCount=(it.wornCount||0)+1; await idbPut('items', it); } }
+  o.lastWorn=Date.now(); await idbPut('outfits', o);
+  await clearPlan(ds);
+  await loadAll(); restoreMoreMenu(); refreshViews(); toast('Logged as worn ✓');
+}
+
+/* ---- plan the whole week ---- */
+function openWeekPlanner(startDs){
+  const start=startDs||localDate();
+  const rows=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(start+'T12:00:00'); d.setDate(d.getDate()+i); const ds=localDate(d);
+    const h=histForDate(ds); const wo=(h&&h.outfitId)?STATE.outfits.find(x=>x.id===h.outfitId):null;
+    const pl=getPlan(ds);
+    rows.push({ds, oid:pl?pl.outfitId:null, event:pl?pl.event:'', worn:wo||null});
+  }
+  window._week={start,rows};
+  renderWeekPlanner();
+}
+function weekExtra(i){ return window._week.rows.filter((r,j)=>j!==i).map(r=>({ds:r.ds, oid:r.oid||(r.worn&&r.worn.id)||null})); }
+function renderWeekPlanner(){
+  const w=window._week;
+  const modal=document.getElementById('moreMenu').querySelector('.modal'); const sc=modal.scrollTop;
+  const rows=w.rows.map((r,i)=>{
+    if(r.worn) return `<div class="card" style="padding:8px;"><div class="row-between"><b>${fmtDay(r.ds)}</b><span class="muted">✅ already worn</span></div><div class="row"><img src="${r.worn.image}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;"><div class="muted">${esc(r.worn.name)}</div></div></div>`;
+    const o=r.oid?STATE.outfits.find(x=>x.id===r.oid):null;
+    const rep=o?repeatInfo(o.id,r.ds,weekExtra(i)):null;
+    const miss=o?outfitUnavailPieces(o):[];
+    return `<div class="card" style="padding:8px;">
+      <div class="row-between"><b>${fmtDay(r.ds)}</b><span class="muted" style="color:var(--danger);">${rep?'⚠️ '+repeatText(rep):''}${miss.length?' ⚠️ '+miss.length+' piece(s) unavailable':''}</span></div>
+      <div class="row" style="margin-top:4px;">
+        ${o?`<img src="${o.image}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;"><div style="flex:1;min-width:0;font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(o.name)}</div>`:`<div class="muted" style="flex:1;">— not planned</div>`}
+        <button class="btn btn-ghost btn-sm" onclick="weekPick(${i})">${o?'Change':'Pick'}</button>
+        <button class="btn btn-ghost btn-sm" onclick="weekAutoOne(${i})">🎲</button>
+        ${o?`<button class="btn btn-ghost btn-sm" onclick="window._week.rows[${i}].oid=null;renderWeekPlanner()">✕</button>`:''}
+      </div>
+      <input placeholder="Event (optional)" value="${esc(r.event||'')}" oninput="window._week.rows[${i}].event=this.value" style="margin-top:6px;padding:7px 9px;font-size:13px;">
+    </div>`;
+  }).join('');
+  showPicker('Plan the week', `
+    <div class="row" style="margin-bottom:8px;"><span class="muted">Start</span><input type="date" value="${w.start}" onchange="openWeekPlanner(this.value)" style="width:auto;flex:1;"></div>
+    <div class="row" style="margin-bottom:10px;"><button class="btn btn-brass btn-sm btn-block" onclick="weekAutoFill()">🎲 Auto-fill empty days</button><button class="btn btn-ghost btn-sm" onclick="weekClear()">Clear</button></div>
+    ${rows}
+    <button class="btn btn-primary btn-block" onclick="saveWeek()">💾 Save week plan</button>`);
+  modal.scrollTop=sc;
+}
+function weekPick(i){
+  const r=window._week.rows[i]; window._planEvent='';
+  openOutfitPicker({ds:r.ds, title:'Pick · '+fmtDay(r.ds), withEvent:false, extra:()=>weekExtra(i),
+    onPick:(oid)=>{ r.oid=oid; renderWeekPlanner(); }});
+}
+function autoPickOutfit(ds, extra, tierInfo){
+  const usedIds=new Set((extra||[]).map(e=>e.oid).filter(Boolean));
+  const tiers=[{wear:true,gap:true,dup:false},{wear:false,gap:true,dup:false},{wear:true,gap:false,dup:false},{wear:false,gap:false,dup:false},{wear:false,gap:false,dup:true}];
+  for(let t=0;t<tiers.length;t++){
+    const T=tiers[t];
+    const c=STATE.outfits.filter(o=>(!T.wear||outfitWearable(o)) && (!T.gap||!repeatInfo(o.id,ds,extra)) && (T.dup||!usedIds.has(o.id)));
+    if(!c.length) continue;
+    const ws=c.map(o=>{ const d=Math.min(lastWornDays(o.id),60); let w=1+d/10; if(o.favorite) w*=1.3; w*=1+(o.rating||0)*0.1; return w; });
+    let r=Math.random()*ws.reduce((a,b)=>a+b,0), pick=c[c.length-1];
+    for(let i=0;i<c.length;i++){ r-=ws[i]; if(r<=0){ pick=c[i]; break; } }
+    if(tierInfo) tierInfo.tier=t;
+    return pick;
+  }
+  return null;
+}
+function weekAutoOne(i){
+  if(!STATE.outfits.length){ toast('Save some outfits first'); return; }
+  const r=window._week.rows[i]; const info={};
+  const extra=weekExtra(i).concat(r.oid?[]:[]);
+  const o=autoPickOutfit(r.ds, extra, info);
+  if(!o){ toast('No outfit available'); return; }
+  r.oid=o.id; if(info.tier>0) toast('Few options — some limits relaxed');
+  renderWeekPlanner();
+}
+function weekAutoFill(){
+  if(!STATE.outfits.length){ toast('Save some outfits first'); return; }
+  let relaxed=false;
+  window._week.rows.forEach((r,i)=>{
+    if(r.worn||r.oid) return;
+    const info={}; const o=autoPickOutfit(r.ds, weekExtra(i), info);
+    if(o){ r.oid=o.id; if(info.tier>0) relaxed=true; }
+  });
+  if(relaxed) toast('Few outfits — some repeat/availability limits were relaxed');
+  renderWeekPlanner();
+}
+function weekClear(){ window._week.rows.forEach(r=>{ if(!r.worn){ r.oid=null; r.event=''; } }); renderWeekPlanner(); }
+async function saveWeek(){
+  window._week.rows.forEach(r=>{
+    if(r.worn) return;
+    if(r.oid) plansObj()[r.ds]={outfitId:r.oid, event:(r.event||'').trim()}; else delete plansObj()[r.ds];
+  });
+  await saveSettings();
+  restoreMoreMenu(); refreshViews(); toast('Week plan saved 📌');
+}
+function linkOutfitPicker(ds){
+  const html=`<div class="grid3" style="max-height:55dvh;overflow:auto;">`+STATE.outfits.map(o=>`<div onclick="linkOutfit('${ds}','${o.id}')" style="cursor:pointer;"><img src="${o.image}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;"><div class="muted" style="font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${o.name}</div></div>`).join('')+`</div>`;
+  showPicker('Link to an outfit', html);
+}
+async function linkOutfit(ds, oid){
+  const h=histForDate(ds), o=STATE.outfits.find(x=>x.id===oid); if(!h||!o) return;
+  h.outfitId=o.id; h.items=o.items.slice(); h.photoOnly=false; await idbPut('history', h);
+  for(const id of o.items){ const it=STATE.items.find(x=>x.id===id); if(it){ it.lastWorn=Date.now(); it.wornCount=(it.wornCount||0)+1; await idbPut('items', it); } }
+  o.lastWorn=Date.now(); await idbPut('outfits', o);
+  await loadAll(); restoreMoreMenu(); refreshViews(); toast('Linked ✓');
+}
+async function removeDayEntry(ds){
+  const h=histForDate(ds); if(!h) return;
+  if(!confirm('Remove this day\'s log?')) return;
+  for(const id of (h.items||[])){ const it=STATE.items.find(x=>x.id===id); if(it){ it.wornCount=Math.max(0,(it.wornCount||0)-1); await idbPut('items', it); } }
+  await idbDelete('history', h.id);
+  await loadAll(); restoreMoreMenu(); refreshViews(); toast('Removed');
+}
+
+/* ================= PACKING ================= */
+let packDaysCount=3;
+function setPackDays(n){ packDaysCount=n; document.querySelectorAll('#packDays .chip').forEach(c=>c.classList.remove('active')); event.target.classList.add('active'); }
+async function generatePackingList(){
+  const box=document.getElementById('packingResult');
+  box.innerHTML='<div class="muted">Building packing list...</div>';
+  const seen=new Set();
+  let html='';
+  for(let d=1; d<=packDaysCount; d++){
+    const sel = buildSuggestion({includeAccessories: d%2===0, seen});
+    if(!sel.length){ html += `<div class="card"><h3>Day ${d}</h3><div class="muted">${reasonMsg()}</div></div>`; continue; }
+    const dataUrl = await drawCollage(sel, 'Day '+d);
+    html += `<div class="card"><h3>Day ${d}</h3><img src="${dataUrl}" style="width:100%;border-radius:10px;"></div>`;
+  }
+  box.innerHTML = html || '<div class="muted">Add more clothes to build a packing list.</div>';
+}
+
+/* ================= BACKUP ================= */
+async function exportBackup(){
+  const data = { items:STATE.items, outfits:STATE.outfits, history:STATE.history, settings:STATE.settings, exportedAt:Date.now(), version:1 };
+  const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='my-outfit-closet-backup.json'; a.click();
+  URL.revokeObjectURL(url);
+  toast('Backup exported');
+}
+async function importBackup(){
+  const file=document.getElementById('importFile').files[0];
+  if(!file){ toast('Choose a backup file first'); return; }
+  if(!confirm('This will replace all current data. Continue?')) return;
+  const text=await file.text();
+  let data;
+  try{ data=JSON.parse(text); }catch(e){ toast('Invalid backup file'); return; }
+  for(const store of ['items','outfits','history']){
+    const existing = await idbGetAll(store);
+    for(const e of existing) await idbDelete(store, e.id);
+    for(const rec of (data[store]||[])) await idbPut(store, rec);
+  }
+  if(data.settings) await idbPut('settings', Object.assign({key:'app'}, data.settings));
+  await loadAll();
+  toast('Backup restored');
+  showPage('home');
+}
+
+/* ================= CAMERA ================= */
+function localDate(d){ d=d||new Date(); const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+const CAM={stream:null, facing:'environment', timer:0, onShot:null, key:'item', counting:false, cdT:null};
+async function openCamera(opts){
+  CAM.onShot=opts.onShot; CAM.key=opts.key||'item';
+  CAM.facing=((STATE.settings.camFacing||{})[CAM.key]) || opts.facing || 'environment';
+  CAM.timer=0; CAM.counting=false; updateTimerBtn();
+  document.getElementById('camTitle').textContent=opts.title||'';
+  document.getElementById('camCount').classList.add('hide');
+  document.getElementById('cam').classList.remove('hide');
+  const ok=await startStream();
+  document.getElementById('cam').classList.toggle('nostream', !ok);
+  document.getElementById('camFallback').classList.toggle('hide', ok);
+}
+async function startStream(){
+  stopStream();
+  if(!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) return false;
+  const v=document.getElementById('camVideo');
+  try{
+    CAM.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:CAM.facing}, width:{ideal:1920}, height:{ideal:1920}}, audio:false});
+  }catch(e){ return false; }
+  if(document.getElementById('cam').classList.contains('hide')){ stopStream(); return true; }
+  v.srcObject=CAM.stream;
+  v.style.transform = CAM.facing==='user' ? 'scaleX(-1)' : 'none';
+  try{ await v.play(); }catch(e){}
+  return true;
+}
+function stopStream(){
+  if(CAM.stream){ CAM.stream.getTracks().forEach(t=>t.stop()); CAM.stream=null; }
+  const v=document.getElementById('camVideo'); if(v) v.srcObject=null;
+}
+function closeCamera(){
+  clearInterval(CAM.cdT); CAM.counting=false;
+  stopStream();
+  document.getElementById('cam').classList.add('hide');
+}
+async function flipCamera(){
+  CAM.facing = CAM.facing==='user' ? 'environment' : 'user';
+  STATE.settings.camFacing = Object.assign({}, STATE.settings.camFacing, {[CAM.key]:CAM.facing});
+  saveSettings();
+  await startStream();
+}
+function updateTimerBtn(){ document.getElementById('camTimerBtn').textContent = CAM.timer? '⏱ '+CAM.timer+'s' : '⏱ Off'; }
+function cycleTimer(){ CAM.timer = CAM.timer===0?3 : CAM.timer===3?10 : 0; updateTimerBtn(); }
+function shutterTap(){
+  const el=document.getElementById('camCount');
+  if(CAM.counting){ clearInterval(CAM.cdT); CAM.counting=false; el.classList.add('hide'); return; }
+  if(CAM.timer>0){
+    let n=CAM.timer; CAM.counting=true; el.textContent=n; el.classList.remove('hide');
+    CAM.cdT=setInterval(()=>{
+      n--;
+      if(n<=0){ clearInterval(CAM.cdT); CAM.counting=false; el.classList.add('hide'); capturePhoto(); }
+      else el.textContent=n;
+    },1000);
+  } else capturePhoto();
+}
+function capturePhoto(){
+  const v=document.getElementById('camVideo');
+  if(!v.videoWidth){ toast('Camera not ready'); return; }
+  const w=v.videoWidth, h=v.videoHeight, scale=Math.min(1, 1000/Math.max(w,h));
+  const c=document.createElement('canvas'); c.width=Math.round(w*scale); c.height=Math.round(h*scale);
+  c.getContext('2d').drawImage(v,0,0,c.width,c.height);
+  const url=c.toDataURL('image/jpeg',0.85);
+  if(navigator.vibrate) navigator.vibrate(25);
+  const cb=CAM.onShot; closeCamera();
+  if(cb) cb(url);
+}
+/* gallery / native-camera fallbacks */
+let _galCb=null, _nativeCb=null;
+function pickFromGallery(cb){ _galCb=cb; document.getElementById('galleryInput').click(); }
+async function handleGalleryPick(e){
+  const f=e.target.files[0]; e.target.value=''; if(!f) return;
+  const url=await resizeImageFile(f,1000); const cb=_galCb; if(cb) cb(url);
+}
+function camGallery(){ const cb=CAM.onShot; closeCamera(); pickFromGallery(cb); }
+function nativeCapture(){ _nativeCb=CAM.onShot; closeCamera(); document.getElementById('nativeCamInput').click(); }
+async function handleNativeCam(e){
+  const f=e.target.files[0]; e.target.value=''; if(!f) return;
+  const url=await resizeImageFile(f,1000); const cb=_nativeCb; if(cb) cb(url);
+}
+/* clothing-item photo helpers */
+function setItemPreview(url){
+  previewDataUrl=url;
+  const p=document.getElementById('imgPickPreview'); p.src=url; p.classList.remove('hide');
+  document.getElementById('imgPickPlaceholder').classList.add('hide');
+}
+function openItemCamera(){ openCamera({title:'Clothing piece', key:'item', facing:'environment', onShot:setItemPreview}); }
+function itemFromGallery(){ pickFromGallery(setItemPreview); }
+function quickAddItem(){
+  openCamera({title:'New piece', key:'item', facing:'environment', onShot:u=>{ openItemModal(); setItemPreview(u); }});
+}
+
+/* ================= INIT ================= */
+window.addEventListener('DOMContentLoaded', async ()=>{
+  await openDB();
+  await loadAll();
+  if(navigator.storage && navigator.storage.persist) navigator.storage.persist();
+  document.addEventListener('visibilitychange',()=>{
+    const camEl=document.getElementById('cam');
+    if(document.hidden) stopStream();
+    else if(!camEl.classList.contains('hide')) startStream();
+  });
+  fillCategorySelect(); fillSubcats();
+  renderHome();
+});
+</script>
+</body>
+</html>

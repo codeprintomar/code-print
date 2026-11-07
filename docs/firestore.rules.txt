@@ -1,0 +1,6 @@
+// ضيف البلوك ده جوه match /databases/{database}/documents { ... }
+// ولو بتستخدم نفس مشروع GradeOS: ضيفه جنب القواعد الموجودة، متمسحش اللي عندك.
+match /site/{doc} {
+  allow read: if true;
+  allow write: if request.auth != null && request.auth.uid == "YOUR_ADMIN_UID";
+}

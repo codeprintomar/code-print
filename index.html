@@ -1,308 +1,99 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CodePrint — Build • Learn • Share</title>
-<link rel="icon" href="favicon.png">
-<meta name="description" content="CodePrint هي مساحة بنبني فيها برامج وأدوات وتجارب برمجية مفيدة، وبنشارك الرحلة من الفكرة لحد المشروع النهائي.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<script>(function(){try{if(localStorage.getItem('codeprint-theme')==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();</script>
+<title>CodePrint — Code • Create • Innovate</title>
+<meta name="description" content="A platform where we turn ideas into real projects, share useful tools, and explore programming.">
+<meta property="og:title" content="CodePrint — Code • Create • Innovate"><meta property="og:description" content="A platform where we turn ideas into real projects, share useful tools, and explore programming."><meta property="og:type" content="website">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml"><link rel="icon" href="assets/img/favicon.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/favicon.png"><meta name="theme-color" content="#050913">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+<script>(function(){try{var t=localStorage.getItem('codeprint-theme');if(t==='light'||(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();</script>
 </head>
-<body class="has-notch-nav">
-<svg class="hidden" style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
-  <defs>
-    <filter id="codeprint-glass" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="7" result="noise"/>
-      <feGaussianBlur in="noise" stdDeviation="2" result="blurredNoise"/>
-      <feDisplacementMap in="SourceGraphic" in2="blurredNoise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs>
-</svg>
-<div class="glow-orb one"></div>
-<div class="glow-orb two"></div>
-
-<div class="notch-nav">
-  <div class="notch-pill">
-    <a href="index.html" class="notch-logo">
-      <span class="logo-mark">&lt;/&gt;</span>
-      CodePrint
-    </a>
-    <div class="notch-links">
-      <a href="index.html" class="active">الرئيسية</a>
-      <a href="projects.html">المشاريع</a>
-      <a href="links.html">الروابط</a>
-      <a href="index.html#contact">تواصل</a>
-    </div>
-    <button class="notch-toggle" aria-haspopup="true" aria-expanded="false" aria-label="فتح القائمة">
-      <span>الرئيسية</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-    </button>
-    <button class="theme-toggle" aria-label="تبديل الوضع الليلي/النهاري" title="تبديل الوضع">
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-    </button>
-  </div>
-  <div class="notch-drawer">
-    <a href="index.html" class="active">الرئيسية</a>
-    <a href="projects.html">المشاريع</a>
-    <a href="links.html">الروابط</a>
-    <a href="index.html#contact">تواصل</a>
+<body>
+<header class="nav"><div class="wrap">
+  <a href="index.html" class="logo"><img src="assets/img/favicon.png" alt=""><span>Code<b>Print</b></span></a>
+  <nav class="menu" aria-label="Main">
+    <a href="index.html" class="active"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="currentColor" stroke="none"/></svg>Home</a>
+    <a href="projects.html"><svg class="i" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projects</a>
+    <a href="links.html"><svg class="i" viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>Links</a>
+    <a href="index.html#about"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><path d="M12 11v6M12 7.5v.01" stroke="#050913" stroke-width="2.4"/></svg>About</a>
+  </nav>
+  <div class="tools"><a class="sbtn" href="https://www.youtube.com/@codeprintomar" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="currentColor" stroke="none"/><path d="M10 9.2v5.6l5-2.8z" fill="#050913" stroke="none"/></svg></a>
+<a class="sbtn" href="https://github.com/codeprintomar" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg class="i f" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+<a class="sbtn" href="https://www.instagram.com/codeprintomar" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/></svg></a>
+<a class="sbtn" href="https://www.tiktok.com/@codeprintomar" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg class="i" viewBox="0 0 24 24"><path d="M15 3v10a4 4 0 1 1-4-4"/><path d="M15 3c.4 2.6 2.2 4.2 5 4.4"/></svg></a><span class="vsep"></span>
+    <button class="theme-toggle" aria-label="Toggle theme"><svg class="i f icon-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg><svg class="i icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    <button class="notch-toggle" aria-label="Menu" aria-expanded="false">☰</button>
   </div>
 </div>
-
-<!-- Hero -->
-<header class="hero">
-  <div class="container">
-    <span class="eyebrow"><span class="dot"></span> مساحة برمجية شخصية</span>
-    <h1>CodePrint</h1>
-    <div class="hero-tagline">Build • Learn • Share<span class="cursor"></span></div>
-    <p class="lead">بنبني برامج وأدوات مفيدة، ونجرب أفكار جديدة في البرمجة والـ AI والـ Data.</p>
-    <div class="hero-cta">
-      <a href="projects.html" class="btn btn-liquid"><span>استكشف المشاريع</span></a>
-      <a href="links.html" class="btn btn-ghost">روابطنا</a>
-    </div>
-  </div>
+<div class="notch-drawer"><a href="index.html">Home</a><a href="projects.html">Projects</a><a href="links.html">Links</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a></div>
 </header>
 
-<!-- About -->
-<section class="section" id="about">
-  <div class="container">
-    <div class="section-head">
-      <span class="kicker">ABOUT</span>
-      <h2>إيه هي CodePrint؟</h2>
-    </div>
-    <div class="about-card">
-      <p>CodePrint هي مساحة بنبني فيها برامج وأدوات وتجارب برمجية مفيدة، وبنشارك الرحلة من الفكرة لحد المشروع النهائي.</p>
-      <p class="en">CodePrint is a personal software project focused on building useful applications, tools, and experiments while exploring programming, AI, and data.</p>
-    </div>
+<main class="wrap">
+<section class="hero">
+  <div>
+    <span class="badge"><svg class="i" viewBox="0 0 24 24"><path d="M5 15c-1 1-1.5 4-1.5 4s3-.5 4-1.5M14 4c3-1 6-1 6-1s0 3-1 6l-7 7-5-5zM9 12l-4-1 2-3 4 0M12 15l1 4 3-2 0-4"/></svg>Welcome to CodePrint</span>
+    <h1>Code<b>Print</b></h1>
+    <div class="tagline">Code<i>●</i>Create<i>●</i>Innovate</div>
+    <p class="lead">A platform where we turn ideas into real projects, share useful tools, and explore the world of programming.</p>
+    <div class="hero-cta"><a href="projects.html" class="btn btn-primary"><svg class="i" viewBox="0 0 24 24"><path d="M5 15c-1 1-1.5 4-1.5 4s3-.5 4-1.5M14 4c3-1 6-1 6-1s0 3-1 6l-7 7-5-5zM9 12l-4-1 2-3 4 0M12 15l1 4 3-2 0-4"/></svg>Explore Projects <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a href="https://github.com/codeprintomar" target="_blank" rel="noopener noreferrer" class="btn"><svg class="i f" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Visit GitHub</a></div>
+  </div>
+  <div class="hero-art"><img src="assets/img/hero-laptop.png" alt="CodePrint laptop illustration">
+    <div class="checks"><span><i class="ck"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke-width="3"/></svg></i>Build</span><span><i class="ck"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke-width="3"/></svg></i>Learn</span><span><i class="ck"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke-width="3"/></svg></i>Grow</span></div></div>
+</section>
+<section class="feats">
+  <div class="feat reveal"><svg class="i" viewBox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg><div><h3>Programming</h3><p>Learn and practice programming concepts</p></div></div><div class="feat reveal"><svg class="i" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg><div><h3>Useful Projects</h3><p>Explore real-world projects</p></div></div><div class="feat reveal"><svg class="i" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><div><h3>Smart Ideas</h3><p>Discover new ideas and tools</p></div></div><div class="feat reveal"><svg class="i" viewBox="0 0 24 24"><path d="M5 20v-6M12 20V6M19 20v-10" stroke-width="3.2"/></svg><div><h3>Continuous Growth</h3><p>Grow with CodePrint</p></div></div>
+</section>
+<section class="sec" id="projects">
+  <div class="sh"><h2>Our <b>Projects</b></h2><a href="projects.html" class="btn btn-sm">View All Projects <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+  <div class="grid" id="home-projects" data-limit="6"></div>
+</section>
+<section class="sec" id="about">
+  <div class="sh"><h2>About <b>CodePrint</b></h2></div>
+  <div class="about">
+    <div class="panel"><p class="big" data-cms="aboutEn">CodePrint is a personal software project focused on building useful applications, tools, and experiments while exploring programming, AI, and data.</p>
+      <p dir="rtl" data-cms="aboutAr">CodePrint هي مساحة بنبني فيها برامج وأدوات وتجارب برمجية مفيدة، وبنشارك الرحلة من الفكرة لحد المشروع النهائي.</p></div>
+    <div class="why"><div><h3>Real Projects</h3><p>We focus on building things that actually work.</p></div><div><h3>Useful Tools</h3><p>Every project aims to solve a real problem.</p></div><div><h3>Open Learning</h3><p>We share what we learn along the way.</p></div></div>
   </div>
 </section>
-
-<!-- Projects preview -->
-<section class="section section-alt" id="projects">
-  <div class="container">
-    <div class="section-head">
-      <span class="kicker">PROJECTS</span>
-      <h2>آخر المشاريع</h2>
-      <p>مشاريع حقيقية بنشتغل عليها وبنطورها باستمرار.</p>
+<section class="sec" id="contact">
+  <div class="sh"><h2>Get in <b>Touch</b></h2></div>
+  <div class="contact">
+    <div class="reach">
+      <a href="https://wa.me/201012144899" target="_blank" rel="noopener noreferrer"><span class="ic">💬</span><b>WhatsApp</b><small>Message us directly</small></a>
+      <a href="https://github.com/codeprintomar" target="_blank" rel="noopener noreferrer"><span class="ic">🐙</span><b>GitHub</b><small>Our source code</small></a>
+      <a href="https://www.instagram.com/codeprintomar" target="_blank" rel="noopener noreferrer"><span class="ic">📷</span><b>Instagram</b><small>Follow daily updates</small></a>
+      <a href="https://www.youtube.com/@codeprintomar" target="_blank" rel="noopener noreferrer"><span class="ic">▶️</span><b>YouTube</b><small>Watch our work</small></a>
+      <a href="https://www.tiktok.com/@codeprintomar" target="_blank" rel="noopener noreferrer"><span class="ic">🎵</span><b>TikTok</b><small>Short videos</small></a>
+      <a href="https://linktr.ee/codeprintomar" target="_blank" rel="noopener noreferrer"><span class="ic">🌳</span><b>Linktree</b><small>All our links</small></a>
     </div>
-
-    <div class="grid grid-3">
-      <!-- Real project -->
-      <div class="card project-card reveal">
-        <div class="project-thumb">
-          🎮
-          <span class="status-badge live">LIVE</span>
-        </div>
-        <div class="project-body">
-          <h3>برا السالفة</h3>
-          <span class="project-tags">Game • Web</span>
-          <p class="project-desc">لعبة من تطوير CodePrint، متاحة للعب أونلاين وتنزيل على أندرويد.</p>
-          <div class="project-actions">
-            <a href="project.html?id=bara-el-salfa" class="link-btn">View Project ←</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Coming soon -->
-      <div class="card project-card reveal">
-        <div class="project-thumb">
-          🌊
-          <span class="status-badge">Coming Soon</span>
-        </div>
-        <div class="project-body">
-          <h3>Wave</h3>
-          <span class="project-tags">Web • App</span>
-          <p class="project-desc">مشروع جديد لسه تحت التطوير، تفاصيله هتتاح قريبًا.</p>
-          <div class="soon-progress">
-            <div class="bar-track"><div class="bar-fill" style="width:35%"></div></div>
-            <div class="bar-meta"><span>قريبًا — الخريف 2026</span><span class="pct">35%</span></div>
-          </div>
-          <div class="project-actions">
-            <a href="project.html?id=wave" class="link-btn">التفاصيل ←</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Coming soon -->
-      <div class="card project-card reveal">
-        <div class="project-thumb">
-          🎙️
-          <span class="status-badge">Coming Soon</span>
-        </div>
-        <div class="project-body">
-          <h3>Voice Controller</h3>
-          <span class="project-tags">Software • AI</span>
-          <p class="project-desc">أداة تحكم بالصوت، لسه بتتطور خلف الكواليس.</p>
-          <div class="soon-progress">
-            <div class="bar-track"><div class="bar-fill" style="width:55%"></div></div>
-            <div class="bar-meta"><span>قريبًا</span><span class="pct">55%</span></div>
-          </div>
-          <div class="project-actions">
-            <a href="project.html?id=voice-controller" class="link-btn">التفاصيل ←</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- What We Build -->
-<section class="section" id="what-we-build">
-  <div class="container">
-    <div class="section-head">
-      <span class="kicker">WHAT WE BUILD</span>
-      <h2>مجالات الشغل</h2>
-    </div>
-    <div class="grid grid-4">
-      <div class="card feature-card reveal">
-        <div class="icon">💻</div>
-        <h3>Software</h3>
-        <p>برامج وأدوات لحل مشاكل حقيقية.</p>
-      </div>
-      <div class="card feature-card reveal">
-        <div class="icon">🌐</div>
-        <h3>Web</h3>
-        <p>مواقع وتطبيقات Web.</p>
-      </div>
-      <div class="card feature-card reveal">
-        <div class="icon">🤖</div>
-        <h3>AI</h3>
-        <p>تجارب ومشاريع في الذكاء الاصطناعي.</p>
-      </div>
-      <div class="card feature-card reveal">
-        <div class="icon">📊</div>
-        <h3>Data</h3>
-        <p>تحليل البيانات والمشاريع المتعلقة بها.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Why CodePrint -->
-<section class="section section-alt" id="why">
-  <div class="container">
-    <div class="section-head">
-      <span class="kicker">WHY CODEPRINT</span>
-      <h2>ليه CodePrint؟</h2>
-    </div>
-    <div class="grid grid-3">
-      <div class="card why-card reveal">
-        <span class="num">01</span>
-        <h3>Real Projects</h3>
-        <p>بنركز على بناء مشاريع فعلية.</p>
-      </div>
-      <div class="card why-card reveal">
-        <span class="num">02</span>
-        <h3>Useful Tools</h3>
-        <p>الهدف إن المشاريع تكون مفيدة فعلًا.</p>
-      </div>
-      <div class="card why-card reveal">
-        <span class="num">03</span>
-        <h3>Open Learning</h3>
-        <p>بنشارك اللي بنتعلمه والتجارب اللي بنمر بيها.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Contact -->
-<section class="section section-alt" id="contact">
-  <div class="container">
-    <div class="section-head">
-      <span class="kicker">CONTACT</span>
-      <h2>تواصل معانا</h2>
-      <p>كل قنوات التواصل مع CodePrint في مكان واحد.</p>
-    </div>
-    <!-- طرق التواصل معانا (واتساب + السوشيال ميديا) -->
-    <div class="contact-form-card contact-links-card">
-      <h3>تواصل معايا</h3>
-      <p class="form-lead">تابعنا وكلمنا من خلال:</p>
-      <div class="contact-grid">
-        <a href="https://wa.me/201012144899" target="_blank" rel="noopener noreferrer" class="card contact-card reveal">
-          <div class="icon">💬</div>
-          <span class="label">WhatsApp</span>
-          <span class="sub">راسلنا مباشرة</span>
-        </a>
-        <a href="https://github.com/codeprintomar" target="_blank" rel="noopener noreferrer" class="card contact-card reveal">
-          <div class="icon">🐙</div>
-          <span class="label">GitHub</span>
-          <span class="sub">مشاريعنا البرمجية</span>
-        </a>
-        <a href="https://www.instagram.com/codeprintomar" target="_blank" rel="noopener noreferrer" class="card contact-card reveal">
-          <div class="icon">📷</div>
-          <span class="label">Instagram</span>
-          <span class="sub">تابعنا يوميًا</span>
-        </a>
-        <a href="https://www.youtube.com/@codeprintomar" target="_blank" rel="noopener noreferrer" class="card contact-card reveal">
-          <div class="icon">▶️</div>
-          <span class="label">YouTube</span>
-          <span class="sub">شاهد أعمالنا</span>
-        </a>
-        <a href="https://www.tiktok.com/@codeprintomar" target="_blank" rel="noopener noreferrer" class="card contact-card reveal">
-          <div class="icon">🎵</div>
-          <span class="label">TikTok</span>
-          <span class="sub">فيديوهات قصيرة</span>
-        </a>
-        <a href="https://linktr.ee/codeprintomar" target="_blank" rel="noopener noreferrer" class="card contact-card reveal">
-          <div class="icon">🌳</div>
-          <span class="label">Linktree</span>
-          <span class="sub">كل روابطنا سوا</span>
-        </a>
-      </div>
-    </div>
-
-    <!--
-      استمارة التواصل — Formspree
-      1) اعمل فورم جديد على https://formspree.io وهياديك رابط شكله:
-         https://formspree.io/f/xxxxxxxx
-      2) استبدل YOUR_FORM_ID تحت بالكود بتاعك من الرابط ده.
-    -->
-    <form class="contact-form-card" id="contact-form" action="https://formspree.io/f/xjyvkdld" method="POST">
-      <h3>ابعتلنا رسالة</h3>
-      <p class="form-lead">هنرد عليك في أقرب وقت.</p>
-
-      <div class="form-field">
-        <label for="cf-name">الاسم</label>
-        <input class="form-input" type="text" id="cf-name" name="name" required>
-      </div>
-
-      <div class="form-field">
-        <label for="cf-email">الإيميل</label>
-        <input class="form-input" type="email" id="cf-email" name="email" required>
-      </div>
-
-      <div class="form-field">
-        <label for="cf-message">الرسالة</label>
-        <textarea class="form-textarea" id="cf-message" name="message" required></textarea>
-      </div>
-
-      <!-- Honeypot ضد Spam -->
+    <form class="formcard" id="contact-form" action="https://formspree.io/f/xjyvkdld" method="POST">
+      <h3>Send us a message</h3><p class="form-lead">We'll get back to you as soon as possible.</p>
+      <div class="form-field"><label for="cf-name">Name</label><input class="form-input" type="text" id="cf-name" name="name" required></div>
+      <div class="form-field"><label for="cf-email">Email</label><input class="form-input" type="email" id="cf-email" name="email" required></div>
+      <div class="form-field"><label for="cf-message">Message</label><textarea class="form-textarea" id="cf-message" name="message" required></textarea></div>
       <input class="form-honeypot" type="text" name="_gotcha" tabindex="-1" autocomplete="off">
-
-      <button type="submit" class="btn btn-liquid"><span>إرسال</span></button>
-
+      <button type="submit" class="btn btn-primary">Send</button>
       <div class="form-status" id="contact-form-status" role="status" aria-live="polite"></div>
     </form>
   </div>
 </section>
-
-<footer>
-  <div class="container">
-    <div class="foot-links">
-      <a href="index.html">الرئيسية</a>
-      <a href="projects.html">المشاريع</a>
-      <a href="links.html">الروابط</a>
-      <a href="index.html#contact">تواصل</a>
-    </div>
-    <span class="brand">CodePrint © 2026 — Build • Learn • Share</span>
-  </div>
-</footer>
-
-<script src="script.js"></script>
+</main>
+<footer><div class="wrap">
+  <a href="index.html" class="logo" style="font-size:22px"><img src="assets/img/favicon.png" alt="" style="width:32px;height:32px"><span>Code<b>Print</b></span></a>
+  <div class="foot-links"><a href="index.html">Home</a><a href="projects.html">Projects</a><a href="links.html">Links</a><a href="index.html#contact">Contact</a></div>
+  <span>© 2026 CodePrint — Code • Create • Innovate</span>
+</div></footer>
+<script src="data/projects-data.js"></script>
+<script src="assets/js/firebase-config.js"></script>
+<script src="assets/js/cms.js"></script>
+<script src="assets/js/core.js"></script>
+<script src="assets/js/links.js"></script>
+<script src="assets/js/projects.js"></script>
+<script src="assets/js/contact.js"></script>
 </body>
 </html>

@@ -1,0 +1,9 @@
+{
+  "remembered_login": {
+    "user_id": 1,
+    "username": "omar"
+  },
+  "notifications_enabled": true,
+  "auto_start_break": false,
+  "sound_enabled": true
+}

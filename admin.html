@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>لوحة التحكم — CodePrint</title>
+<link rel="icon" href="assets/img/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700&family=Tajawal:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080B14;--card:#111628;--line:#232a44;--tx:#e8ecff;--mut:#8b93b8;--b:#4F7CFF;--p:#9B5CFF}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px Tajawal,system-ui,sans-serif}
+h1,summary,button{font-family:Cairo,system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.bar h1{font-size:18px;margin:0 0 0 auto}
+button{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer;font-size:14px}
+button.on,button.pri{background:linear-gradient(135deg,var(--b),var(--p));border:0;color:#fff}
+button.del{color:#ff7b8a}
+input,textarea,select{width:100%;background:#0b0f1e;color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:9px;font:inherit}
+input[type=checkbox]{width:20px;height:20px}input[type=range]{padding:0}
+.f{display:block;margin:10px 0;color:var(--mut);font-size:13px}.f>*{margin-top:4px;color:var(--tx)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 14px;margin:12px 0}
+summary{cursor:pointer;padding:10px 0;display:flex;justify-content:space-between;gap:8px}
+.tag{color:var(--mut);font-size:13px}.item{border-top:1px solid var(--line);padding:6px 0}
+.row{display:flex;gap:8px;margin:10px 0}
+#st{color:#ffc857;font-size:13px}#msg{padding:8px 0;font-size:14px}#msg.err{color:#ff7b8a}#msg.ok{color:#5be3a1}
+#login{max-width:340px;margin:12vh auto;padding:20px}
+</style>
+</head>
+<body>
+<form id="login" class="card" hidden>
+  <h1>لوحة تحكم CodePrint</h1>
+  <label class="f">الإيميل<input id="em" type="email" required></label>
+  <label class="f">كلمة السر<input id="pw" type="password" required></label>
+  <button class="pri" type="submit">دخول</button>
+  <div id="lerr" class="err" style="color:#ff7b8a;margin-top:8px"></div>
+</form>
+
+<div id="app" class="wrap" hidden>
+  <div class="bar">
+    <button class="pri" data-a="save">💾 حفظ</button>
+    <span id="st"></span>
+    <h1>لوحة التحكم</h1>
+    <span class="tabs">
+      <button data-a="tab" data-t="texts">النصوص</button>
+      <button data-a="tab" data-t="projects">المشاريع</button>
+      <button data-a="tab" data-t="links">الروابط</button>
+    </span>
+    <button data-a="imp">⬆ استيراد</button>
+    <button data-a="export">نسخة احتياطية</button>
+    <button data-a="logout">خروج</button>
+  </div>
+  <div id="msg"></div>
+  <div id="imp" class="card" hidden>
+    <h3>استيراد بيانات</h3>
+    <p class="tag">اختار ملف أو الصق JSON، أو محتوى <code>projects-data.js</code> / <code>links-data.js</code> مباشرة. بيقبل: مصفوفة مشاريع، أو مصفوفة أقسام روابط، أو <code>{texts, projects, links}</code>.</p>
+    <input type="file" id="ifile" accept=".json,.js,.txt">
+    <textarea id="itxt" rows="8" placeholder="الصق هنا..."></textarea>
+    <label class="f">الوضع<select id="imode"><option value="merge">دمج — يحدّث الموجود (بنفس id أو الاسم) ويضيف الجديد</option><option value="replace">استبدال الأجزاء المستوردة بالكامل</option></select></label>
+    <button class="pri" data-a="run">استيراد</button>
+  </div>
+  <div id="view"></div>
+</div>
+
+<script src="data/projects-data.js"></script>
+<script src="data/links-data.js"></script>
+<script src="assets/js/firebase-config.js"></script>
+<script src="assets/js/cms.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>

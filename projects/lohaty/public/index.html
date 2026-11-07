@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>لوحتي</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#5b6cff">
+<style>
+:root{--bg:#fff;--fg:#1d2433;--mut:#6b7280;--line:#e6e8ee;--card:#f5f6fa;--pri:#5b6cff;--ok:#16a34a;--bad:#dc2626;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111420;--fg:#e8eaf2;--mut:#98a0b3;--line:#262b3b;--card:#1a1f2e}}
+:root[data-theme="dark"]{--bg:#111420;--fg:#e8eaf2;--mut:#98a0b3;--line:#262b3b;--card:#1a1f2e}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Segoe UI",Tahoma,system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+h1{font-size:18px;margin:0;margin-inline-end:8px;background:linear-gradient(90deg,var(--pri),#e052a0);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-inline-end:auto}
+button,select,input,textarea{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+button{cursor:pointer;transition:transform .12s}button:active{transform:scale(.95)}
+button.p,nav button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+main{padding:12px;max-width:1100px;margin:auto}
+h2{font-size:16px;margin:18px 0 8px}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.grid{display:grid;grid-template-columns:44px repeat(7,minmax(105px,1fr));min-width:860px}
+.dh{padding:6px;text-align:center;border-bottom:1px solid var(--line);border-inline-start:1px solid var(--line);font-size:13px;height:40px}
+.dh.td{color:var(--pri);font-weight:700}
+.hrs div{height:48px;font-size:11px;color:var(--mut);text-align:center;border-top:1px solid var(--line)}
+.col{position:relative;border-inline-start:1px solid var(--line);height:864px;background:repeating-linear-gradient(var(--line) 0 1px,transparent 1px 48px)}
+.ev{position:absolute;inset-inline:3px;border-radius:9px;color:#fff;padding:3px 6px;font-size:12px;overflow:hidden;cursor:pointer;line-height:1.35;box-shadow:0 1px 3px #0003}
+.ev b{display:block}.ev small{opacity:.92}
+.pop{animation:pop .6s cubic-bezier(.3,1.6,.5,1)}@keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.now{position:absolute;inset-inline:0;height:2px;background:#e052a0;z-index:2}
+.nv{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+.card h3{margin:0 0 4px;font-size:15px}.card p{margin:2px 0;color:var(--mut);font-size:13px}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.btns button{font-size:13px}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;color:#fff}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.big{font-size:24px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:start;padding:7px 6px;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:500}
+.bar{height:8px;border-radius:9px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--pri)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cal div{background:var(--card);border-radius:8px;min-height:46px;padding:3px;font-size:12px}.cal .h{background:none;min-height:0;color:var(--mut)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin:1px}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--fg);max-width:440px;width:94%;max-height:92vh}dialog::backdrop{background:#0008}
+label{display:block;margin:8px 0 3px;font-size:13px;color:var(--mut)}dialog input:not([type=checkbox]),dialog select,dialog textarea,.fw{width:100%}
+.dys{display:flex;flex-wrap:wrap;gap:8px}.dys label,.ck{margin:0;display:flex;gap:4px;align-items:center;color:var(--fg)}
+.r2{display:flex;gap:8px}.r2>div{flex:1}.hid{display:none!important}
+#toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translate(-50%,120px);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:99px;opacity:0;visibility:hidden;pointer-events:none;transition:transform .35s cubic-bezier(.3,1.5,.5,1),opacity .25s,visibility .25s;z-index:30}
+#toast.on{transform:translate(-50%,0);opacity:1;visibility:visible}
+.cf{position:fixed;width:9px;height:9px;border-radius:2px;z-index:40;pointer-events:none}
+.picker-field{position:relative;width:100%}.btns .picker-field{flex:1;min-width:130px}.picker-field>input{display:none}
+.picker-btn{width:100%;display:flex;align-items:center;gap:8px;text-align:start;padding:8px 10px}.picker-btn.empty{color:var(--mut)}.picker-btn.open{border-color:var(--pri);box-shadow:0 0 0 3px #5b6cff33}.picker-text{flex:1;font-size:14px}.picker-icon{display:flex;color:var(--pri)}.picker-caret{color:var(--mut);font-size:12px}
+.picker-backdrop{position:fixed;inset:0;z-index:50}.picker-backdrop.dim{background:#0007}
+.picker-pop{position:fixed;z-index:51;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 36px #0005;padding:12px;width:290px}
+.picker-pop.sheet{left:0;right:0;bottom:0;top:auto;width:100%;border-radius:20px 20px 0 0;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.picker-pop button{border:0;background:none}.dp-head{display:flex;align-items:center;gap:2px;margin-bottom:8px}.dp-title{flex:1;text-align:center;font-weight:700}.dp-nav{width:32px;height:32px;border-radius:50%!important;font-size:18px;color:var(--pri)}.dp-nav:hover,.dp-day:hover,.tp-item:hover{background:var(--card)!important}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}.dp-wd{font-size:12px;color:var(--mut);padding:4px 0}.dp-day{aspect-ratio:1;border-radius:50%!important;font-size:14px}.dp-day.out{opacity:.35}.dp-day.is-today{outline:2px solid #e052a0;outline-offset:-2px}.dp-day.sel{background:var(--pri)!important;color:#fff!important;font-weight:700}
+.tp-preview{text-align:center;font-size:26px;font-weight:700;margin-bottom:8px;color:var(--pri)}.tp-cols{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px}.tp-label{text-align:center;font-size:12px;color:var(--mut);margin-bottom:4px}.tp-col{max-height:176px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;position:relative}.tp-col.short{max-height:none}.tp-item{padding:7px 0;border-radius:10px!important;font-size:15px}.tp-item.sel{background:var(--pri)!important;color:#fff!important;font-weight:700}
+.picker-foot{display:flex;align-items:center;gap:14px;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)}.picker-link{color:var(--pri)!important;font-size:14px}.picker-link.danger{color:var(--bad)!important}.picker-done{margin-inline-start:auto;background:var(--pri)!important;color:#fff;padding:6px 18px!important;border-radius:10px!important}
+.picker-field>select{display:none}
+.od{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 20%,transparent);flex:none}.od i{width:10px;height:10px;border-radius:50%;background:var(--c)}.od i.ring{background:none;border:2px solid var(--mut);width:9px;height:9px}.od:has(i.ring){background:var(--card)}
+.time-pop{width:min(380px,calc(100vw - 16px));padding:16px}
+.time-pop .tp-preview{font-size:40px;margin-bottom:10px}
+.time-pop .tp-label{font-size:14px;margin-bottom:6px}
+.time-pop .tp-cols{gap:10px}
+.time-pop .tp-col{max-height:250px;gap:4px;-webkit-overflow-scrolling:touch}
+.time-pop .tp-col.short{gap:6px}
+.time-pop .tp-item{padding:0;min-height:50px;font-size:22px;border-radius:12px!important}
+.time-pop .tp-type{display:block;width:100%;margin:0 0 12px;padding:12px;font-size:22px;text-align:center;direction:ltr;border:2px solid var(--line);border-radius:14px;background:var(--card);color:var(--fg);outline:none}
+.time-pop .tp-type:focus{border-color:var(--pri);box-shadow:0 0 0 3px #5b6cff33}
+.time-pop .tp-type.bad{border-color:var(--bad)}
+.time-pop .tp-hint{text-align:center;font-size:12px;color:var(--mut);margin:-6px 0 10px}
+.time-pop .picker-foot{margin-top:14px;padding-top:12px}
+.time-pop .picker-link{font-size:16px;padding:8px 4px!important}
+.time-pop .picker-done{font-size:17px;padding:10px 28px!important;border-radius:12px!important}
+.picker-pop.sheet.time-pop{width:100%;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.picker-pop.sheet.time-pop .tp-col{max-height:210px}
+.sel-pop{padding:6px;max-height:320px;overflow:auto}.picker-pop.sheet.sel-pop{max-height:70vh}
+.so{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:12px!important;font-size:14px;text-align:start;margin:2px 0;border:1px solid transparent!important;color:var(--fg)}.so.sel{background:var(--card)!important;border-color:var(--line)!important;font-weight:700}.so .ck2{margin-inline-start:auto;color:var(--pri)}
+.picker-btn .od{width:26px;height:26px}
+.od{width:auto!important;height:auto!important;background:none!important;padding:0 4px}.od i{width:11px;height:11px;box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 22%,transparent)}.od i.ring{background:none;border:2px solid var(--mut);box-shadow:none;width:11px;height:11px}
+.sel-pop{padding:8px;border-radius:18px;animation:sp .14s ease-out}@keyframes sp{from{opacity:0;transform:translateY(-4px) scale(.97)}}
+.so{gap:12px;padding:10px 12px}.so:hover{background:var(--card)!important}.so.sel{background:color-mix(in srgb,var(--pri) 12%,transparent)!important;border-color:transparent!important}.so .ck2{width:20px;height:20px;border-radius:50%;background:var(--pri);color:#fff;display:grid;place-items:center;font-size:12px}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}.seg button{flex:1;border:0;background:none;border-radius:9px;padding:7px 4px;font-size:13px;color:var(--mut)}.seg button.on{background:var(--pri);color:#fff;font-weight:700;box-shadow:0 2px 8px #5b6cff55}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{border-radius:99px!important;padding:5px 12px!important;font-size:13px}.chip.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.sum{font-size:13px;color:var(--pri);background:color-mix(in srgb,var(--pri) 10%,transparent);padding:8px 10px;border-radius:10px;margin:12px 0 0}
+.cfl{outline:2px solid #f59e0b;outline-offset:-2px}
+.warn{background:color-mix(in srgb,#f59e0b 16%,transparent);border:1px solid #f59e0b66;border-radius:10px;padding:8px 10px;font-size:13px;margin:6px 0}
+a{color:var(--pri)}code{background:var(--card);padding:1px 5px;border-radius:6px}
+/* ===== واجهة جديدة: موبايل أولاً ===== */
+:root{--bg:#f3f4f9;--fg:#1b2030;--mut:#6b7385;--line:#e6e8f0;--card:#fff;--pri:#5b6cff;--r:16px;--nav:64px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e111b;--fg:#eceef6;--mut:#99a1b5;--line:#252a3b;--card:#171b29}}
+html{-webkit-text-size-adjust:100%}
+body{font-family:"Noto Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.5;padding-bottom:calc(var(--nav) + 100px + env(safe-area-inset-bottom,0px))}
+header{border:0;padding:12px 16px;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);flex-wrap:nowrap}
+h1{font-size:22px;flex:1}
+header button{width:42px;height:42px;border-radius:50%;padding:0;font-size:18px;min-height:0;position:relative}
+#cfg[data-s=ok]::after,#cfg[data-s=err]::after,#cfg[data-s=syncing]::after{content:"";position:absolute;top:7px;inset-inline-end:7px;width:9px;height:9px;border-radius:50%;background:#16a34a}
+#cfg[data-s=err]::after{background:#dc2626}#cfg[data-s=syncing]::after{background:#f59e0b}
+main{padding:2px 14px;max-width:720px}main:has(.grid){max-width:1100px}
+h2{font-size:14px;color:var(--mut);font-weight:600;margin:22px 4px 8px}
+button,select,input,textarea{font-size:16px;border-radius:12px;border:1px solid var(--line);background:var(--card)}
+button,select,input{min-height:42px}
+button.p{background:var(--pri);color:#fff;border-color:var(--pri)}
+.btns button{font-size:14px;min-height:40px;padding:6px 14px}
+.picker-pop button{min-height:0}
+.card{background:var(--card);border:0;border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:0 1px 2px #0000000d,0 4px 14px #0000000a}
+.card h3{font-size:16px;margin-bottom:2px}
+.g{grid-template-columns:repeat(2,1fr);gap:10px}.g .card{margin:0}
+@media(min-width:700px){.g{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}}
+.wrap{border:0;background:var(--card);border-radius:var(--r)}
+nav{position:fixed;inset-inline:0;bottom:0;z-index:20;display:flex;gap:0;margin:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line)}
+nav button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;color:var(--mut);padding:5px 2px;min-height:54px}
+nav button span{font-size:22px;line-height:1.1;transition:transform .15s}
+nav button.on{background:none;color:var(--pri);font-weight:700;border:0}nav button.on span{transform:scale(1.15)}
+@media(min-width:700px){nav{inset-inline:auto;left:50%;transform:translateX(-50%);width:560px;bottom:12px;border:1px solid var(--line);border-radius:22px;box-shadow:0 8px 30px #0002}}
+.fab{position:fixed;inset-inline-end:16px;bottom:calc(var(--nav) + 18px + env(safe-area-inset-bottom,0px));width:58px;height:58px;min-height:0;border-radius:50%;font-size:30px;line-height:1;padding:0;background:var(--pri);color:#fff;border:0;box-shadow:0 8px 22px #5b6cff77;z-index:19}
+@media(min-width:700px){.fab{bottom:90px}}
+#toast{bottom:calc(var(--nav) + 90px + env(safe-area-inset-bottom,0px));max-width:90vw;text-align:center}
+.hero{background:linear-gradient(135deg,var(--pri),#e052a0);color:#fff;border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:2px;margin:8px 0 12px}.hero b{font-size:21px}.hero small,.hero span{opacity:.92}
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:10px 0 14px}
+.dd{display:flex;flex-direction:column;align-items:center;padding:8px 0;min-height:66px;border-radius:14px;border:0;gap:0}.dd small{color:var(--mut);font-size:11px}.dd b{font-size:17px}.dd i{font-style:normal;color:var(--pri);height:10px;line-height:10px}
+.dd.on{background:var(--pri);color:#fff}.dd.on small,.dd.on i{color:#fff}.dd.td:not(.on) b{color:var(--pri)}
+.tl{display:flex;gap:10px;margin-bottom:10px;cursor:pointer}.tt{width:56px;text-align:center;font-size:13px;padding-top:10px}.tt small{display:block;color:var(--mut)}
+.tc{flex:1;background:var(--card);border-radius:14px;padding:10px 12px;border-inline-start:5px solid var(--c);display:flex;flex-direction:column;gap:2px;box-shadow:0 1px 2px #0000000d,0 4px 14px #0000000a}.tc small{color:var(--mut)}.tc .tag{align-self:flex-start;margin-top:4px}
+.empty{text-align:center;color:var(--mut);padding:40px 0}.empty button{margin-top:10px}
+.back{background:none;border:0;color:var(--pri);margin:4px 0;padding:0}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:start;background:var(--card);border:0;border-radius:var(--r);padding:14px;margin-bottom:10px;min-height:66px}.row .ico{font-size:26px}.row span:nth-child(2){flex:1;display:flex;flex-direction:column}.row small{color:var(--mut)}.row i{color:var(--mut);font-style:normal;font-size:20px}
+dialog{border:0;box-shadow:0 20px 60px #0006}
+@media(max-width:600px){dialog{margin:auto 0 0;width:100%;max-width:100%;border-radius:24px 24px 0 0;max-height:92vh;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}}
+.chk{width:40px;height:40px;min-height:0;border-radius:50%;border:2px solid var(--line);padding:0;font-size:20px;color:#fff;flex:none}.chk.on{background:#16a34a;border-color:#16a34a}
+.exh{display:flex;align-items:center;gap:10px;margin-bottom:8px}.exh b{flex:1;font-size:16px}.ex.done{opacity:.65}.ex.done b{text-decoration:line-through}.ex small{display:block;margin-top:4px;color:var(--mut)}
+.rowc{display:flex;align-items:center;gap:8px}.ck input{width:22px;height:22px;min-height:0}summary{cursor:pointer;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+<h1>✨ لوحتي</h1>
+<button id="bell" title="تفعيل التنبيهات">🔔</button>
+<button id="cfg" data-act="settings" title="الإعدادات والمزامنة">⚙️</button>
+</header>
+<main id="app"></main>
+<button class="fab" data-act="add" aria-label="إضافة موعد">+</button>
+<nav id="nav"></nav>
+<dialog id="dlg"></dialog>
+<div id="toast"></div>
+<script src="firebase-config.js?v=2"></script>
+<script>
+(()=>{
+const MONTHS=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const WEEKDAYS=["س","ح","ن","ث","ر","خ","ج"];
+const pad=n=>String(n).padStart(2,"0");
+const ds=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;
+const parseD=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||"");return m?new Date(+m[1],+m[2]-1,+m[3]):null};
+const parseT=s=>{const m=/^(\d{2}):(\d{2})/.exec(s||"");return m?{h:+m[1],m:+m[2]}:null};
+const fmtDate=s=>{const d=parseD(s);return d?d.toLocaleDateString("ar-EG-u-nu-latn",{weekday:"long",day:"numeric",month:"long",year:"numeric"}):""};
+const fmtTime=s=>{const t=parseT(s);return t?`${t.h%12||12}:${pad(t.m)} ${t.h>=12?"م":"ص"}`:""};
+const ICONS={date:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>',time:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'};
+const nativeValue=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value");
+const refreshers=new WeakMap();let active=null;
+function closePicker(){if(!active)return;active.pop.remove();active.backdrop.remove();active.btn.classList.remove("open");active=null}
+function emit(input){input.dispatchEvent(new Event("input",{bubbles:true}));input.dispatchEvent(new Event("change",{bubbles:true}))}
+function setValue(input,v){nativeValue.set.call(input,v);refreshers.get(input)?.();emit(input)}
+function place(pop,btn,backdrop){
+ const mobile=window.innerWidth<=520;backdrop.classList.toggle("dim",mobile);pop.classList.toggle("sheet",mobile);if(mobile)return;
+ pop.style.visibility="hidden";
+ const r=btn.getBoundingClientRect(),w=pop.offsetWidth,h=pop.offsetHeight;
+ let top=r.bottom+6;if(top+h>window.innerHeight-8)top=Math.max(8,r.top-h-6);
+ const left=Math.min(Math.max(8,r.right-w),window.innerWidth-w-8);
+ pop.style.top=`${top}px`;pop.style.left=`${left}px`;pop.style.visibility=""}
+function mount(input,btn,pop){
+ closePicker();
+ const backdrop=document.createElement("div");backdrop.className="picker-backdrop";backdrop.addEventListener("click",closePicker);
+ const host=document.querySelector("dialog[open]")||document.body;
+ host.append(backdrop,pop);place(pop,btn,backdrop);btn.classList.add("open");active={input,btn,pop,backdrop}}
+function openDate(input,btn){
+ const sel=parseD(input.value),base=sel||new Date();let vy=base.getFullYear(),vm=base.getMonth();
+ const pop=document.createElement("div");pop.className="picker-pop date-pop";pop.dir="rtl";
+ const render=()=>{
+  const first=new Date(vy,vm,1),offset=(first.getDay()+1)%7,start=new Date(vy,vm,1-offset),now=new Date();
+  const todayS=ds(now.getFullYear(),now.getMonth(),now.getDate());let cells="";
+  for(let i=0;i<42;i++){const d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+i);const s=ds(d.getFullYear(),d.getMonth(),d.getDate());
+   cells+=`<button type="button" class="dp-day${d.getMonth()!==vm?" out":""}${s===todayS?" is-today":""}${s===input.value?" sel":""}" data-day="${s}">${d.getDate()}</button>`}
+  pop.innerHTML=`<div class="dp-head"><button type="button" class="dp-nav" data-nav="-12" aria-label="السنة السابقة">»</button><button type="button" class="dp-nav" data-nav="-1" aria-label="الشهر السابق">›</button><div class="dp-title">${MONTHS[vm]} ${vy}</div><button type="button" class="dp-nav" data-nav="1" aria-label="الشهر التالي">‹</button><button type="button" class="dp-nav" data-nav="12" aria-label="السنة التالية">«</button></div><div class="dp-grid">${WEEKDAYS.map(w=>`<span class="dp-wd">${w}</span>`).join("")}${cells}</div><div class="picker-foot"><button type="button" class="picker-link" data-act="today">اليوم</button>${input.required?"":'<button type="button" class="picker-link danger" data-act="clear">مسح</button>'}</div>`};
+ pop.addEventListener("click",e=>{
+  e.stopPropagation();
+  const nav=e.target.closest("[data-nav]"),day=e.target.closest("[data-day]"),act=e.target.closest("[data-act]");
+  if(nav){const t=vy*12+vm+Number(nav.dataset.nav);vy=Math.floor(t/12);vm=t%12;render()}
+  else if(day){setValue(input,day.dataset.day);closePicker()}
+  else if(act?.dataset.act==="today"){const n=new Date();setValue(input,ds(n.getFullYear(),n.getMonth(),n.getDate()));closePicker()}
+  else if(act?.dataset.act==="clear"){setValue(input,"");closePicker()}});
+ render();mount(input,btn,pop)}
+function centre(el){const col=el.parentElement;col.scrollTop=el.offsetTop-col.clientHeight/2+el.clientHeight/2}
+function openTime(input,btn){
+ const cur=parseT(input.value)||{h:8,m:0};const st={h:cur.h%12||12,m:cur.m,p:cur.h>=12?"PM":"AM"};
+ const pop=document.createElement("div");pop.className="picker-pop time-pop";pop.dir="rtl";
+ const item=(attr,val,label,on)=>`<button type="button" class="tp-item${on?" sel":""}" data-${attr}="${val}">${label}</button>`;
+ pop.innerHTML=`<div class="tp-preview" id="tpPreview"></div><input class="tp-type" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="اكتب الوقت: 9:30 م أو 21:30" aria-label="اكتب الوقت بالكيبورد"><div class="tp-cols"><div><div class="tp-label">الساعة</div><div class="tp-col" data-col="h">${Array.from({length:12},(_,i)=>item("h",i+1,i+1,st.h===i+1)).join("")}</div></div><div><div class="tp-label">الدقيقة</div><div class="tp-col" data-col="m">${Array.from({length:60},(_,i)=>item("m",i,pad(i),st.m===i)).join("")}</div></div><div><div class="tp-label">الفترة</div><div class="tp-col short" data-col="p">${item("p","AM","صباحًا",st.p==="AM")}${item("p","PM","مساءً",st.p==="PM")}</div></div></div><div class="picker-foot"><button type="button" class="picker-link" data-act="now">الآن</button>${input.required?"":'<button type="button" class="picker-link danger" data-act="clear">مسح</button>'}<button type="button" class="picker-done" data-act="done">تم</button></div>`;
+ const value24=()=>`${pad((st.h%12)+(st.p==="PM"?12:0))}:${pad(st.m)}`;
+ const preview=()=>{pop.querySelector("#tpPreview").textContent=`${st.h}:${pad(st.m)} ${st.p==="PM"?"م":"ص"}`};
+ const mark=()=>{pop.querySelectorAll(".tp-item").forEach(b=>{const d=b.dataset;b.classList.toggle("sel",(d.h&&+d.h===st.h)||(d.m!==undefined&&+d.m===st.m)||(d.p&&d.p===st.p))});preview()};
+ pop.addEventListener("click",e=>{
+  e.stopPropagation();
+  const b=e.target.closest(".tp-item"),act=e.target.closest("[data-act]");
+  if(b){ti.value="";ti.classList.remove("bad");if(b.dataset.h)st.h=+b.dataset.h;if(b.dataset.m!==undefined)st.m=+b.dataset.m;if(b.dataset.p)st.p=b.dataset.p;mark();setValue(input,value24())}
+  else if(act){
+   if(act.dataset.act==="now"){const n=new Date();st.h=n.getHours()%12||12;st.m=n.getMinutes();st.p=n.getHours()>=12?"PM":"AM";mark();setValue(input,value24());pop.querySelectorAll(".tp-item.sel").forEach(centre)}
+   else if(act.dataset.act==="clear"){setValue(input,"");closePicker()}
+   else closePicker()}});
+ const ti=pop.querySelector(".tp-type");
+ const parseTyped=raw=>{
+  let s=String(raw||"").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).trim().toLowerCase();
+  if(!s)return null;
+  let p=null;if(/pm|p\.m|م|مساء/.test(s))p="PM";else if(/am|a\.m|ص|صباح/.test(s))p="AM";
+  const t=s.replace(/[^\d:.]/g,"");let h,m,complete;
+  if(/[:.]/.test(t)){const a=t.split(/[:.]/);if(a[0]===""||a[1]===""||a[1]===undefined)return null;h=+a[0];m=+a[1];complete=true}
+  else{const d=t;if(!d||d.length>4)return null;if(d.length<=2){h=+d;m=0;complete=!!p}else if(d.length===3){h=+d[0];m=+d.slice(1);complete=true}else{h=+d.slice(0,2);m=+d.slice(2);complete=true}}
+  if(!(h>=0&&h<=23&&m>=0&&m<=59))return null;
+  let hh,pp;
+  if(h>12){hh=h-12;pp="PM"}else if(h===0){hh=12;pp="AM"}else{hh=h;pp=p||st.p}
+  if(h>12||h===0)p=null;
+  return{h:hh,m,p:pp,complete}};
+ const applyTyped=(final)=>{
+  const r=parseTyped(ti.value);
+  if(!r){ti.classList.toggle("bad",!!ti.value.trim()&&!!final);return false}
+  if(!r.complete&&!final)return false;
+  ti.classList.remove("bad");st.h=r.h;st.m=r.m;st.p=r.p;mark();setValue(input,value24());pop.querySelectorAll(".tp-item.sel").forEach(centre);return true};
+ ti.addEventListener("input",e=>{e.stopPropagation();applyTyped(false)});
+ ti.addEventListener("change",e=>e.stopPropagation());
+ ti.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();e.stopPropagation();if(!ti.value.trim()||applyTyped(true))closePicker();else ti.classList.add("bad")}});
+ ti.addEventListener("blur",()=>{if(ti.value.trim())applyTyped(true)});
+ if(window.visualViewport){const vv=visualViewport;const fix=()=>{if(!pop.isConnected){vv.removeEventListener("resize",fix);vv.removeEventListener("scroll",fix);return}if(pop.classList.contains("sheet"))pop.style.bottom=Math.max(0,innerHeight-vv.height-vv.offsetTop)+"px"};vv.addEventListener("resize",fix);vv.addEventListener("scroll",fix)}
+ mount(input,btn,pop);preview();pop.querySelectorAll(".tp-item.sel").forEach(centre);
+ if(window.matchMedia&&matchMedia("(pointer:fine)").matches){try{ti.focus({preventScroll:true})}catch(e){ti.focus()}}}
+function enhance(input){
+ const type=input.type;if((type!=="date"&&type!=="time")||input.dataset.picker)return;input.dataset.picker="1";
+ const wrap=document.createElement("div");wrap.className="picker-field";
+ const btn=document.createElement("button");btn.type="button";btn.className="picker-btn";
+ btn.innerHTML=`<span class="picker-icon">${ICONS[type]}</span><span class="picker-text"></span><span class="picker-caret">▾</span>`;
+ const text=btn.querySelector(".picker-text");
+ input.parentNode.insertBefore(wrap,input);wrap.append(btn,input);input.tabIndex=-1;input.setAttribute("aria-hidden","true");
+ const refresh=()=>{const v=nativeValue.get.call(input),label=type==="date"?fmtDate(v):fmtTime(v);text.textContent=label||(type==="date"?"اختر التاريخ":"اختر الوقت");btn.classList.toggle("empty",!label)};
+ refreshers.set(input,refresh);
+ Object.defineProperty(input,"value",{configurable:true,get(){return nativeValue.get.call(this)},set(v){nativeValue.set.call(this,v);refresh()}});
+ input.addEventListener("change",refresh);
+ btn.addEventListener("click",()=>{if(active?.input===input)return closePicker();type==="date"?openDate(input,btn):openTime(input,btn)});
+ refresh()}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&active){e.stopImmediatePropagation();e.preventDefault();closePicker()}},true);
+const typing=()=>active&&document.activeElement&&document.activeElement.tagName==="INPUT"&&active.pop.contains(document.activeElement);
+window.addEventListener("resize",()=>{if(typing())return;closePicker()});
+window.addEventListener("scroll",e=>{if(typing())return;if(active&&!active.pop.contains(e.target))closePicker()},true);
+const scan=()=>document.querySelectorAll('input[type="date"], input[type="time"]').forEach(enhance);
+new MutationObserver(scan).observe(document.body,{childList:true,subtree:true});scan();
+})();
+</script>
+<script>
+const T={"درس":["#0f9d8a","📚"],"محاضرة":["#3b82f6","🎓"],"مذاكرة":["#8b5cf6","📝"],"جيم":["#ef4444","🏋️"],"تمرين":["#f97316","💪"],"خروجة":["#ec4899","🎉"],"نوم":["#64748b","😴"],"أخرى":["#78716c","📌"]};
+const ST={present:["حضرت","#16a34a"],late:["اتأخرت","#d97706"],absent:["غبت","#dc2626"],cancel:["اتلغت","#64748b"],excuse:["ظرف حصل","#8b5cf6"]};
+const TS=["لم يبدأ","قيد الحل","تم الحل","تم التسليم","متأخر"],SPL=["Push","Pull","Legs","Upper","Lower","Full body","Cardio","راحة"];
+const DN=["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"],ORD=[6,0,1,2,3,4,5],H0=6,PX=48,STUDY=["درس","محاضرة","مذاكرة"],GYMT=["جيم","تمرين"],ATTT=["درس","محاضرة","جيم","تمرين"],needAtt=e=>typeof e.att==="boolean"?e.att:(ATTT.includes(e.type)||(e.type==="أخرى"&&/مدرس|كلي|سكشن|كورس/.test(e.title||"")));
+const $=s=>document.querySelector(s),esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ld=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const pad2=n=>String(n).padStart(2,"0"),fmt=d=>d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+const pd=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c)},mins=t=>{const[h,m]=t.split(":").map(Number);return h*60+m};
+const dl=s=>pd(s).toLocaleDateString("ar-EG",{weekday:"long",day:"numeric",month:"long"});
+const addDays=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return fmt(d)};
+const ft=s=>{const[h,m]=s.split(":").map(Number);return(h%12||12)+":"+pad2(m)+(h>=12?" م":" ص")};
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));
+const rid=()=>"i"+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
+const PLAN0=["راحة","Push","Pull","Legs","راحة","Push","Pull"];
+function migrate(s){
+  s=s||{};s.ev=s.ev||[];s.att=s.att||{};s.tasks=s.tasks||[];s.lec=s.lec||[];s.subs=s.subs||[];s.gym=s.gym||{plan:[...PLAN0],logs:[]};s.gym.logs=s.gym.logs||[];s.gym.rt=s.gym.rt||{};s.gym.ses=s.gym.ses||null;s.meta=s.meta||{ua:0};
+  if(!s.v||s.v<2){ // ربط المواد: كل مادة ليها id ثابت
+    const by={},arr=[],get=n=>{n=String(n||"").trim();if(!n)return null;if(!by[n]){by[n]={id:rid(),name:n};arr.push(by[n])}return by[n].id};
+    s.subs.forEach(x=>get(typeof x==="string"?x:x.name));
+    s.ev.forEach(e=>{if(STUDY.includes(e.type)&&!e.subjectId)e.subjectId=get(e.title)});
+    s.tasks.forEach(t=>{if(!t.subjectId)t.subjectId=get(t.sub)});s.lec.forEach(l=>{if(!l.subjectId)l.subjectId=get(l.sub)});
+    s.subs=arr;s.v=2}
+  s.ev.forEach(e=>{e.ex=e.ex||[];e.every=e.every||1;e.until=e.until||"";e.days=e.days||[];if(!T[e.type])e.type="أخرى"});
+  s.lec.forEach(l=>{l.n=l.n||1;if(typeof l.d!=="number")l.d=l.w?l.n:0});
+  return s}
+function loadLocal(){let s=ld("hub",null);if(!s){const oa=ld("sch_att",{}),na={};Object.keys(oa).forEach(k=>na[k]={s:oa[k],log:[]});s={ev:ld("sch_ev",[]).map(e=>({...e,place:"",notes:e.hw||"",rem:0})),att:na}}return migrate(s)}
+let S=loadLocal();const REM=ld("hub_rem",{});
+const save=()=>{S.meta.ua=Date.now();try{localStorage.setItem("hub",JSON.stringify(S))}catch(e){}window.Hub&&Hub.onSave&&Hub.onSave()};
+let page="today",sub=null,off=0,mo=0,roff=0,newId=null,cur=null,curDs=null,pend=null,AF={r:45,from:"",to:"",sj:"",n:40},GX="",GM="w",GF="";
+const dayN=s=>{const[a,b,c]=s.split("-").map(Number);return Math.round(Date.UTC(a,b-1,c)/864e5)},wkI=s=>Math.floor((dayN(s)-2)/7);
+const occIn=(L,ds)=>{const w=pd(ds).getDay();return L.filter(e=>e.weekly?(e.days.includes(w)&&ds>=e.date&&(!e.until||ds<=e.until)&&(!e.every||e.every<2||(wkI(ds)-wkI(e.date))%e.every===0)&&!(e.ex||[]).includes(ds)):e.date===ds)};
+const occ=ds=>occIn(S.ev,ds);
+const wsOf=o=>{const t=new Date();t.setHours(0,0,0,0);t.setDate(t.getDate()-((t.getDay()+1)%7)+o*7);return t},ws=()=>wsOf(off);
+const subName=id=>(S.subs.find(s=>s.id===id)||{}).name||"";
+const evSub=e=>e.subjectId&&subName(e.subjectId)?e.subjectId:null,evKey=e=>evSub(e)||"t:"+e.title,keyName=k=>k.startsWith("t:")?k.slice(2):subName(k);
+const NAV=[["today","🏠","اليوم"],["schedule","📅","الجدول"],["attendance","✅","الحضور"],["subjects","📖","المواد"],["more","☰","المزيد"]],MORE=["gym","stats","report"];
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),3000)}
+function burst(c){const cs=[c,"#fbbf24","#ec4899","#5b6cff","#16a34a"];for(let i=0;i<26;i++){const s=document.createElement("span");s.className="cf";s.style.background=cs[i%5];s.style.left="50%";s.style.top="40%";document.body.appendChild(s);const a=Math.random()*6.28,d=80+Math.random()*140;s.animate([{transform:"translate(0,0) rotate(0)",opacity:1},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d+120}px) rotate(${Math.random()*540}deg)`,opacity:0}],{duration:900+Math.random()*500,easing:"cubic-bezier(.2,.8,.4,1)"}).onfinish=()=>s.remove()}}
+function modal(h){$("#dlg").innerHTML=h;if(!$("#dlg").open)$("#dlg").showModal()}
+const close=()=>$("#dlg").close();
+async function notify(t,b,tag){try{if(!("Notification"in window)||Notification.permission!=="granted")return;const r=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();r?r.showNotification(t,{body:b,tag,icon:"icon-192.png",dir:"rtl",lang:"ar"}):new Notification(t,{body:b,tag})}catch(e){}}
+// ---------- تعارض المواعيد ----------
+const ov=(a,b)=>mins(a.start)<mins(b.end)&&mins(b.start)<mins(a.end),chk=e=>e.type!=="نوم";
+function dayConf(L,ds){const l=occIn(L,ds).filter(chk),r=[];for(let i=0;i<l.length;i++)for(let j=i+1;j<l.length;j++)if(ov(l[i],l[j]))r.push([l[i],l[j],ds]);return r}
+function newConf(o,excl){const t=fmt(new Date()),from=o.date>t?o.date:t,others=S.ev.filter(e=>e.id!==excl&&e.id!==o.id),r=[];if(!chk(o))return r;
+  for(let i=0;i<60;i++){const ds=addDays(from,i);if(!occIn([o],ds).length)continue;occIn(others,ds).filter(chk).forEach(x=>{if(ov(o,x))r.push({x,ds})})}return r}
+// ---------- الصفحات ----------
+function render(){
+  $("#nav").innerHTML=NAV.map(n=>`<button data-act="go" data-p="${n[0]}" class="${page===n[0]||(n[0]==="more"&&MORE.includes(page))?"on":""}"><span>${n[1]}</span>${n[2]}</button>`).join("");
+  $("#app").innerHTML=(MORE.includes(page)?'<button class="back" data-act="go" data-p="more">› رجوع</button>':"")+({today:vToday,schedule:vSch,attendance:vAtt,stats:vStats,subjects:vSubs,gym:vGym,report:vRep,more:vMore})[page]()}
+function vMore(){const L=[["go","gym","🏋️","الجيم","تمارينك وتطور الأوزان"],["go","stats","📊","الإحصائيات","نسب الحضور والتقويم"],["go","report","📋","التقرير الأسبوعي","مدى التزامك"],["settings","","⚙️","الإعدادات والمزامنة","الحساب والإشعارات"],["exp","","💾","نسخة احتياطية","تصدير بياناتك كملف"]];
+  return `<h2>المزيد</h2>`+L.map(x=>`<button class="row" data-act="${x[0]}" data-p="${x[1]}"><span class="ico">${x[2]}</span><span><b>${x[3]}</b><small>${x[4]}</small></span><i>‹</i></button>`).join("")}
+let sd=fmt(new Date()),SV=innerWidth>=900?"week":"day";
+function vSch(){const h=`<div class="seg" style="margin:8px 0">${[["day","يوم"],["week","أسبوع"]].map(x=>`<button data-act="sv" data-v="${x[0]}" class="${SV===x[0]?"on":""}">${x[1]}</button>`).join("")}</div>`+(SV==="week"?vWeek():vDay());newId=null;return h}
+function vDay(){const t=fmt(new Date()),d=pd(sd);d.setDate(d.getDate()-((d.getDay()+1)%7));const a=fmt(d),cf=new Set();dayConf(S.ev,sd).forEach(c=>{cf.add(c[0].id);cf.add(c[1].id)});
+  const strip=Array.from({length:7},(_,i)=>{const ds=addDays(a,i);return `<button data-act="sdp" data-d="${ds}" class="dd ${ds===sd?"on":""} ${ds===t?"td":""}"><small>${DN[pd(ds).getDay()].slice(0,3)}</small><b>${pd(ds).getDate()}</b><i>${occ(ds).length?"•":""}</i></button>`}).join("");
+  const ev=occ(sd).sort((x,y)=>mins(x.start)-mins(y.start));
+  return `<div class="nv"><button data-act="sdw" data-n="-1">›</button><b style="flex:1;text-align:center">${dl(sd)}</b><button data-act="sdw" data-n="1">‹</button>${sd!==t?'<button data-act="sdt">اليوم</button>':""}</div><div class="strip">${strip}</div>`+
+  (ev.map(e=>{const r=S.att[e.id+"|"+sd];return `<div class="tl ${e.id===newId?"pop":""}" data-act="edit" data-id="${e.id}" data-ds="${sd}" style="--c:${T[e.type][0]}"><div class="tt"><b>${ft(e.start)}</b><small>${ft(e.end)}</small></div><div class="tc"><b>${cf.has(e.id)?"⚠️ ":""}${T[e.type][1]} ${esc(e.title)}</b><small>${esc(e.place||e.type)}</small>${r?`<span class="tag" style="background:${ST[r.s][1]}">${ST[r.s][0]}</span>`:""}</div></div>`}).join("")||`<div class="empty">اليوم فاضي 🎈<br><button class="p" data-act="add">+ ضيف موعد</button></div>`)}
+function wkData(o){const a=fmt(wsOf(o)),b=addDays(a,6),t=fmt(new Date()),end=b<t?b:t,c={p:0,l:0,a:0,c:0,x:0,un:0,sm:0},M={present:"p",late:"l",absent:"a",cancel:"c",excuse:"x"};
+  (a<=end?past(a,end):[]).forEach(x=>{if(!x.r){c.un++;return}c[M[x.r.s]]++;if((x.r.s==="present"||x.r.s==="late")&&STUDY.includes(x.e.type))c.sm+=mins(x.e.end)-mins(x.e.start)});
+  const den=c.p+c.l+c.a;c.pct=den?Math.round((c.p+c.l)/den*100):null;
+  const plan=S.gym.plan.filter(x=>x!=="راحة").length,lg=S.gym.logs.filter(l=>l.d>=a&&l.d<=b),gd=new Set(lg.map(l=>l.d)).size,
+  gym={n:gd,plan,pct:plan?Math.min(100,Math.round(gd/plan*100)):null,vol:lg.reduce((s,l)=>s+l.v,0)},
+  tw=S.tasks.filter(x=>x.due>=a&&x.due<=b),tk={n:tw.length,done:tw.filter(x=>x.st==="تم التسليم").length};tk.pct=tk.n?Math.round(tk.done/tk.n*100):null;
+  const lw=S.lec.filter(l=>l.wAt&&l.wAt>=a&&l.wAt<=b).length,parts=[c.pct,gym.pct,tk.pct].filter(x=>x!==null);
+  return{a,b,c,gym,tk,lw,score:parts.length?Math.round(parts.reduce((x,y)=>x+y,0)/parts.length):null}}
+function vToday(){
+  const t=fmt(new Date()),n=new Date(),nm=n.getHours()*60+n.getMinutes(),dow=n.getDay();
+  const ev=occ(t).filter(e=>e.type!=="نوم").sort((a,b)=>mins(a.start)-mins(b.start)),pend=past(addDays(t,-45),t).filter(x=>!x.r).length;
+  const tk=S.tasks.filter(x=>x.st!=="تم التسليم"&&x.due&&x.due<=addDays(t,7)).sort((a,b)=>a.due<b.due?-1:1),lw=S.lec.filter(l=>!l.w&&(!l.rel||l.rel<=t)).length;
+  const cf=[];for(let i=0;i<7;i++)dayConf(S.ev,addDays(t,i)).forEach(c=>cf.push(c));
+  const nx=ev.find(e=>mins(e.start)>nm),hm=m=>m>=60?Math.floor(m/60)+" ساعة"+(m%60?" و"+m%60+" دقيقة":""):m+" دقيقة";const w=wkData(0),gp=S.gym.plan[dow],gdone=S.gym.logs.some(l=>l.d===t);
+  const row=e=>{const k=e.id+"|"+t,r=S.att[k],live=mins(e.start)<=nm&&mins(e.end)>nm;
+    return `<div class="card"><h3>${T[e.type][1]} ${esc(e.title)} ${live?'<span class="tag" style="background:#e052a0">دلوقتي</span>':""}</h3><p>${ft(e.start)} – ${ft(e.end)}${e.place?" · "+esc(e.place):""}</p>${r?`<p><span class="tag" style="background:${ST[r.s][1]}">${ST[r.s][0]}</span></p>`:""}<div class="btns">${!r&&needAtt(e)&&mins(e.start)<=nm?`<button class="p" data-act="qp" data-k="${k}">✅ حضرت</button><button data-act="attm" data-k="${k}" data-s="absent">غبت</button><button data-act="attm" data-k="${k}">تفاصيل</button>`:r?`<button data-act="attm" data-k="${k}">عدّل التسجيل</button>`:""}${GYMT.includes(e.type)?`<button data-act="gymfor" data-ds="${t}">💪 سجّل التمرينة</button>`:""}</div></div>`};
+  return `<h2 style="margin-top:8px">${dl(t)}</h2>${nx?`<div class="hero"><small>الموعد الجاي</small><b>${T[nx.type][1]} ${esc(nx.title)}</b><span>بعد ${hm(mins(nx.start)-nm)} · ${ft(nx.start)}${nx.place?" · "+esc(nx.place):""}</span></div>`:`<div class="hero"><small>النهارده</small><b>${ev.length?"خلصت مواعيدك ✨":"يوم فاضي 🎈"}</b></div>`}
+  <div class="g"><div class="card"><div class="big">${ev.length}</div>مواعيد النهارده</div><div class="card" data-act="go" data-p="attendance" style="cursor:pointer"><div class="big">${pend}</div>حصص محتاجة تسجيل</div><div class="card"><div class="big">${tk.length}</div>مهام قربت/متأخرة</div><div class="card"><div class="big">${lw}</div>محاضرات متفرجتش</div></div>
+  ${cf.length?`<div class="warn">⚠️ <b>تعارض في المواعيد:</b><br>${cf.slice(0,4).map(c=>`${esc(c[0].title)} × ${esc(c[1].title)} — ${dl(c[2])}`).join("<br>")}</div>`:""}
+  <h2>جدول النهارده</h2>${ev.map(row).join("")||"<p>النهارده فاضي 🎈</p>"}
+  <h2>🏋️ الجيم</h2><div class="card"><h3>تمرين النهارده: ${gp}</h3><p>${gp==="راحة"?"يوم راحة":gdone?"✅ سجلت تمرينة النهارده":"لسه متسجلتش"} · الأسبوع: ${w.gym.n} من ${w.gym.plan} أيام</p>${gp!=="راحة"&&!gdone?'<div class="btns"><button class="p" data-act="gymfor" data-ds="'+t+'">سجّل تمرينة</button></div>':""}</div>
+  <h2>📌 المهام القريبة</h2>${tk.map(x=>`<div class="card" data-act="sub" data-s="${x.subjectId}" style="cursor:pointer"><h3>${esc(x.title)}</h3><p>${esc(subName(x.subjectId))} · ${x.due<t?'<b style="color:var(--bad)">متأخر</b>':x.due===t?"<b>النهارده</b>":dl(x.due)} · ${x.st}</p></div>`).join("")||"<p>مفيش مهام قريبة ✨</p>"}
+  <h2>📊 الأسبوع ده</h2><div class="card"><div class="big">${w.score===null?"—":w.score+"%"}</div>مؤشر الالتزام (<a href="#report">التقرير الكامل</a>)<div class="bar"><i style="width:${w.score||0}%"></i></div></div>`}
+function vWeek(){
+  const s=ws(),e2=new Date(s),td=fmt(new Date());e2.setDate(e2.getDate()+6);
+  let o=`<div class="nv"><button data-act="wk" data-n="-1">›</button><button data-act="wk" data-n="0">النهارده</button><button data-act="wk" data-n="1">‹</button><b>${s.toLocaleDateString("ar-EG",{day:"numeric",month:"long"})} – ${e2.toLocaleDateString("ar-EG",{day:"numeric",month:"long"})}</b></div><div class="wrap"><div class="grid"><div class="hrs"><div style="height:40px;border:0"></div>`;
+  for(let i=H0;i<24;i++)o+=`<div>${i%12||12}${i<12?"ص":"م"}</div>`;o+="</div>";
+  for(let i=0;i<7;i++){const d=new Date(s);d.setDate(d.getDate()+i);const ds=fmt(d),cs=new Set();dayConf(S.ev,ds).forEach(c=>{cs.add(c[0].id);cs.add(c[1].id)});
+    o+=`<div><div class="dh ${ds===td?"td":""}">${DN[d.getDay()]}<br>${d.getDate()}</div><div class="col">`;
+    occ(ds).forEach(e=>{const a=Math.max(0,mins(e.start)-H0*60),b=Math.max(a+22,mins(e.end)-H0*60),r=S.att[e.id+"|"+ds];
+      o+=`<div class="ev ${e.id===newId?"pop":""} ${cs.has(e.id)?"cfl":""}" data-act="edit" data-id="${e.id}" data-ds="${ds}" style="top:${a*PX/60}px;height:${(b-a)*PX/60-2}px;background:${r?ST[r.s][1]:T[e.type][0]}"><b>${cs.has(e.id)?"⚠️ ":""}${T[e.type][1]} ${esc(e.title)}</b><small>${e.start}${e.place?" · "+esc(e.place):""}${r?" · "+ST[r.s][0]:""}</small></div>`});
+    if(ds===td){const n=new Date(),m=n.getHours()*60+n.getMinutes()-H0*60;if(m>0)o+=`<div class="now" style="top:${m*PX/60}px"></div>`}
+    o+="</div></div>"}
+  newId=null;return o+"</div></div>"}
+// ---------- الحضور ----------
+const minDate=()=>S.ev.reduce((m,e)=>e.date<m?e.date:m,fmt(new Date()));
+function past(from,to){const r=[],n=new Date();let ds=to;for(let i=0;ds>=from&&i<4000;i++,ds=addDays(ds,-1))occ(ds).forEach(e=>{if(!needAtt(e))return;const en=pd(ds);en.setHours(...e.end.split(":").map(Number));if(en<=n)r.push({e,ds,k:e.id+"|"+ds,r:S.att[e.id+"|"+ds]})});return r}
+function detail(r){return r?[r.min?`تأخرت ${r.min} دقيقة`:"",r.why?"السبب: "+esc(r.why):"",r.by?"اللي لغى: "+esc(r.by):"",r.note?esc(r.note):""].filter(Boolean).join(" · "):""}
+function acard(o){return `<div class="card"><h3>${T[o.e.type][1]} ${esc(o.e.title)}</h3><p>${dl(o.ds)} · ${o.e.start}–${o.e.end}${o.e.place?" · "+esc(o.e.place):""}</p>${o.r?`<p><span class="tag" style="background:${ST[o.r.s][1]}">${ST[o.r.s][0]}</span> ${detail(o.r)} <small>(${o.r.log.length} تعديل في السجل)</small></p>`:""}<div class="btns">${Object.keys(ST).map(k=>`<button data-act="attm" data-k="${o.k}" data-s="${k}">${ST[k][0]}</button>`).join("")}${GYMT.includes(o.e.type)?`<button data-act="gymfor" data-ds="${o.ds}">💪 تمرينة</button>`:""}</div></div>`}
+function vAtt(){
+  const t=fmt(new Date()),mn=minDate();let from=AF.r==="c"?(AF.from||mn):AF.r===0?mn:addDays(t,-AF.r),to=AF.r==="c"?(AF.to||t):t;if(from<mn)from=mn;
+  let a=past(from,to);if(AF.sj)a=a.filter(x=>evSub(x.e)===AF.sj);
+  const p=a.filter(x=>!x.r),d=a.filter(x=>x.r),older=from>mn?past(mn,addDays(from,-1)).filter(x=>!x.r).length:0;
+  const R=[[30,"آخر 30 يوم"],[90,"آخر 90 يوم"],[365,"السنة"],[0,"الكل"],["c","فترة"]];
+  return `<div class="chips" style="margin-bottom:8px">${R.map(r=>`<button class="chip ${AF.r===r[0]?"on":""}" data-act="afr" data-r="${r[0]}">${r[1]}</button>`).join("")}</div>
+  ${AF.r==="c"?`<div class="r2"><div><label>من</label><input type="date" data-act="afd" data-k="from" value="${AF.from}"></div><div><label>إلى</label><input type="date" data-act="afd" data-k="to" value="${AF.to}"></div></div>`:""}
+  <select data-act="afs" class="fw" style="margin:8px 0"><option value="">كل المواد</option>${S.subs.map(s=>`<option value="${s.id}" ${AF.sj===s.id?"selected":""}>${esc(s.name)}</option>`).join("")}</select>
+  ${older?`<div class="warn">فيه ${older} حصة أقدم لسه متسجلتش <button data-act="afr" data-r="0">اعرضها</button></div>`:""}
+  <h2>وراك (${p.length})</h2>${p.slice(0,AF.n).map(acard).join("")||"<p>كله متسجل 🎉</p>"}
+  <h2>اتسجل (${d.length}) — تقدر تعدل أي حاجة</h2>${d.slice(0,AF.n).map(acard).join("")||"<p>مفيش سجل في الفترة دي</p>"}
+  ${Math.max(p.length,d.length)>AF.n?'<div class="btns"><button data-act="more">عرض المزيد</button></div>':""}`}
+function stat(){const m={};Object.keys(S.att).forEach(k=>{const[id]=k.split("|"),e=S.ev.find(x=>x.id===id);if(!e||!needAtt(e))return;const r=S.att[k],key=evKey(e),o=m[key]=m[key]||{p:0,l:0,a:0,c:0,x:0,min:0};
+  if(r.s==="present")o.p++;else if(r.s==="late"){o.l++;o.min+=+r.min||0}else if(r.s==="absent")o.a++;else if(r.s==="cancel")o.c++;else o.x++});
+  Object.values(m).forEach(o=>{const t=o.p+o.l+o.a;o.pct=t?Math.round((o.p+o.l)/t*100):null});return m}
+function vStats(){const m=stat(),ks=Object.keys(m),v=Object.values(m),sum=f=>v.reduce((a,o)=>a+o[f],0);
+  const best=ks.filter(k=>m[k].pct!==null).sort((a,b)=>m[b].pct-m[a].pct||(m[b].p-m[a].p))[0];
+  const first=new Date();first.setMonth(first.getMonth()+mo,1);const y=first.getFullYear(),mn=first.getMonth(),dim=new Date(y,mn+1,0).getDate(),lead=(first.getDay()+1)%7;
+  const byD={};Object.keys(S.att).forEach(k=>{const ds=k.split("|")[1];(byD[ds]=byD[ds]||[]).push(S.att[k].s)});
+  let c='<div class="cal">'+ORD.map(i=>`<div class="h">${DN[i].slice(0,3)}</div>`).join("")+"<div class='h'></div>".repeat(lead);
+  for(let d=1;d<=dim;d++){const ds=fmt(new Date(y,mn,d));c+=`<div>${d}<br>${(byD[ds]||[]).map(s=>`<span class="dot" style="background:${ST[s][1]}"></span>`).join("")}</div>`}
+  return `<div class="g"><div class="card"><div class="big">${sum("a")}</div>مرات الغياب</div><div class="card"><div class="big">${sum("l")}</div>مرات التأخير (${sum("min")} د)</div><div class="card"><div class="big">${best?esc(keyName(best)):"—"}</div>أكتر مادة ملتزم فيها${best?" ("+m[best].pct+"%)":""}</div></div>
+  <h2>نسبة الحضور لكل مادة</h2><div class="wrap"><table><tr><th>المادة</th><th>النسبة</th><th>حضور</th><th>تأخير</th><th>غياب</th><th>اتلغت</th><th>ظرف</th></tr>${ks.map(k=>{const o=m[k];return `<tr><td>${esc(keyName(k))}</td><td style="min-width:90px">${o.pct===null?"—":o.pct+"%"}<div class="bar"><i style="width:${o.pct||0}%"></i></div></td><td>${o.p}</td><td>${o.l}</td><td>${o.a}</td><td>${o.c}</td><td>${o.x}</td></tr>`}).join("")||"<tr><td colspan=7>سجّل حضورك الأول وهتظهر الإحصائيات هنا</td></tr>"}</table></div>
+  <h2>تقويم الحضور</h2><div class="nv"><button data-act="mo" data-n="-1">›</button><b>${first.toLocaleDateString("ar-EG",{month:"long",year:"numeric"})}</b><button data-act="mo" data-n="1">‹</button></div>${c}</div>
+  <p>${Object.keys(ST).map(k=>`<span class="dot" style="background:${ST[k][1]}"></span>${ST[k][0]} `).join("")}</p>`}
+// ---------- التقرير الأسبوعي ----------
+function repText(w){return `📋 تقرير لوحتي (${dl(w.a)} – ${dl(w.b)})\nمؤشر الالتزام: ${w.score===null?"—":w.score+"%"}\nالحضور: ${w.c.pct===null?"—":w.c.pct+"%"} (حضور ${w.c.p} · تأخير ${w.c.l} · غياب ${w.c.a} · غير مسجل ${w.c.un})\nساعات الدراسة: ${(w.c.sm/60).toFixed(1)}\nالجيم: ${w.gym.n}/${w.gym.plan} أيام · حجم ${w.gym.vol} كجم\nالمهام: ${w.tk.done}/${w.tk.n} اتسلمت\nمحاضرات اتفرجت: ${w.lw}`}
+function vRep(){const w=wkData(roff),c=w.c,v=w.score===null?"مفيش بيانات كفاية للأسبوع ده":w.score>=85?"أسبوع ممتاز 🔥":w.score>=65?"أسبوع كويس 👍":w.score>=40?"محتاج تشد حيلك شوية 💪":"أسبوع صعب — ابدأ الأسبوع الجاي بخطوة صغيرة";
+  return `<div class="nv"><button data-act="ro" data-n="-1">›</button><button data-act="ro" data-n="0">الأسبوع ده</button><button data-act="ro" data-n="1">‹</button><b>${dl(w.a)} – ${dl(w.b)}</b></div>
+  <div class="card"><div class="big">${w.score===null?"—":w.score+"%"}</div>مؤشر التزامك الأسبوعي<div class="bar"><i style="width:${w.score||0}%"></i></div><p>${v}</p></div>
+  <div class="g"><div class="card"><div class="big">${c.pct===null?"—":c.pct+"%"}</div>نسبة الحضور<p>حضور ${c.p} · تأخير ${c.l} · غياب ${c.a}</p></div><div class="card"><div class="big">${c.un}</div>حصص لسه متسجلتش</div><div class="card"><div class="big">${(c.sm/60).toFixed(1)}</div>ساعات دراسة حضرتها</div><div class="card"><div class="big">${w.gym.n}/${w.gym.plan}</div>أيام جيم · حجم ${w.gym.vol} كجم</div><div class="card"><div class="big">${w.tk.done}/${w.tk.n}</div>مهام اتسلمت</div><div class="card"><div class="big">${w.lw}</div>محاضرات اتفرجت</div></div>
+  <div class="btns"><button class="p" data-act="cprep">📋 انسخ التقرير</button></div>`}
+// ---------- المواد ----------
+let SUBT="over";
+function vSubDetail(sj){
+  const t=fmt(new Date()),evs=S.ev.filter(e=>e.subjectId===sj.id),ids=new Set(evs.map(e=>e.id)),lec=S.lec.filter(l=>l.subjectId===sj.id),tk=S.tasks.filter(x=>x.subjectId===sj.id),m=stat()[sj.id];
+  const open=tk.filter(x=>x.st!=="تم التسليم").sort((a,b)=>a.due<b.due?-1:1),nw=lec.filter(l=>!l.w&&(!l.rel||l.rel<=t)),soon=lec.filter(l=>!l.w&&l.rel>t),wt=lec.filter(l=>l.w);
+  const rel=d=>d<t?'<b style="color:var(--bad)">متأخر · '+dl(d)+"</b>":d===t?"<b>النهارده</b>":dl(d);
+  const lc=l=>{const n=l.n||1,d=l.d||0,rem=n-d,tdy=l.dd===t?(l.dc||0):0,pl=[];
+    if(!l.w){if(l.per>0)pl.push(`هدف النهارده ${tdy}/${l.per} فيديو`);if(l.by)pl.push(l.by<t?`<b style="color:var(--bad)">فات ميعاد ${dl(l.by)}</b>`:`لازم ${Math.ceil(rem/Math.max(1,dayN(l.by)-dayN(t)+1))} فيديو في اليوم لحد ${dl(l.by)}`)}
+    return `<div class="card"><div class="rowc"><b style="flex:1">${esc(l.title)}${l.rel&&!l.w?` <small style="color:var(--mut)">· ${l.rel>t?"هتنزل "+dl(l.rel):"نزلت "+dl(l.rel)}</small>`:""}</b><button data-act="lplan" data-id="${l.id}" title="الخطة">⚙️</button><button data-act="dlec" data-id="${l.id}">🗑</button></div><div class="rowc" style="margin:8px 0"><div class="bar" style="flex:1"><i style="width:${d/n*100}%"></i></div><small>${d}/${n} فيديو</small></div>${pl.length?`<p>${pl.join(" · ")}</p>`:""}<div class="btns"><button data-act="vid" data-id="${l.id}" data-n="-1" ${d?"":"disabled"}>−</button><button class="p" data-act="vid" data-id="${l.id}" data-n="1" ${l.w?"disabled":""}>✅ فيديو اتفرجته</button></div></div>`};
+  const tc=x=>{const late=x.due<t&&x.st!=="تم التسليم",st=late&&x.st!=="متأخر"?"متأخر":x.st;return `<div class="card"><div class="rowc"><b style="flex:1">${esc(x.title)}</b><button data-act="dtask" data-id="${x.id}">🗑</button></div><p>${rel(x.due)}</p><select data-act="tst" data-id="${x.id}" class="fw">${TS.map(y=>`<option ${y===st?"selected":""}>${y}</option>`).join("")}</select></div>`};
+  const tabs=`<div class="seg" style="margin:14px 0">${[["over","نظرة"],["lec","محاضرات"],["task","واجبات"],["att","حضور"]].map(x=>`<button data-act="stab" data-v="${x[0]}" class="${SUBT===x[0]?"on":""}">${x[1]}</button>`).join("")}</div>`;
+  let body="";
+  if(SUBT==="over")body=`<h2>المواعيد</h2>${evs.map(e=>`<div class="card">${T[e.type][1]} <b>${esc(e.title)}</b><p>${e.weekly?e.days.map(d=>DN[d]).join("، "):e.date} · ${ft(e.start)}–${ft(e.end)}${e.place?" · "+esc(e.place):""}</p></div>`).join("")||"<p>مفيش مواعيد في الجدول</p>"}<h2>أقرب تسليمات</h2>${open.slice(0,3).map(tc).join("")||"<p>مفيش مهام مفتوحة ✨</p>"}<h2>محاضرات لسه متفرجتش</h2>${nw.slice(0,3).map(lc).join("")||"<p>كله متفرج ✨</p>"}`;
+  else if(SUBT==="lec")body=`<div class="card"><label>محاضرة جديدة</label><input id="l_t" placeholder="محاضرة 5" class="fw"><label>كام فيديو في المحاضرة؟</label><input type="number" id="l_n" min="1" value="1" class="fw"><label>هتنزل امتى؟ (اختياري)</label><input type="date" id="l_d"><div class="btns"><button class="p" data-act="alec">+ أضف</button></div></div>
+    <div class="card"><b>${wt.length} من ${lec.length} اتفرجت</b><div class="bar" style="margin-top:6px"><i style="width:${lec.length?wt.length/lec.length*100:0}%"></i></div></div>
+    <h2>لسه متفرجتش (${nw.length})</h2>${nw.map(lc).join("")||"<p>—</p>"}${soon.length?`<h2>لسه هتنزل (${soon.length})</h2>${soon.map(lc).join("")}`:""}<h2>اتفرجت (${wt.length})</h2>${wt.map(lc).join("")||"<p>—</p>"}`;
+  else if(SUBT==="task")body=`<div class="card"><label>واجب أو امتحان جديد</label><input id="t_t" placeholder="واجب 4" class="fw"><label>تاريخ التسليم</label><input type="date" id="t_d"><div class="btns"><button class="p" data-act="atask">+ أضف</button></div></div>
+    <h2>مفتوحة (${open.length})</h2>${open.map(tc).join("")||"<p>مفيش مهام مفتوحة ✨</p>"}<h2>اتسلمت (${tk.length-open.length})</h2>${tk.filter(x=>x.st==="تم التسليم").map(tc).join("")||"<p>—</p>"}`;
+  else{const hist=Object.keys(S.att).map(k=>{const[id,ds]=k.split("|");return{id,ds,k,r:S.att[k]}}).filter(x=>ids.has(x.id)).sort((a,b)=>a.ds<b.ds?1:-1);
+    body=m?`<div class="g"><div class="card"><div class="big">${m.p}</div>حضور</div><div class="card"><div class="big">${m.l}</div>تأخير</div><div class="card"><div class="big">${m.a}</div>غياب</div><div class="card"><div class="big">${m.c+m.x}</div>إلغاء/ظرف</div></div>`:"";
+    body+=`<h2>السجل</h2>${hist.slice(0,60).map(x=>`<div class="card" data-act="attm" data-k="${x.k}" data-s="${x.r.s}" style="cursor:pointer"><span class="tag" style="background:${ST[x.r.s][1]}">${ST[x.r.s][0]}</span> ${dl(x.ds)}<p>${detail(x.r)}</p></div>`).join("")||"<p>لسه مفيش تسجيل</p>"}`}
+  return `<div class="nv"><button data-act="go" data-p="subjects">›</button><h2 style="margin:0;flex:1;font-size:21px;color:var(--fg)">${esc(sj.name)}</h2><button data-act="rsub">✏️</button></div>
+  <div class="g"><div class="card"><div class="big">${m&&m.pct!==null?m.pct+"%":"—"}</div>نسبة الحضور</div><div class="card"><div class="big">${open.length}</div>مهام مفتوحة</div><div class="card"><div class="big">${nw.length}</div>محاضرات متفرجتش</div><div class="card"><div class="big">${evs.length}</div>مواعيد</div></div>${tabs}${body}`}
+function vSubs(){
+  if(sub){const sj=S.subs.find(x=>x.id===sub);if(sj)return vSubDetail(sj);sub=null}
+  const m=stat();
+  return `<div class="btns" style="margin:0 0 10px"><input id="s_n" placeholder="مادة جديدة (مثلاً: Data Analysis)" class="fw" style="flex:1"><button class="p" data-act="asub">+ مادة</button></div><div class="g">${S.subs.map(s=>{const o=m[s.id],op=S.tasks.filter(t=>t.subjectId===s.id&&t.st!=="تم التسليم").length;return `<div class="card" data-act="sub" data-s="${s.id}" style="cursor:pointer"><h3>${esc(s.name)}</h3><p>حضور: ${o&&o.pct!==null?o.pct+"%":"—"}</p><p>مهام مفتوحة: ${op}</p></div>`}).join("")||"<p>ضيف أول مادة أو درس وهتظهر هنا</p>"}</div>`}
+// ---------- الجيم ----------
+const wkDone=()=>wkData(0).gym.n;
+function parseEx(txt){const bad=[],x=[];norm(txt).split("\n").map(l=>l.trim()).filter(Boolean).forEach(l=>{const i=l.indexOf(":");if(i<1){bad.push(l);return}const n=l.slice(0,i).trim(),sets=l.slice(i+1).split(/[\s,،]+/).filter(Boolean).map(z=>z.split(/[x×X]/).map(Number));
+  if(!n||!sets.length||!sets.every(z=>z.length===2&&z.every(isFinite)&&z[0]>=0&&z[1]>0))bad.push(l);else x.push({n,sets})});return{x,bad}}
+function svgLine(pts,u){if(pts.length<2)return"<p>محتاج تمرينتين على الأقل عشان الرسم يظهر</p>";const W=640,H=200,P=34,vs=pts.map(p=>p.v),mn=Math.min(...vs),mx=Math.max(...vs),r=mx-mn||1,x=i=>P+(W-2*P)*i/(pts.length-1),y=v=>H-P-(H-2*P)*(v-mn)/r;
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;direction:ltr"><path d="${pts.map((p,i)=>(i?"L":"M")+x(i).toFixed(1)+" "+y(p.v).toFixed(1)).join(" ")}" fill="none" stroke="var(--pri)" stroke-width="2.5"/>${pts.map((p,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="4" fill="var(--pri)"><title>${p.d}: ${p.v}${u}</title></circle>`).join("")}<text x="${P}" y="14" font-size="11" fill="var(--mut)">${mx}${u}</text><text x="${P}" y="${H-6}" font-size="11" fill="var(--mut)">${mn}${u} · ${pts[0].d}</text><text x="${W-P}" y="${H-6}" font-size="11" text-anchor="end" fill="var(--mut)">${pts[pts.length-1].d}</text></svg>`}
+const setsTxt=sets=>sets.map(s=>s[0]+"x"+s[1]).join(" ");
+const lastOf=n=>{const l=[...S.gym.logs].sort((a,b)=>a.d<b.d?1:-1).find(l=>l.x.some(e=>e.n===n));return l?setsTxt(l.x.find(e=>e.n===n).sets):""};
+const rtN=t=>parseEx(S.gym.rt[t]||"").x;
+function saveLog(d,s,m,x){const v=x.reduce((a,e)=>a+e.sets.reduce((b,z)=>b+z[0]*z[1],0),0);S.gym.logs.push({id:rid(),d,s,m,x,v});
+  let n=0;if(d<=fmt(new Date()))occ(d).filter(e=>GYMT.includes(e.type)&&!S.att[e.id+"|"+d]).forEach(e=>{setAtt(e.id+"|"+d,"present",{note:"اتسجل تلقائي من التمرينة"});n++});return n}
+function vGym(){const pl=S.gym.plan,tr=pl.filter(x=>x!=="راحة").length,dn=wkDone(),pc=tr?Math.min(100,Math.round(dn/tr*100)):0,td=new Date().getDay(),gd=GF||fmt(new Date()),gp=pl[pd(gd).getDay()],se=S.gym.ses;
+  const exs=[...new Set(S.gym.logs.flatMap(l=>l.x.map(x=>x.n)))],ex=exs.includes(GX)?GX:exs[0];
+  const pts=ex?[...S.gym.logs].sort((a,b)=>a.d<b.d?-1:1).map(l=>{const e=l.x.find(x=>x.n===ex);if(!e)return null;const f=GM==="w"?Math.max(...e.sets.map(s=>s[0])):GM==="e"?Math.max(...e.sets.map(s=>s[0]*(1+s[1]/30))):e.sets.reduce((a,s)=>a+s[0]*s[1],0);return{d:l.d,v:Math.round(f*10)/10}}).filter(Boolean):[];
+  const types=SPL.filter(x=>x!=="راحة"),rts=[...new Set([...pl.filter(x=>x!=="راحة"),...Object.keys(S.gym.rt)])];
+  let top;
+  if(se){const k=se.x.filter(e=>e.ok).length;
+    top=`<div class="card"><h3>🏋️ ${esc(se.s)} · ${dl(se.d)}</h3><p>${k} من ${se.x.length} اتعملوا</p><div class="bar"><i style="width:${se.x.length?k/se.x.length*100:0}%"></i></div></div>`+
+    se.x.map(e=>`<div class="card ex ${e.ok?"done":""}"><div class="exh"><button class="chk ${e.ok?"on":""}" data-act="exok" data-id="${e.id}">${e.ok?"✓":""}</button><b>${esc(e.n)}</b><button data-act="exdel" data-id="${e.id}">🗑</button></div><input class="fw" data-act="exset" data-id="${e.id}" value="${esc(e.sets)}" placeholder="60x8 60x8 60x8"><small>${lastOf(e.n)?"آخر مرة: "+lastOf(e.n):"أول مرة"}</small></div>`).join("")+
+    `<div class="card"><label>تمرين إضافي</label><div class="btns" style="margin:0"><input id="x_n" placeholder="اسم التمرين" style="flex:2" class="fw"><input id="x_s" placeholder="40x10 40x10" style="flex:2" class="fw"><button class="p" data-act="exadd">+</button></div></div>
+    <div class="btns"><button class="p" data-act="exend">✅ إنهاء وحفظ</button><button data-act="exrt">💾 احفظ الأوزان في الروتين</button><button data-act="excancel" style="color:var(--bad)">إلغاء الجلسة</button></div>`}
+  else top=`<div class="card"><h3>${gp==="راحة"?"النهارده راحة 😴":"تمرين "+gp}</h3><p>${dl(gd)}${gp!=="راحة"&&rtN(gp).length?" · "+rtN(gp).length+" تمارين جاهزة":""}</p><label>نوع التمرين</label><select id="g_st">${types.map(x=>`<option ${x===(gp==="راحة"?types[0]:gp)?"selected":""}>${x}</option>`).join("")}</select><div class="btns"><button class="p" data-act="exstart">▶️ ابدأ التمرينة</button></div></div>`;
+  return `<div class="card"><h3>التزامك الأسبوعي: ${dn} من ${tr} أيام</h3><div class="bar"><i style="width:${pc}%"></i></div></div>
+  <h2>${se?"التمرينة الجارية":"النهارده"}</h2>${top}
+  <h2>تمارين كل تقسيمة (الروتين)</h2>${rts.map(t=>{const l=rtN(t);return `<div class="card"><h3>${esc(t)}</h3><p>${l.length?l.map(e=>esc(e.n)).join("، "):"لسه مفيش تمارين"}</p><div class="btns"><button data-act="rted" data-t="${esc(t)}">✏️ ${l.length?"عدّل":"أضف تمارين"}</button></div></div>`}).join("")}
+  <h2>تقسيمة الأسبوع</h2><div class="g">${ORD.map(i=>`<div class="card"><b>${DN[i]}${i===td?" • النهارده":""}</b><select data-act="plan" data-i="${i}" class="fw">${SPL.map(x=>`<option ${pl[i]===x?"selected":""}>${x}</option>`).join("")}</select></div>`).join("")}</div>
+  ${ex?`<h2>📈 تطور الأوزان</h2><div class="card"><select data-act="gex" class="fw">${exs.map(x=>`<option ${x===ex?"selected":""}>${esc(x)}</option>`).join("")}</select><div class="seg" style="margin:8px 0">${[["w","أقصى وزن"],["e","1RM تقديري"],["v","حجم التمرين"]].map(m=>`<button data-act="gm" data-v="${m[0]}" class="${GM===m[0]?"on":""}">${m[1]}</button>`).join("")}</div>${svgLine(pts,"كجم")}</div>`:""}
+  <h2>آخر التمارين</h2>${[...S.gym.logs].sort((a,b)=>a.d<b.d?1:-1).slice(0,15).map(l=>`<div class="card"><h3>${esc(l.s)} · ${dl(l.d)}</h3><p>${l.m} دقيقة · حجم التمرين ${l.v} كجم</p>${l.x.map(x=>`<p>${esc(x.n)}: ${x.sets.map(s=>s[0]+"×"+s[1]).join("  ")}</p>`).join("")}<button data-act="dg" data-id="${l.id}">🗑</button></div>`).join("")||"<p>لسه مفيش تمارين</p>"}
+  <details class="card" style="margin-top:14px"><summary>تسجيل تمرينة يدويًا (من غير روتين)</summary><div class="r2"><div><label>اليوم</label><input type="date" id="g_d" value="${gd}"></div><div><label>النوع</label><select id="g_s">${types.map(x=>`<option ${gp===x?"selected":""}>${x}</option>`).join("")}</select></div><div><label>المدة (دقيقة)</label><input type="number" id="g_m" value="60" min="0"></div></div>
+  <label>كل تمرين في سطر: الاسم: وزنxتكرار وزنxتكرار</label><textarea id="g_x" rows="4" class="fw" placeholder="Bench press: 60x8 60x8 65x6"></textarea><div class="btns"><button class="p" data-act="glog">حفظ التمرينة</button></div></details>`}
+// ---------- نموذج الموعد ----------
+function evForm(e,ds){const x=e||{title:"",type:"درس",start:"16:00",end:"17:30",date:(page==="schedule"&&SV==="day"?sd:fmt(new Date())),weekly:true,days:[],place:"",notes:"",rem:0,every:1,until:"",subjectId:sub||""};
+  cur=e?e.id:null;curDs=e&&e.weekly?(ds||e.date):null;const dv=curDs||x.date,rep=!x.weekly?"once":(x.every===2?"two":"one");
+  modal(`<h3 style="margin-top:0">${e?"تعديل":"إضافة موعد"}</h3>${e&&e.weekly?`<p class="sum">بتعدّل حصة يوم ${dl(curDs)} — هتختار بعد الحفظ تأثيره على أنهي حصص</p>`:""}
+  <label>النوع</label><select id="f_ty">${Object.keys(T).map(k=>`<option ${k===x.type?"selected":""}>${k}</option>`).join("")}</select>
+  <div id="f_sjb" class="${STUDY.includes(x.type)?"":"hid"}"><label>المادة</label><select id="f_sj"><option value="">اختار المادة…</option>${S.subs.map(s=>`<option value="${s.id}" ${s.id===x.subjectId?"selected":""}>${esc(s.name)}</option>`).join("")}<option value="__new">➕ مادة جديدة…</option></select><input id="f_sn" class="hid" placeholder="اسم المادة الجديدة" style="margin-top:6px"></div>
+  <label>الاسم ${STUDY.includes(x.type)?"(اختياري — مثلاً: درس الأحد)":""}</label><input id="f_t" value="${esc(x.title)}" placeholder="جيم / نوم / درس...">
+  <div class="r2"><div><label>من</label><input type="time" id="f_s" value="${x.start}" required></div><div><label>إلى</label><input type="time" id="f_e" value="${x.end}" required></div></div>
+  <label>${curDs?"تاريخ الحصة دي":"التاريخ (أول مرة)"}</label><input type="date" id="f_d" value="${dv}" required>
+  <label>التكرار</label>${seg("f_rep",rep,[["once","مرة واحدة"],["one","كل أسبوع"],["two","كل أسبوعين"]])}
+  <div id="f_rb" class="${rep==="once"?"hid":""}"><label>في أنهي أيام؟</label><div class="chips" id="f_ds">${ORD.map(i=>`<button type="button" data-act="day" data-d="${i}" class="chip${x.days.includes(i)?" on":""}">${DN[i]}</button>`).join("")}</div>
+  <label>ينتهي</label>${seg("f_un",x.until?"date":"none",[["none","من غير نهاية"],["date","في تاريخ"]])}
+  <div id="f_ub" class="${x.until?"":"hid"}" style="margin-top:6px"><input type="date" id="f_u" value="${x.until||""}"></div></div>
+  <p class="sum" id="f_sum"></p><label>المكان</label><input id="f_p" value="${esc(x.place)}">
+  <label>تذكير قبل الموعد</label><select id="f_r">${[[0,"من غير"],[10,"10 دقايق"],[30,"30 دقيقة"],[60,"ساعة"]].map(r=>`<option value="${r[0]}" ${r[0]==x.rem?"selected":""}>${r[1]}</option>`).join("")}</select>
+  <label>تسجيل الحضور</label><select id="f_att">${[["","تلقائي (حسب النوع)"],["y","أيوه، سجّل حضور"],["n","لأ، من غير حضور"]].map(r=>`<option value="${r[0]}" ${r[0]===(x.att===true?"y":x.att===false?"n":"")?"selected":""}>${r[1]}</option>`).join("")}</select>
+  <label>ملاحظات</label><textarea id="f_n" rows="2">${esc(x.notes)}</textarea>
+  <div class="btns"><button class="p" data-act="sev">حفظ</button><button data-act="close">إلغاء</button>${e?'<button data-act="dev" style="color:var(--bad)">حذف</button>':""}</div>`);sumF()}
+const seg=(id,v,list)=>`<div class="seg" id="${id}" data-v="${v}">${list.map(([k,l])=>`<button type="button" data-act="${id==="f_rep"?"rep":"unt"}" data-v="${k}" class="${k===v?"on":""}">${l}</button>`).join("")}</div>`;
+function sumF(){const r=$("#f_rep").dataset.v,d=$("#f_d").value;let t;if(!d)t="اختار التاريخ";else if(r==="once")t="مرة واحدة يوم "+dl(d);else{const ds=[...document.querySelectorAll("#f_ds .chip.on")].map(b=>DN[+b.dataset.d]);t=(r==="two"?"كل أسبوعين":"كل أسبوع")+" ("+(ds.length?ds.join("، "):DN[pd(d).getDay()])+") من "+dl(d)+" — "+(($("#f_un").dataset.v==="date"&&$("#f_u").value)?"لحد "+dl($("#f_u").value):"من غير تاريخ نهاية")}$("#f_sum").textContent=t}
+function readForm(){const ty=$("#f_ty").value,rp=$("#f_rep").dataset.v,w=rp!=="once",d=$("#f_d").value,s=$("#f_s").value,e=$("#f_e").value;let t=$("#f_t").value.trim(),sj=null,un="";
+  if(!d)return toast("اختار التاريخ"),null;if(!s||!e)return toast("حدد وقت البداية والنهاية"),null;
+  if(mins(e)<=mins(s))return toast("لازم الموعد ينتهي بعد ما يبدأ (لو بعد نص الليل قسّمه لموعدين)"),null;
+  if(w&&$("#f_un").dataset.v==="date"){un=$("#f_u").value;if(!un)return toast("اختار تاريخ نهاية التكرار"),null;if(un<d)return toast("تاريخ النهاية قبل تاريخ البداية"),null}
+  if(STUDY.includes(ty)){const v=$("#f_sj").value;if(!v)return toast("اختار المادة"),null;if(v==="__new"){const n=$("#f_sn").value.trim();if(!n)return toast("اكتب اسم المادة"),null;sj="__new:"+n;if(!t)t=ty+" "+n}else{sj=v;if(!t)t=ty+" "+subName(v)}}else if(!t)return toast("اكتب الاسم"),null;
+  let days=[...document.querySelectorAll("#f_ds .chip.on")].map(b=>+b.dataset.d);if(w&&!days.length)days=[pd(d).getDay()];
+  return{id:rid(),title:t,type:ty,subjectId:sj,start:s,end:e,date:d,weekly:w,days:w?days:[],every:rp==="two"?2:1,until:un,place:$("#f_p").value,notes:$("#f_n").value,rem:+$("#f_r").value,att:{y:true,n:false}[$("#f_att").value],ex:[]}}
+function moveAtt(a,b){if(S.att[a]){S.att[b]=S.att[a];delete S.att[a]}}
+function commit(o,old,ds,scope){
+  const cf=newConf(o,old&&old.id);if(cf.length&&!confirm("⚠️ فيه تعارض مع:\n"+cf.slice(0,3).map(c=>`${c.x.title} (${c.x.start}–${c.x.end}) — ${dl(c.ds)}`).join("\n")+"\n\nتحفظ برضه؟"))return false;
+  if(o.subjectId&&o.subjectId.startsWith("__new:")){const n=o.subjectId.slice(6);let x=S.subs.find(s=>s.name===n);if(!x){x={id:rid(),name:n};S.subs.push(x)}o.subjectId=x.id}
+  let n=o;
+  if(!old)S.ev.push(o);
+  else if(!old.weekly){o.id=old.id;S.ev=S.ev.map(x=>x.id===old.id?o:x)}
+  else if(scope==="all"){o.id=old.id;o.ex=old.ex;if(o.weekly&&o.date===ds)o.date=old.date;S.ev=S.ev.map(x=>x.id===old.id?o:x)}
+  else if(scope==="one"){old.ex=[...old.ex,ds];Object.assign(o,{weekly:false,days:[],every:1,until:""});moveAtt(old.id+"|"+ds,o.id+"|"+o.date);S.ev.push(o)}
+  else{ // next: نقفل السلسلة القديمة ونفتح واحدة جديدة من الحصة دي
+    o.ex=old.ex.filter(d=>d>=ds);Object.keys(S.att).filter(k=>k.startsWith(old.id+"|")&&k.split("|")[1]>=ds).forEach(k=>moveAtt(k,o.id+"|"+k.split("|")[1]));
+    const prev=addDays(ds,-1);if(prev<old.date)S.ev=S.ev.filter(x=>x!==old);else{old.until=prev;old.ex=old.ex.filter(d=>d<=prev)}S.ev.push(o)}
+  save();close();pend=null;if(!old)sd=n.date;if(!old){newId=n.id;burst(T[n.type][0]);toast(T[n.type][1]+" اتضاف ✨")}else toast("اتحفظ");render();return true}
+function applyDel(old,ds,scope){const own=k=>k.startsWith(old.id+"|");
+  if(scope==="one"){old.ex.push(ds);delete S.att[old.id+"|"+ds]}
+  else if(scope==="next"){Object.keys(S.att).forEach(k=>{if(own(k)&&k.split("|")[1]>=ds)delete S.att[k]});const prev=addDays(ds,-1);if(prev<old.date)S.ev=S.ev.filter(x=>x!==old);else old.until=prev}
+  else{S.ev=S.ev.filter(x=>x.id!==old.id);Object.keys(S.att).forEach(k=>{if(own(k))delete S.att[k]})}}
+function scopeDlg(){const del=pend.mode==="del";modal(`<h3 style="margin-top:0">${del?"حذف":"تعديل"} موعد متكرر</h3><p>الحصة اللي اخترتها: <b>${dl(pend.ds)}</b></p><div class="btns" style="flex-direction:column;align-items:stretch"><button data-act="scope" data-s="one">الحصة دي فقط</button><button data-act="scope" data-s="next">الحصة دي والحصص القادمة <small>(سجل الحضور القديم بيفضل)</small></button><button data-act="scope" data-s="all">السلسلة كلها${del?" <small>(وكمان سجل حضورها)</small>":""}</button><button data-act="close">إلغاء</button></div>`)}
+// ---------- نموذج الحضور ----------
+function attForm(k,s){const[id,ds]=k.split("|"),e=S.ev.find(x=>x.id===id);if(!e)return toast("الموعد ده اتحذف");const r=S.att[k]||{log:[]};cur=k;const st=s||r.s||"present";
+  modal(`<h3 style="margin-top:0">${esc(e.title)} · ${dl(ds)}</h3><label>الحالة</label><select id="a_s" data-act="ast">${Object.keys(ST).map(x=>`<option value="${x}" ${x===st?"selected":""}>${ST[x][0]}</option>`).join("")}</select>
+  <div id="a_m"><label>دقايق التأخير</label><input type="number" min="0" id="a_min" value="${r.min||""}"></div><div id="a_w"><label>السبب</label><input id="a_why" value="${esc(r.why||"")}"></div><div id="a_b"><label>مين اللي لغى؟</label><input id="a_by" value="${esc(r.by||"")}" placeholder="المدرس / السنتر"></div>
+  <label>ملاحظة</label><textarea id="a_n" rows="2">${esc(r.note||"")}</textarea>${r.log.length?`<label>السجل</label>${r.log.map(l=>`<small>${new Date(l.t).toLocaleString("ar-EG")} → ${ST[l.s][0]}</small><br>`).join("")}`:""}
+  <div class="btns"><button class="p" data-act="satt">حفظ</button><button data-act="close">إلغاء</button>${S.att[k]?'<button data-act="datt" style="color:var(--bad)">مسح التسجيل</button>':""}</div>`);vis()}
+function vis(){const s=$("#a_s").value;$("#a_m").classList.toggle("hid",s!=="late");$("#a_w").classList.toggle("hid",!["absent","excuse"].includes(s));$("#a_b").classList.toggle("hid",s!=="cancel")}
+function setAtt(k,s,x){const p=S.att[k],log=p?p.log:[];log.push({t:new Date().toISOString(),s});S.att[k]={s,min:0,why:"",by:"",note:"",...x,log}}
+// ---------- الإعدادات والنسخ الاحتياطي ----------
+function settings(){const H=Hub,u=H.user,ic={ok:"☁️ متزامن",syncing:"🔄 بيزامن…",err:"⚠️ مشكلة في المزامنة",off:"📴 غير متزامن"}[H.sync||"off"],pv=(u&&u.providers)||[],hasG=pv.includes("google.com"),hasP=pv.includes("password");let acc;
+  if(!H.cfg)acc="<p>Firebase لسه متضبطش — افتح ملف <code>firebase-config.js</code> (شوف SETUP.md).</p>";
+  else if(u)acc=`<p>${ic}<br>${esc(u.email||u.name||"")}</p><p><small>طرق الدخول المربوطة: ${[hasG?"جوجل ✅":"",hasP?"إيميل وباسورد ✅":""].filter(Boolean).join(" · ")||"—"}</small></p>
+    ${hasG?"":'<div class="btns"><button data-act="lkg">🔗 اربط حساب جوجل</button></div>'}
+    ${hasP||!u.email?"":`<label>أضف باسورد عشان تدخل بيه بالإيميل (${esc(u.email)})</label><div class="btns" style="margin:0"><input id="ae_lp" type="password" autocomplete="new-password" placeholder="باسورد (6 حروف+)" dir="ltr" style="flex:2" class="fw"><button data-act="lkp">🔗 اربط</button></div>`}
+    <div class="btns"><button data-act="syncout">تسجيل خروج</button></div>`;
+  else acc=`<button class="p fw" data-act="syncin">دخول بحساب جوجل</button><p style="text-align:center;color:var(--mut);margin:10px 0 0">— أو بالإيميل —</p>
+    <label>الإيميل</label><input id="ae_e" type="email" autocomplete="email" dir="ltr" class="fw"><label>الباسورد</label><input id="ae_p" type="password" autocomplete="current-password" dir="ltr" class="fw">
+    <div class="btns"><button class="p" data-act="emin">دخول</button><button data-act="emup">إنشاء حساب</button><button data-act="emrs">نسيت الباسورد</button></div>`;
+  modal(`<h3 style="margin-top:0">⚙️ الإعدادات</h3><div id="st_box"><b>الحساب والمزامنة</b>${acc}
+  <p style="margin-bottom:4px"><b>الإشعارات</b></p><p style="margin-top:0">${H.push?"🔔 شغالة على الجهاز ده (بتوصلك حتى والموقع مقفول)":"مقفولة على الجهاز ده"}</p><div class="btns">${H.push?'<button data-act="pushoff">إيقاف</button>':'<button class="p" data-act="pushon">🔔 تفعيل الإشعارات</button>'}</div>
+  <p style="margin-bottom:4px"><b>نسخة احتياطية</b></p><div class="btns"><button data-act="exp">💾 تصدير نسخة</button><button data-act="impb">📂 استرجاع من ملف</button><input type="file" id="imp" accept=".json,application/json" class="hid"></div></div><div class="btns"><button data-act="close">إغلاق</button></div>`)}
+const cred=()=>{const e=$("#ae_e").value.trim(),p=$("#ae_p").value;if(!/\S+@\S+\.\S+/.test(e))return toast("اكتب إيميل صحيح"),null;if(p.length<6)return toast("الباسورد 6 حروف على الأقل"),null;return{e,p}};
+// ---------- الأفعال ----------
+const A={
+  exstart:()=>{const t=$("#g_st").value;S.gym.ses={d:GF||fmt(new Date()),s:t,st:Date.now(),x:rtN(t).map(e=>({id:rid(),n:e.n,sets:setsTxt(e.sets),ok:false}))};save();render();if(!S.gym.ses.x.length)toast("الروتين فاضي — ضيف تمارينك تحت أو من «تمرين إضافي»")},
+  exok:b=>{const e=S.gym.ses.x.find(x=>x.id===b.dataset.id);e.ok=!e.ok;save();if(e.ok&&S.gym.ses.x.every(x=>x.ok))burst("#16a34a");render()},
+  exdel:b=>{S.gym.ses.x=S.gym.ses.x.filter(x=>x.id!==b.dataset.id);save();render()},
+  exset:b=>{const e=S.gym.ses.x.find(x=>x.id===b.dataset.id);if(e){e.sets=b.value;save()}},
+  exadd:()=>{const n=$("#x_n").value.replace(/:/g,"").trim();if(!n)return toast("اكتب اسم التمرين");S.gym.ses.x.push({id:rid(),n,sets:$("#x_s").value.trim(),ok:false});save();render()},
+  excancel:()=>{if(confirm("تلغي الجلسة الحالية؟")){S.gym.ses=null;save();render()}},
+  exrt:()=>{const se=S.gym.ses,r=parseEx(se.x.map(e=>e.n+": "+e.sets).join("\n"));if(r.bad.length)return toast("صيغة غلط: "+r.bad[0]);S.gym.rt[se.s]=r.x.map(e=>e.n+": "+setsTxt(e.sets)).join("\n");save();toast("💾 اتحدّث روتين "+se.s)},
+  exend:()=>{const se=S.gym.ses,done=se.x.filter(e=>e.ok);if(!done.length)return toast("علّم تمرين واحد على الأقل بعلامة ✓");
+    const{x,bad}=parseEx(done.map(e=>e.n+": "+e.sets).join("\n"));if(bad.length)return toast("صيغة غلط: "+bad[0]+" — الصيغة: 60x8 60x8");
+    const n=saveLog(se.d,se.s,Math.min(300,Math.max(1,Math.round((Date.now()-se.st)/6e4))),x);S.gym.ses=null;GF="";save();burst("#ef4444");toast("💪 اتسجلت"+(n?" · واتسجل حضور الجيم":""));render()},
+  rted:b=>{cur=b.dataset.t;modal(`<h3 style="margin-top:0">تمارين ${esc(cur)}</h3><p class="sum">كل تمرين في سطر: الاسم: وزنxتكرار وزنxتكرار</p><textarea id="r_x" rows="9" class="fw" placeholder="Bench press: 60x8 60x8 60x8&#10;Dips: 0x12 0x10">${esc(S.gym.rt[cur]||"")}</textarea><div class="btns"><button class="p" data-act="rtsave">حفظ</button><button data-act="close">إلغاء</button></div>`)},
+  rtsave:()=>{const{x,bad}=parseEx($("#r_x").value);if(bad.length)return toast("سطر غلط: "+bad[0]);S.gym.rt[cur]=x.map(e=>e.n+": "+setsTxt(e.sets)).join("\n");save();close();toast("اتحفظ ✅");render()},
+  stab:b=>{SUBT=b.dataset.v;render()},
+  sv:b=>{SV=b.dataset.v;render()},sdp:b=>{sd=b.dataset.d;render()},sdw:b=>{sd=addDays(sd,7*b.dataset.n);render()},sdt:()=>{sd=fmt(new Date());render()},
+  go:b=>{page=b.dataset.p;sub=null;location.hash=page;render()},add:()=>evForm(null),edit:b=>evForm(S.ev.find(e=>e.id===b.dataset.id),b.dataset.ds),close,
+  wk:b=>{off=+b.dataset.n?off+ +b.dataset.n:0;render()},mo:b=>{mo+=+b.dataset.n;render()},ro:b=>{roff=+b.dataset.n?roff+ +b.dataset.n:0;render()},
+  attm:b=>attForm(b.dataset.k,b.dataset.s),ast:vis,
+  qp:b=>{setAtt(b.dataset.k,"present");save();burst("#16a34a");toast("اتسجل ✅");render()},
+  satt:()=>{const k=cur,s=$("#a_s").value,m=+$("#a_min").value;if(s==="late"&&!(m>=0))return toast("اكتب دقايق التأخير");
+    setAtt(k,s,{min:s==="late"?m||0:0,why:["absent","excuse"].includes(s)?$("#a_why").value:"",by:s==="cancel"?$("#a_by").value:"",note:$("#a_n").value});save();close();if(s==="present")burst("#16a34a");toast("اتسجل ✅");render()},
+  datt:()=>{delete S.att[cur];save();close();render()},
+  afr:b=>{AF.r=b.dataset.r==="c"?"c":+b.dataset.r;AF.n=40;render()},afd:b=>{AF[b.dataset.k]=b.value;render()},afs:b=>{AF.sj=b.value;render()},more:()=>{AF.n+=40;render()},
+  sev:()=>{const o=readForm();if(!o)return;const old=cur?S.ev.find(x=>x.id===cur):null;if(old&&old.weekly){pend={mode:"save",o,old,ds:curDs};scopeDlg()}else commit(o,old,null,"all")},
+  scope:b=>{const p=pend;if(!p)return;if(p.mode==="save")commit(p.o,p.old,p.ds,b.dataset.s);else{applyDel(p.old,p.ds,b.dataset.s);save();close();pend=null;toast("اتحذف");render()}},
+  dev:()=>{const old=S.ev.find(x=>x.id===cur);if(!old)return;if(old.weekly){pend={mode:"del",old,ds:curDs};scopeDlg()}else if(confirm("تحذف الموعد؟")){applyDel(old,null,"all");save();close();render()}},
+  rep:b=>{const g=$("#f_rep");g.dataset.v=b.dataset.v;g.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));$("#f_rb").classList.toggle("hid",b.dataset.v==="once");sumF()},
+  day:b=>{b.classList.toggle("on");sumF()},unt:b=>{const g=$("#f_un");g.dataset.v=b.dataset.v;g.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));$("#f_ub").classList.toggle("hid",b.dataset.v!=="date");sumF()},
+  sub:b=>{page="subjects";sub=b.dataset.s;SUBT="over";location.hash="subjects";render()},
+  asub:()=>{const v=$("#s_n").value.trim();if(!v)return;if(S.subs.some(s=>s.name===v))return toast("المادة دي موجودة");S.subs.push({id:rid(),name:v});save();burst("#5b6cff");render()},
+  rsub:()=>{const s=S.subs.find(x=>x.id===sub),n=(prompt("اسم المادة الجديد",s.name)||"").trim();if(n&&!S.subs.some(x=>x!==s&&x.name===n)){s.name=n;save();render()}},
+  alec:()=>{const t=$("#l_t").value.trim();if(!t)return toast("اكتب اسم المحاضرة");S.lec.push({id:rid(),subjectId:sub,title:t,rel:$("#l_d").value,w:false,n:Math.max(1,parseInt(norm($("#l_n").value))||1),d:0});save();toast("🎬 اتضافت");render()},
+  vid:b=>{const l=S.lec.find(x=>x.id===b.dataset.id);if(!l)return;const n=l.n||1,td=fmt(new Date()),k=+b.dataset.n;
+    if(l.dd!==td){l.dd=td;l.dc=0}
+    if(k>0){l.d=Math.min(n,(l.d||0)+1);l.dc=(l.dc||0)+1}else{l.d=Math.max(0,(l.d||0)-1);l.dc=Math.max(0,(l.dc||0)-1)}
+    const was=l.w;l.w=l.d>=n;l.wAt=l.w?(was&&l.wAt?l.wAt:td):"";save();
+    if(l.w&&!was){burst("#3b82f6");toast("🎉 خلصت المحاضرة كلها")}else if(k>0&&l.per>0&&l.dc===l.per){burst("#16a34a");toast("🎯 خلصت هدف النهارده")}else if(k>0)toast("✅ "+l.d+"/"+n);render()},
+  lplan:b=>{const l=S.lec.find(x=>x.id===b.dataset.id);if(!l)return;cur=l.id;
+    modal(`<h3 style="margin-top:0">🎬 ${esc(l.title)}</h3><label>عدد الفيديوهات الكلي</label><input type="number" id="l_pn" min="1" value="${l.n||1}"><label>اتفرجت كام فيديو</label><input type="number" id="l_pd" min="0" value="${l.d||0}"><label>عايز تتفرج كام فيديو في اليوم؟ (اختياري)</label><input type="number" id="l_pp" min="0" value="${l.per||""}" placeholder="مثلاً 2"><label>أو تخلصها قبل تاريخ (اختياري)</label><input type="date" id="l_pb" value="${l.by||""}"><div class="btns"><button class="p" data-act="lpsave">حفظ</button><button data-act="close">إلغاء</button></div>`)},
+  lpsave:()=>{const l=S.lec.find(x=>x.id===cur);if(!l)return;const n=Math.max(1,parseInt(norm($("#l_pn").value))||1),d=Math.min(n,Math.max(0,parseInt(norm($("#l_pd").value))||0)),per=Math.max(0,parseInt(norm($("#l_pp").value))||0);
+    Object.assign(l,{n,d,per,by:$("#l_pb").value});l.w=d>=n;l.wAt=l.w?(l.wAt||fmt(new Date())):"";save();close();toast("اتحفظت الخطة ✅");render()},
+  watch:b=>{const l=S.lec.find(x=>x.id===b.dataset.id);l.w=b.checked;l.wAt=b.checked?fmt(new Date()):"";save();if(l.w)burst("#3b82f6");render()},dlec:b=>{S.lec=S.lec.filter(x=>x.id!==b.dataset.id);save();render()},
+  atask:()=>{const t=$("#t_t").value.trim(),d=$("#t_d").value;if(!t)return toast("اكتب اسم المهمة");if(!d)return toast("اختار تاريخ التسليم");S.tasks.push({id:rid(),subjectId:sub,title:t,due:d,st:"لم يبدأ"});save();toast("📌 اتضافت");render()},
+  tst:b=>{const t=S.tasks.find(x=>x.id===b.dataset.id);t.st=b.value;save();if(b.value==="تم التسليم")burst("#16a34a");render()},dtask:b=>{S.tasks=S.tasks.filter(x=>x.id!==b.dataset.id);save();render()},
+  plan:b=>{S.gym.plan[+b.dataset.i]=b.value;save();render()},gex:b=>{GX=b.value;render()},gm:b=>{GM=b.dataset.v;render()},
+  gymfor:b=>{GF=b.dataset.ds;page="gym";sub=null;location.hash="gym";render()},
+  glog:()=>{const d=$("#g_d").value,m=+$("#g_m").value;if(!d)return toast("اختار تاريخ التمرينة");if(!(m>=0))return toast("المدة غلط");
+    const{x,bad}=parseEx($("#g_x").value);if(bad.length)return toast("سطر غلط: "+bad[0]+" — الصيغة: اسم: 60x8 60x8");if(!x.length)return toast("اكتب تمرين واحد على الأقل");
+    const v=x.reduce((a,e)=>a+e.sets.reduce((b,s)=>b+s[0]*s[1],0),0);S.gym.logs.push({id:rid(),d,s:$("#g_s").value,m,x,v});
+    let linked=0;if(d<=fmt(new Date()))occ(d).filter(e=>GYMT.includes(e.type)&&!S.att[e.id+"|"+d]).forEach(e=>{setAtt(e.id+"|"+d,"present",{note:"اتسجل تلقائي من التمرينة"});linked++});
+    GF="";save();burst("#ef4444");toast("💪 كمّل كده"+(linked?" · واتسجل حضور الجيم":""));render()},
+  dg:b=>{S.gym.logs=S.gym.logs.filter(x=>x.id!==b.dataset.id);save();render()},
+  cprep:()=>{navigator.clipboard.writeText(repText(wkData(roff))).then(()=>toast("اتنسخ 📋"),()=>toast("المتصفح منع النسخ"))},
+  emin:()=>{const c=cred();c&&Hub.emailIn(c.e,c.p)},emup:()=>{const c=cred();c&&Hub.emailUp(c.e,c.p)},
+  emrs:()=>{const e=$("#ae_e").value.trim();if(!/\S+@\S+\.\S+/.test(e))return toast("اكتب الإيميل الأول");Hub.reset(e)},
+  lkg:()=>Hub.linkGoogle(),lkp:()=>{const p=$("#ae_lp").value;if(p.length<6)return toast("الباسورد 6 حروف على الأقل");Hub.linkPass(p)},
+  settings,syncin:()=>Hub.signIn&&Hub.signIn(),syncout:()=>Hub.signOut&&Hub.signOut(),
+  pushon:()=>Hub.enablePush?Hub.enablePush():toast("فعّل Firebase الأول"),pushoff:()=>Hub.disablePush&&Hub.disablePush(),
+  exp:()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:"application/json"}));a.download="lohaty-"+fmt(new Date())+".json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);toast("💾 اتحفظت نسخة")},
+  impb:()=>$("#imp").click()
+};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(!b||b.tagName==="INPUT"||b.tagName==="SELECT")return;A[b.dataset.act]&&A[b.dataset.act](b)});
+document.addEventListener("change",e=>{const t=e.target,b=t.closest("[data-act]");
+  if(t.id==="imp"){const f=t.files[0];if(!f)return;f.text().then(x=>{try{const o=JSON.parse(x);if(!Array.isArray(o.ev)||typeof o.att!=="object")throw 0;if(!confirm("هتستبدل كل بياناتك الحالية بالنسخة دي. متأكد؟"))return;try{localStorage.setItem("hub_bak",JSON.stringify(S))}catch(e){}S=migrate(o);save();close();render();toast("✅ اتسترجعت النسخة")}catch(e){toast("الملف مش نسخة صالحة من لوحتي")}});return}
+  if(b&&["SELECT","INPUT"].includes(b.tagName)&&A[b.dataset.act])A[b.dataset.act](b);
+  if($("#f_sum"))sumF();if(t.id==="f_ty")$("#f_sjb").classList.toggle("hid",!STUDY.includes(t.value));if(t.id==="f_sj")$("#f_sn").classList.toggle("hid",t.value!=="__new")});
+$("#bell").onclick=()=>Hub.enablePush?Hub.enablePush():(window.Notification?Notification.requestPermission().then(p=>toast(p==="granted"?"🔔 التنبيهات شغالة (والموقع مفتوح)":"التنبيهات مقفولة")):toast("المتصفح مش بيدعم التنبيهات"));
+// ---------- التذكيرات ----------
+function buildReminders(days=14){const out=[],now=Date.now(),t0=fmt(new Date()),at=(ds,hm)=>new Date(ds+"T"+hm+":00").getTime();
+  for(let i=0;i<=days;i++){const ds=addDays(t0,i);occ(ds).forEach(e=>{if(!e.rem)return;const a=at(ds,e.start)-e.rem*6e4;if(a>now)out.push({id:"e_"+e.id+"_"+ds,at:a,title:T[e.type][1]+" "+e.title,body:"بعد "+e.rem+" دقيقة — "+ft(e.start)+(e.place?" · "+e.place:"")})})}
+  S.tasks.forEach(t=>{if(!t.due||t.st==="تم التسليم")return;const nm=subName(t.subjectId);[[t.due,"08:00","📌 النهارده تسليم: "],[addDays(t.due,-1),"18:00","⏳ بكرة تسليم: "]].forEach(([d,h,p],j)=>{const a=at(d,h);if(a>now&&a<now+days*864e5)out.push({id:"t_"+t.id+"_"+j,at:a,title:p+t.title,body:nm})})});
+  S.lec.forEach(l=>{if(l.w||!l.rel)return;const a=at(l.rel,"09:00");if(a>now&&a<now+days*864e5)out.push({id:"l_"+l.id,at:a,title:"🎬 نزلت: "+l.title,body:subName(l.subjectId)})});
+  return out.sort((a,b)=>a.at-b.at).slice(0,400)}
+function remind(){if(window.Hub&&Hub.push)return;const n=new Date(),ds=fmt(n);occ(ds).forEach(e=>{if(!e.rem)return;const k=e.id+"|"+ds,d=(new Date(ds+"T"+e.start+":00")-n)/6e4;
+  if(d<=e.rem&&d>-5&&!REM[k]){REM[k]=1;try{localStorage.setItem("hub_rem",JSON.stringify(REM))}catch(x){}const m="بعد "+Math.max(0,Math.round(d))+" دقيقة";toast("⏰ "+e.title+" "+m);notify(e.title,m+" — "+ft(e.start),k)}})}
+window.Hub={get:()=>S,apply:o=>{S=migrate(o);try{localStorage.setItem("hub",JSON.stringify(S))}catch(e){}render()},reminders:buildReminders,toast,notify,cfg:false,push:false,sync:"off",user:null,onSave:null,
+  onStatus(){const b=$("#cfg");if(b)b.dataset.s=this.sync;if($("#st_box")&&$("#dlg").open)settings()}};
+function route(){const p=location.hash.slice(1);if([...NAV.map(n=>n[0]),...MORE].includes(p))page=p;render()}
+addEventListener("hashchange",route);route();remind();setInterval(remind,30000);
+if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("firebase-messaging-sw.js").catch(()=>{});
+</script>
+<script>
+(()=>{
+let cur=null;
+const TSC={"لم يبدأ":"#94a3b8","قيد الحل":"#3b82f6","تم الحل":"#16a34a","تم التسليم":"#8b5cf6","متأخر":"#ef4444"};
+const SPC={Push:"#ef4444",Pull:"#3b82f6",Legs:"#f97316",Upper:"#8b5cf6",Lower:"#16a34a","Full body":"#ec4899",Cardio:"#eab308","راحة":"#64748b"};
+function col(sel,o){const t=o.textContent.trim();
+ if(sel.id==="f_ty"&&T[t])return T[t][0];
+ if(sel.id==="a_s"&&ST[o.value])return ST[o.value][1];
+ if(sel.dataset.act==="tst")return TSC[t]||null;
+ if(sel.dataset.act==="plan"||sel.id==="g_s")return SPC[t]||null;
+ return null}
+const ic=c=>`<span class="od" style="--c:${c||"transparent"}"><i class="${c?"":"ring"}"></i></span>`;
+function shut(){if(!cur)return;cur.pop.remove();cur.bd.remove();cur.btn.classList.remove("open");cur=null}
+function openSel(sel,btn,refresh){
+ shut();
+ const bd=document.createElement("div");bd.className="picker-backdrop";bd.addEventListener("click",shut);
+ const pop=document.createElement("div");pop.className="picker-pop sel-pop";pop.dir="rtl";
+ pop.innerHTML=[...sel.options].map((o,i)=>`<button type="button" class="so${i===sel.selectedIndex?" sel":""}" data-i="${i}">${ic(col(sel,o))}<span>${esc(o.textContent)}</span>${i===sel.selectedIndex?'<span class="ck2">✓</span>':""}</button>`).join("");
+ pop.addEventListener("click",e=>{e.stopPropagation();const b=e.target.closest(".so");if(!b)return;sel.selectedIndex=+b.dataset.i;refresh();shut();sel.dispatchEvent(new Event("change",{bubbles:true}))});
+ const host=document.querySelector("dialog[open]")||document.body,mobile=innerWidth<=520;
+ bd.classList.toggle("dim",mobile);pop.classList.toggle("sheet",mobile);
+ host.append(bd,pop);
+ if(!mobile){const r=btn.getBoundingClientRect(),w=Math.max(r.width,200);pop.style.width=w+"px";const h=pop.offsetHeight;let top=r.bottom+6;if(top+h>innerHeight-8)top=Math.max(8,r.top-h-6);pop.style.top=top+"px";pop.style.left=Math.min(Math.max(8,r.right-w),innerWidth-w-8)+"px"}
+ const s=pop.querySelector(".so.sel");if(s)pop.scrollTop=s.offsetTop-pop.clientHeight/2+s.clientHeight/2;
+ btn.classList.add("open");cur={pop,bd,btn,sel}}
+function enh(sel){
+ if(sel.dataset.sp)return;sel.dataset.sp="1";
+ const wrap=document.createElement("div");wrap.className="picker-field";
+ const btn=document.createElement("button");btn.type="button";btn.className="picker-btn";
+ sel.parentNode.insertBefore(wrap,sel);wrap.append(btn,sel);
+ const refresh=()=>{const o=sel.options[sel.selectedIndex];btn.innerHTML=`${ic(o?col(sel,o):null)}<span class="picker-text">${o?esc(o.textContent):""}</span><span class="picker-caret">▾</span>`};
+ sel.addEventListener("change",refresh);refresh();
+ btn.addEventListener("click",()=>{if(cur&&cur.sel===sel)return shut();openSel(sel,btn,refresh)})}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&cur){e.stopImmediatePropagation();e.preventDefault();shut()}},true);
+addEventListener("resize",shut);
+const scan=()=>document.querySelectorAll("select").forEach(enh);
+new MutationObserver(scan).observe(document.body,{childList:true,subtree:true});scan();
+})();
+</script>
+<script src="auth-gate.js?v=2"></script>
+<script type="module" src="firebase-sync.js?v=2"></script>
+</body>
+</html>
