@@ -2,67 +2,114 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#050913">
 <title>لوحة التحكم — CodePrint</title>
 <link rel="icon" href="assets/img/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700&family=Tajawal:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#080B14;--card:#111628;--line:#232a44;--tx:#e8ecff;--mut:#8b93b8;--b:#4F7CFF;--p:#9B5CFF}
+:root{--bg:#050913;--card:#0C1424;--card2:#0A111F;--line:rgba(52,110,210,.28);--line2:rgba(70,140,255,.5);--tx:#F4F7FF;--mut:#9AA7BF;--blue:#1E90FF;--green:#34D399;--amber:#F2B84B;--red:#FF6B8A}
 *{box-sizing:border-box}[hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--tx);font:15px Tajawal,system-ui,sans-serif}
-h1,summary,button{font-family:Cairo,system-ui,sans-serif}
-.wrap{max-width:900px;margin:0 auto;padding:16px}
-.bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.bar h1{font-size:18px;margin:0 0 0 auto}
-button{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer;font-size:14px}
-button.on,button.pri{background:linear-gradient(135deg,var(--b),var(--p));border:0;color:#fff}
-button.del{color:#ff7b8a}
-input,textarea,select{width:100%;background:#0b0f1e;color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:9px;font:inherit}
-input[type=checkbox]{width:20px;height:20px}input[type=range]{padding:0}
-.f{display:block;margin:10px 0;color:var(--mut);font-size:13px}.f>*{margin-top:4px;color:var(--tx)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 14px;margin:12px 0}
-summary{cursor:pointer;padding:10px 0;display:flex;justify-content:space-between;gap:8px}
-.tag{color:var(--mut);font-size:13px}.item{border-top:1px solid var(--line);padding:6px 0}
-.row{display:flex;gap:8px;margin:10px 0}
-#st{color:#ffc857;font-size:13px}#msg{padding:8px 0;font-size:14px}#msg.err{color:#ff7b8a}#msg.ok{color:#5be3a1}
-#login{max-width:340px;margin:12vh auto;padding:20px}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font:15.5px/1.6 Tajawal,Inter,system-ui,sans-serif;padding-bottom:max(24px,env(safe-area-inset-bottom))}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(700px 400px at 85% -5%,rgba(20,100,255,.18),transparent 60%)}
+button,input,select,textarea{font:inherit}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px}
+.top{position:sticky;top:0;z-index:20;background:rgba(5,9,19,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.top .wrap{display:flex;align-items:center;gap:12px;min-height:64px}
+.brand{display:flex;align-items:center;gap:10px;font:700 18px Inter,Tajawal,sans-serif}.brand img{width:34px;height:34px;border-radius:10px}.brand b{color:var(--blue)}
+.brand small{display:block;font:500 12px Tajawal;color:var(--mut);margin-top:-4px}
+.sp{flex:1}#st{color:var(--amber);font-size:13px;white-space:nowrap}
+button{min-height:42px;background:transparent;color:var(--tx);border:1px solid var(--line2);border-radius:12px;padding:8px 16px;cursor:pointer;transition:background .2s,border-color .2s}
+button:hover{border-color:var(--blue);background:rgba(30,144,255,.12)}
+button.pri{background:linear-gradient(180deg,#2B9BFF,#0B7BFF);border-color:transparent;color:#fff;font-weight:700}
+button.del{color:var(--red);border-color:rgba(255,107,138,.4)}button.del:hover{background:rgba(255,107,138,.12);border-color:var(--red)}
+.sub{border-bottom:1px solid var(--line)}
+.sub .wrap{display:flex;gap:10px;align-items:center;padding-top:10px;padding-bottom:10px;overflow-x:auto;scrollbar-width:none}
+.sub .wrap::-webkit-scrollbar{display:none}
+.tabs{display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:14px;background:var(--card2)}
+.tabs button{border:0;min-height:38px;border-radius:10px;color:var(--mut);white-space:nowrap}
+.tabs button.on{background:var(--blue);color:#fff;font-weight:700}
+.acts{display:flex;gap:8px;margin-inline-start:auto}.acts button{white-space:nowrap;min-height:38px;font-size:14px}
+#msg{margin:14px 0 0;padding:0;font-size:14.5px}#msg:not(:empty){padding:12px 16px;border-radius:12px;border:1px solid var(--line)}
+#msg.err{color:var(--red);border-color:rgba(255,107,138,.4)}#msg.ok{color:var(--green);border-color:rgba(52,211,153,.4)}
+main{padding-top:6px}
+.card{background:linear-gradient(180deg,#0D1626,#09111E);border:1px solid var(--line);border-radius:18px;padding:6px 18px 14px;margin:14px 0}
+details.card{padding-bottom:0}details[open].card{padding-bottom:16px}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;font-weight:700;min-height:56px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"▾";color:var(--mut);transition:transform .2s;margin-inline-start:4px}details[open]>summary::after{transform:rotate(180deg)}
+.sum{display:flex;align-items:center;gap:12px;min-width:0}.sum b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tl{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:rgba(30,144,255,.12);border:1px solid var(--line)}
+.pills{display:flex;gap:6px;margin-inline-start:auto}
+.pill{font-size:12px;font-weight:600;padding:3px 11px;border-radius:999px;color:var(--amber);background:rgba(242,184,75,.12);border:1px solid rgba(242,184,75,.35)}
+.pill.paid,.pill.paid,.pill.free,.pill.live{color:var(--green);background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.35)}
+.pill.bad{color:var(--red);background:rgba(255,107,138,.12);border-color:rgba(255,107,138,.35)}
+.sec-h{margin:18px 0 2px;font-size:13px;letter-spacing:.04em;color:var(--blue);font-weight:700;border-bottom:1px solid var(--line);padding-bottom:6px}
+.tag{color:var(--mut);font-size:13.5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0 14px}
+.f{display:block;margin:12px 0 0;color:var(--mut);font-size:13.5px}.f.wide{grid-column:1/-1}
+.f>*{display:block;margin-top:5px;color:var(--tx)}
+input,textarea,select{width:100%;min-height:44px;background:#070D1A;color:var(--tx);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+textarea{resize:vertical}input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,144,255,.2)}
+input[type=checkbox]{width:22px;height:22px;min-height:0}input[type=range]{padding:0;accent-color:var(--blue)}output{color:var(--mut);font-size:13px}
+.item{border-top:1px solid var(--line);padding:6px 0 14px;margin-top:10px}
+.row{display:flex;gap:8px;margin:14px 0 0;flex-wrap:wrap}.row button{min-width:46px}
+.add{width:100%;border-style:dashed;margin-top:6px}
+#login{max-width:380px;margin:12vh auto 0;padding:28px 24px;border-radius:20px}
+#login h1{font:700 22px Inter,Tajawal;margin:12px 0 6px;text-align:center}#login .brand{justify-content:center}
+#login .pri{width:100%;margin-top:18px}
+#imp textarea{min-height:150px}code{font:12.5px ui-monospace,monospace;color:var(--blue)}
+@media (max-width:640px){
+  .wrap{padding:0 12px}.brand small{display:none}.top .wrap{min-height:58px}
+  .acts{margin-inline-start:0}.grid{grid-template-columns:1fr}.card{padding-inline:14px;border-radius:16px}
+  .pills .pill:first-child{display:none}
+}
 </style>
 </head>
 <body>
 <form id="login" class="card" hidden>
-  <h1>لوحة تحكم CodePrint</h1>
-  <label class="f">الإيميل<input id="em" type="email" required></label>
-  <label class="f">كلمة السر<input id="pw" type="password" required></label>
+  <div class="brand"><img src="assets/img/favicon.png" alt="">Code<b>Print</b></div>
+  <h1>تسجيل الدخول</h1>
+  <label class="f">الإيميل<input id="em" type="email" autocomplete="username" required></label>
+  <label class="f">كلمة السر<input id="pw" type="password" autocomplete="current-password" required></label>
   <button class="pri" type="submit">دخول</button>
-  <div id="lerr" class="err" style="color:#ff7b8a;margin-top:8px"></div>
+  <div id="lerr" style="color:var(--red);margin-top:10px;font-size:14px"></div>
 </form>
 
-<div id="app" class="wrap" hidden>
-  <div class="bar">
+<div id="app" hidden>
+  <header class="top"><div class="wrap">
+    <div class="brand"><img src="assets/img/favicon.png" alt=""><div>Code<b>Print</b><small>لوحة التحكم</small></div></div>
+    <span class="sp"></span><span id="st"></span>
     <button class="pri" data-a="save">💾 حفظ</button>
-    <span id="st"></span>
-    <h1>لوحة التحكم</h1>
+  </div></header>
+  <div class="sub"><div class="wrap">
     <span class="tabs">
       <button data-a="tab" data-t="texts">النصوص</button>
       <button data-a="tab" data-t="projects">المشاريع</button>
       <button data-a="tab" data-t="links">الروابط</button>
+      <button data-a="tab" data-t="store">🛒 المتجر</button>
+      <button data-a="tab" data-t="orders">📦 الطلبات</button>
     </span>
-    <button data-a="imp">⬆ استيراد</button>
-    <button data-a="export">نسخة احتياطية</button>
-    <button data-a="logout">خروج</button>
-  </div>
-  <div id="msg"></div>
-  <div id="imp" class="card" hidden>
-    <h3>استيراد بيانات</h3>
-    <p class="tag">اختار ملف أو الصق JSON، أو محتوى <code>projects-data.js</code> / <code>links-data.js</code> مباشرة. بيقبل: مصفوفة مشاريع، أو مصفوفة أقسام روابط، أو <code>{texts, projects, links}</code>.</p>
-    <input type="file" id="ifile" accept=".json,.js,.txt">
-    <textarea id="itxt" rows="8" placeholder="الصق هنا..."></textarea>
-    <label class="f">الوضع<select id="imode"><option value="merge">دمج — يحدّث الموجود (بنفس id أو الاسم) ويضيف الجديد</option><option value="replace">استبدال الأجزاء المستوردة بالكامل</option></select></label>
-    <button class="pri" data-a="run">استيراد</button>
-  </div>
-  <div id="view"></div>
+    <span class="acts">
+      <button data-a="imp">⬆ استيراد</button>
+      <button data-a="export">⬇ نسخة احتياطية</button>
+      <button data-a="logout">خروج</button>
+    </span>
+  </div></div>
+  <main class="wrap">
+    <div id="msg"></div>
+    <div id="imp" class="card" hidden>
+      <h3>استيراد بيانات</h3>
+      <p class="tag">اختار ملف أو الصق JSON، أو محتوى <code>projects-data.js</code> / <code>links-data.js</code> مباشرة. بيقبل: مصفوفة مشاريع، أو مصفوفة أقسام روابط، أو <code>{texts, projects, links}</code>.</p>
+      <input type="file" id="ifile" accept=".json,.js,.txt">
+      <label class="f">المحتوى<textarea id="itxt" rows="8" placeholder="الصق هنا..."></textarea></label>
+      <label class="f">الوضع<select id="imode"><option value="merge">دمج — يحدّث الموجود (بنفس id أو الاسم) ويضيف الجديد</option><option value="replace">استبدال الأجزاء المستوردة بالكامل</option></select></label>
+      <div class="row"><button class="pri" data-a="run">استيراد</button></div>
+    </div>
+    <div id="view"></div>
+  </main>
 </div>
 
 <script src="data/projects-data.js"></script>
