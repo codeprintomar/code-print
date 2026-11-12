@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أداة تنسيق وتلوين النصوص والأكواد البرمجية</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            font-weight: 900;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+            font-weight: 600;
+            position: relative;
+            line-height: 1.8;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 700px;
+        }
+
+        .editor-panel, .preview-panel {
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-panel {
+            border-left: 4px solid #e0e0e0;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .panel-header h2 {
+            color: #2c3e50;
+            font-size: 1.6em;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 700;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .theme-toggle:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5);
+        }
+
+        .color-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .color-picker {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .color-picker:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .color-picker label {
+            font-size: 0.9em;
+            font-weight: 700;
+            color: #495057;
+            text-align: center;
+        }
+
+        .color-picker input[type="color"] {
+            width: 100%;
+            height: 50px;
+            border: 3px solid #dee2e6;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .color-picker input[type="color"]:hover {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+        }
+
+        #input-text {
+            width: 100%;
+            flex: 1;
+            padding: 25px;
+            border: 3px solid #dee2e6;
+            border-radius: 15px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 17px;
+            resize: none;
+            line-height: 2.2;
+            transition: all 0.3s;
+            background: white;
+            color: #2c3e50;
+        }
+
+        #input-text:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.25);
+        }
+
+        #input-text::placeholder {
+            color: #adb5bd;
+            opacity: 0.7;
+        }
+
+        .preview-panel {
+            background: white;
+        }
+
+        #preview {
+            flex: 1;
+            overflow-y: auto;
+            padding: 35px;
+            border: 3px solid #dee2e6;
+            border-radius: 15px;
+            background: white;
+            line-height: 2.4;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        #preview p {
+            margin-bottom: 1.4em;
+            font-size: 18px;
+            line-height: 2.4;
+            color: var(--text-color, #2c3e50);
+            font-weight: 500;
+        }
+
+        #preview h1 {
+            font-size: 2.6em;
+            font-weight: 900;
+            margin-top: 1.2em;
+            margin-bottom: 0.7em;
+            padding-bottom: 0.5em;
+            border-bottom: 5px solid var(--h1-color, #2c3e50);
+            color: var(--h1-color, #2c3e50);
+            line-height: 1.5;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        #preview h2 {
+            font-size: 2em;
+            font-weight: 800;
+            margin-top: 1.4em;
+            margin-bottom: 0.6em;
+            color: var(--h2-color, #34495e);
+            line-height: 1.5;
+            letter-spacing: 0.3px;
+            position: relative;
+            padding-right: 20px;
+        }
+
+        #preview h2::before {
+            content: '▸';
+            position: absolute;
+            right: 0;
+            color: var(--h2-color, #34495e);
+            font-size: 0.8em;
+        }
+
+        #preview h3 {
+            font-size: 1.6em;
+            font-weight: 700;
+            margin-top: 1.2em;
+            margin-bottom: 0.5em;
+            color: var(--h3-color, #7f8c8d);
+            line-height: 1.5;
+            letter-spacing: 0.2px;
+        }
+
+        #preview ul, #preview ol {
+            margin-right: 2.5em;
+            margin-bottom: 1.4em;
+            line-height: 2.4;
+        }
+
+        #preview li {
+            margin-bottom: 0.8em;
+            font-size: 18px;
+            color: var(--text-color, #2c3e50);
+            font-weight: 500;
+        }
+
+        #preview ul li {
+            list-style-type: disc;
+        }
+
+        #preview ul li::marker {
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        #preview pre {
+            background: var(--code-bg, #1e1e1e);
+            padding: 30px;
+            border-radius: 15px;
+            overflow-x: auto;
+            margin: 2em 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border-right: 6px solid #667eea;
+            position: relative;
+        }
+
+        #preview pre::before {
+            content: '< CODE />';
+            position: absolute;
+            top: 8px;
+            left: 15px;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.75em;
+            font-weight: 700;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        #preview code {
+            font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+            font-size: 16px;
+            line-height: 2;
+            direction: ltr;
+            text-align: left;
+            display: block;
+        }
+
+        #preview :not(pre) > code {
+            background: #f8f9fa;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #e83e8c;
+            font-weight: 700;
+            border: 1px solid #e9ecef;
+        }
+
+        .theme-dark .hljs-keyword { color: #569cd6; font-weight: bold; }
+        .theme-dark .hljs-string { color: #ce9178; }
+        .theme-dark .hljs-comment { color: #6a9955; font-style: italic; }
+        .theme-dark .hljs-number { color: #b5cea8; }
+        .theme-dark .hljs-function, .theme-dark .hljs-title { color: #dcdcaa; font-weight: bold; }
+        .theme-dark .hljs-built_in { color: #4ec9b0; }
+        .theme-dark .hljs-params { color: #9cdcfe; }
+        .theme-dark code { color: #d4d4d4; }
+
+        .theme-light pre {
+            background: #f6f8fa !important;
+            border-right-color: #0366d6;
+        }
+        
+        .theme-light pre::before {
+            color: rgba(0,0,0,0.3) !important;
+        }
+
+        .theme-light .hljs-keyword { color: #d73a49; font-weight: bold; }
+        .theme-light .hljs-string { color: #032f62; }
+        .theme-light .hljs-comment { color: #6a737d; font-style: italic; }
+        .theme-light .hljs-number { color: #005cc5; }
+        .theme-light .hljs-function, .theme-light .hljs-title { color: #6f42c1; font-weight: bold; }
+        .theme-light .hljs-built_in { color: #005cc5; }
+        .theme-light .hljs-params { color: #24292e; }
+        .theme-light code { color: #24292e; }
+
+        .actions {
+            padding: 35px;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+            border-top: 4px solid #e0e0e0;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.15em;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Cairo', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.6);
+        }
+
+        .btn-tertiary {
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+            color: white;
+            box-shadow: 0 6px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn-tertiary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(220, 53, 69, 0.6);
+        }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 20px 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+            animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-500px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .example-text {
+            color: #6c757d;
+            font-size: 1em;
+            margin-top: 15px;
+            font-weight: 600;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 10px;
+            border-right: 4px solid #ffc107;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-right: 5px solid #2196f3;
+        }
+
+        .info-box h3 {
+            color: #1565c0;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .info-box ul {
+            margin-right: 25px;
+            color: #0d47a1;
+            font-weight: 600;
+        }
+
+        .info-box li {
+            margin-bottom: 8px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .editor-panel {
+                border-left: none;
+                border-bottom: 4px solid #e0e0e0;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .color-controls {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.6em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .editor-panel, .preview-panel {
+                padding: 20px;
+            }
+
+            .color-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            #preview h1 {
+                font-size: 1.8em;
+            }
+
+            #preview h2 {
+                font-size: 1.4em;
+            }
+
+            #preview h3 {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 أداة تنسيق وتلوين النصوص والأكواد البرمجية</h1>
+            <p>نسّق نصوصك وأكوادك بألوان احترافية - جاهز للنسخ المباشر في Canva و Word</p>
+        </div>
+
+        <div class="main-content">
+            <div class="editor-panel">
+                <div class="panel-header">
+                    <h2>✏️ محرر النصوص</h2>
+                    <button class="theme-toggle" onclick="toggleTheme()">🌙 تبديل ثيم الكود</button>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 كيفية الاستخدام:</h3>
+                    <ul>
+                        <li>استخدم <strong>#</strong> للعنوان الرئيسي</li>
+                        <li>استخدم <strong>##</strong> للعنوان الفرعي</li>
+                        <li>استخدم <strong>###</strong> للعنوان الصغير</li>
+                        <li>استخدم <strong>-</strong> للقوائم النقطية</li>
+                        <li>اكتب الكود عادي وسيتم اكتشافه تلقائياً!</li>
+                    </ul>
+                </div>
+                
+                <div class="color-controls">
+                    <div class="color-picker">
+                        <label>🔴 لون العنوان الرئيسي (H1)</label>
+                        <input type="color" id="h1-color" value="#2c3e50" onchange="updateColors()">
+                    </div>
+                    <div class="color-picker">
+                        <label>🟠 لون العنوان الفرعي (H2)</label>
+                        <input type="color" id="h2-color" value="#34495e" onchange="updateColors()">
+                    </div>
+                    <div class="color-picker">
+                        <label>🟡 لون العنوان الصغير (H3)</label>
+                        <input type="color" id="h3-color" value="#7f8c8d" onchange="updateColors()">
+                    </div>
+                    <div class="color-picker">
+                        <label>🟢 لون النص العادي</label>
+                        <input type="color" id="text-color" value="#2c3e50" onchange="updateColors()">
+                    </div>
+                </div>
+
+               <textarea id="input-text" placeholder="ابدأ الكتابة هنا..."></textarea>
+
+<style>
+  #input-text {
+    direction: ltr; /* يجعل الكتابة من اليسار لليمين */
+    text-align: left; /* محاذاة النص لليسار */
+  }
+</style>
+
+                <p class="example-text">💡 <strong>نصيحة:</strong> الموقع يكتشف الأكواد تلقائياً - فقط اكتب بشكل طبيعي!</p>
+            </div>
+
+           <div class="preview-panel">
+    <div class="panel-header">
+        <h2>👁️ المعاينة المباشرة</h2>
+    </div>
+    <div id="preview" class="theme-dark" style="direction: ltr; text-align: left;"></div>
+</div>
+
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="copyAsRichText()">
+                📋 نسخ بالألوان للصق في Canva
+            </button>
+            <button class="btn btn-secondary" onclick="exportToWord()">
+                📄 تصدير إلى Word
+            </button>
+            <button class="btn btn-tertiary" onclick="exportToPDF()">
+                📕 تصدير إلى PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        let isDarkTheme = true;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('input-text');
+            input.addEventListener('input', updatePreview);
+            updatePreview();
+            updateColors();
+        });
+
+        function updateColors() {
+            const h1Color = document.getElementById('h1-color').value;
+            const h2Color = document.getElementById('h2-color').value;
+            const h3Color = document.getElementById('h3-color').value;
+            const textColor = document.getElementById('text-color').value;
+            
+            const preview = document.getElementById('preview');
+            preview.style.setProperty('--h1-color', h1Color);
+            preview.style.setProperty('--h2-color', h2Color);
+            preview.style.setProperty('--h3-color', h3Color);
+            preview.style.setProperty('--text-color', textColor);
+            
+            const style = `
+                #preview h1 { 
+                    color: ${h1Color} !important; 
+                    border-bottom-color: ${h1Color} !important; 
+                }
+                #preview h2 { 
+                    color: ${h2Color} !important; 
+                }
+                #preview h2::before { 
+                    color: ${h2Color} !important; 
+                }
+                #preview h3 { 
+                    color: ${h3Color} !important; 
+                }
+                #preview p, #preview li { 
+                    color: ${textColor} !important; 
+                }
+            `;
+            
+            let styleEl = document.getElementById('dynamic-colors');
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = 'dynamic-colors';
+                document.head.appendChild(styleEl);
+            }
+            styleEl.textContent = style;
+        }
+
+        function detectAndFormatCode(text) {
+            const lines = text.split('\n');
+            let result = [];
+            let inCodeBlock = false;
+            let codeBuffer = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const trimmed = line.trim();
+                
+                if (trimmed.startsWith('#') || 
+                    trimmed.startsWith('-') || 
+                    trimmed.startsWith('*') || 
+                    /^\d+\.\s/.test(trimmed)) {
+                    if (inCodeBlock && codeBuffer.length > 0) {
+                        result.push('\n```python\n' + codeBuffer.join('\n') + '\n```\n');
+                        codeBuffer = [];
+                        inCodeBlock = false;
+                    }
+                    result.push(line);
+                    continue;
+                }
+                
+                const isCode = /^(def |class |import |from |if |elif |else:|for |while |return |print\(|console\.log|let |const |var |function |async |await )/.test(trimmed) ||
+                               /[{}\[\]();]$/.test(trimmed) ||
+                               /^[a-zA-Z_][a-zA-Z0-9_]*\s*=/.test(trimmed) ||
+                               /^\s{4,}/.test(line) ||
+                               /^#\s+[^#]/.test(trimmed) && !/^#{1,3}\s/.test(trimmed) ||
+                               (inCodeBlock && trimmed !== '');
+                
+                if (isCode && trimmed !== '') {
+                    inCodeBlock = true;
+                    codeBuffer.push(line);
+                } else {
+                    if (inCodeBlock && codeBuffer.length > 0) {
+                        result.push('\n```python\n' + codeBuffer.join('\n') + '\n```\n');
+                        codeBuffer = [];
+                        inCodeBlock = false;
+                    }
+                    if (trimmed !== '' || !inCodeBlock) {
+                        result.push(line);
+                    }
+                }
+            }
+            
+            if (codeBuffer.length > 0) {
+                result.push('\n```python\n' + codeBuffer.join('\n') + '\n```');
+            }
+            
+            return result.join('\n');
+        }
+
+        function parseMarkdown(text) {
+            if (!text.includes('```')) {
+                text = detectAndFormatCode(text);
+            }
+            
+            let html = '';
+            const lines = text.split('\n');
+            let inCodeBlock = false;
+            let codeBuffer = '';
+            let codeLang = '';
+            let inList = false;
+            let listType = '';
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const trimmed = line.trim();
+                
+                if (trimmed.startsWith('```')) {
+                    if (!inCodeBlock) {
+                        if (inList) {
+                            html += listType === 'ul' ? '</ul>' : '</ol>';
+                            inList = false;
+                        }
+                        inCodeBlock = true;
+                        codeLang = trimmed.substring(3).trim() || 'python';
+                        codeBuffer = '';
+                    } else {
+                        const highlighted = hljs.highlight(codeBuffer, { language: codeLang }).value;
+                        html += `<pre><code class="hljs language-${codeLang}">${highlighted}</code></pre>`;
+                        inCodeBlock = false;
+                        codeBuffer = '';
+                    }
+                } else if (inCodeBlock) {
+                    codeBuffer += line + '\n';
+                } 
+                else if (trimmed.startsWith('### ')) {
+                    if (inList) {
+                        html += listType === 'ul' ? '</ul>' : '</ol>';
+                        inList = false;
+                    }
+                    html += `<h3>${trimmed.substring(4)}</h3>`;
+                } else if (trimmed.startsWith('## ')) {
+                    if (inList) {
+                        html += listType === 'ul' ? '</ul>' : '</ol>';
+                        inList = false;
+                    }
+                    html += `<h2>${trimmed.substring(3)}</h2>`;
+                } else if (trimmed.startsWith('# ')) {
+                    if (inList) {
+                        html += listType === 'ul' ? '</ul>' : '</ol>';
+                        inList = false;
+                    }
+                    html += `<h1>${trimmed.substring(2)}</h1>`;
+                } 
+                else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+                    if (!inList || listType !== 'ul') {
+                        if (inList) html += listType === 'ul' ? '</ul>' : '</ol>';
+                        html += '<ul>';
+                        inList = true;
+                        listType = 'ul';
+                    }
+                    html += `<li>${trimmed.substring(2)}</li>`;
+                } else if (/^\d+\.\s/.test(trimmed)) {
+                    if (!inList || listType !== 'ol') {
+                        if (inList) html += listType === 'ul' ? '</ul>' : '</ol>';
+                        html += '<ol>';
+                        inList = true;
+                        listType = 'ol';
+                    }
+                    const text = trimmed.replace(/^\d+\.\s/, '');
+                    html += `<li>${text}</li>`;
+                } 
+                else if (trimmed !== '') {
+                    if (inList) {
+                        html += listType === 'ul' ? '</ul>' : '</ol>';
+                        inList = false;
+                    }
+                    html += `<p>${line}</p>`;
+                } else {
+                    if (inList) {
+                        html += listType === 'ul' ? '</ul>' : '</ol>';
+                        inList = false;
+                    }
+                }
+            }
+            
+            if (inList) {
+                html += listType === 'ul' ? '</ul>' : '</ol>';
+            }
+            
+            return html;
+        }
+
+        function updatePreview() {
+            const input = document.getElementById('input-text').value;
+            const preview = document.getElementById('preview');
+            preview.innerHTML = parseMarkdown(input);
+        }
+
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            const preview = document.getElementById('preview');
+            const toggleBtn = document.querySelector('.theme-toggle');
+            
+            if (isDarkTheme) {
+                preview.classList.remove('theme-light');
+                preview.classList.add('theme-dark');
+                preview.style.setProperty('--code-bg', '#1e1e1e');
+                toggleBtn.textContent = '🌙 ثيم داكن';
+            } else {
+                preview.classList.remove('theme-dark');
+                preview.classList.add('theme-light');
+                preview.style.setProperty('--code-bg', '#f6f8fa');
+                toggleBtn.textContent = '☀️ ثيم فاتح';
+            }
+            
+            updatePreview();
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(135deg, #dc3545 0%, #fd7e14 100%)';
+            } else {
+                notification.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }
+            
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 4000);
+        }
+
+        async function copyAsRichText() {
+            const preview = document.getElementById('preview');
+            const h1Color = document.getElementById('h1-color').value;
+            const h2Color = document.getElementById('h2-color').value;
+            const h3Color = document.getElementById('h3-color').value;
+            const textColor = document.getElementById('text-color').value;
+            
+            const htmlContent = preview.innerHTML;
+            
+            const styledHtml = `
+                <!DOCTYPE html>
+                <html dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+                        
+                        body { 
+                            font-family: 'Cairo', 'Arial', sans-serif; 
+                            line-height: 2.4; 
+                            padding: 30px;
+                            direction: rtl;
+                            background: white;
+                        }
+                        
+                        h1 { 
+                            color: ${h1Color}; 
+                            font-size: 2.6em; 
+                            font-weight: 900; 
+                            margin: 1.2em 0 0.7em 0;
+                            padding-bottom: 0.5em;
+                            border-bottom: 5px solid ${h1Color};
+                            line-height: 1.5;
+                            letter-spacing: 0.5px;
+                        }
+                        
+                        h2 { 
+                            color: ${h2Color}; 
+                            font-size: 2em; 
+                            font-weight: 800; 
+                            margin: 1.4em 0 0.6em 0;
+                            line-height: 1.5;
+                            position: relative;
+                            padding-right: 20px;
+                        }
+                        
+                        h2::before {
+                            content: '▸';
+                            position: absolute;
+                            right: 0;
+                            color: ${h2Color};
+                        }
+                        
+                        h3 { 
+                            color: ${h3Color}; 
+                            font-size: 1.6em; 
+                            font-weight: 700; 
+                            margin: 1.2em 0 0.5em 0;
+                            line-height: 1.5;
+                        }
+                        
+                        p, li { 
+                            color: ${textColor}; 
+                            font-size: 18px; 
+                            margin-bottom: 1.4em;
+                            line-height: 2.4;
+                            font-weight: 500;
+                        }
+                        
+                        pre { 
+                            background: ${isDarkTheme ? '#1e1e1e' : '#f6f8fa'}; 
+                            padding: 30px; 
+                            border-radius: 15px; 
+                            margin: 2em 0;
+                            border-right: 6px solid #667eea;
+                            direction: ltr;
+                            text-align: left;
+                            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                        }
+                        
+                        code { 
+                            font-family: 'Courier New', 'Consolas', 'Monaco', monospace; 
+                            font-size: 16px; 
+                            line-height: 2;
+                            color: ${isDarkTheme ? '#d4d4d4' : '#24292e'};
+                        }
+                        
+                        ul, ol { 
+                            margin-right: 2.5em; 
+                            margin-bottom: 1.4em;
+                        }
+                        
+                        li { 
+                            margin-bottom: 0.8em; 
+                        }
+                        
+                        ul li {
+                            list-style-type: disc;
+                        }
+                        
+                        ${isDarkTheme ? `
+                        .hljs-keyword { color: #569cd6; font-weight: bold; }
+                        .hljs-string { color: #ce9178; }
+                        .hljs-comment { color: #6a9955; font-style: italic; }
+                        .hljs-number { color: #b5cea8; }
+                        .hljs-function, .hljs-title { color: #dcdcaa; font-weight: bold; }
+                        .hljs-built_in { color: #4ec9b0; }
+                        .hljs-params { color: #9cdcfe; }
+                        ` : `
+                        .hljs-keyword { color: #d73a49; font-weight: bold; }
+                        .hljs-string { color: #032f62; }
+                        .hljs-comment { color: #6a737d; font-style: italic; }
+                        .hljs-number { color: #005cc5; }
+                        .hljs-function, .hljs-title { color: #6f42c1; font-weight: bold; }
+                        .hljs-built_in { color: #005cc5; }
+                        .hljs-params { color: #24292e; }
+                        `}
+                    </style>
+                </head>
+                <body>${htmlContent}</body>
+                </html>
+            `;
+            
+            try {
+                const blob = new Blob([styledHtml], { type: 'text/html' });
+                const clipboardItem = new ClipboardItem({ 
+                    'text/html': blob 
+                });
+                
+                await navigator.clipboard.write([clipboardItem]);
+                showNotification('✅ تم النسخ بنجاح! افتح Canva واضغط Ctrl+V (أو Cmd+V في Mac)', 'success');
+            } catch (err) {
+                console.error('خطأ في النسخ:', err);
+                
+                try {
+                    const textContent = preview.innerText;
+                    await navigator.clipboard.writeText(textContent);
+                    showNotification('✅ تم النسخ كنص عادي (بدون تنسيق)', 'success');
+                } catch (err2) {
+                    showNotification('❌ فشل النسخ - الرجاء المحاولة مرة أخرى', 'error');
+                }
+            }
+        }
+
+        async function exportToWord() {
+            const preview = document.getElementById('preview');
+            const h1Color = document.getElementById('h1-color').value;
+            const h2Color = document.getElementById('h2-color').value;
+            const h3Color = document.getElementById('h3-color').value;
+            const textColor = document.getElementById('text-color').value;
+            
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset="UTF-8">
+                    <xml>
+                        <w:WordDocument>
+                            <w:View>Print</w:View>
+                            <w:Zoom>100</w:Zoom>
+                        </w:WordDocument>
+                    </xml>
+                    <style>
+                        @page { 
+                            margin: 2cm; 
+                            mso-page-orientation: portrait;
+                        }
+                        body { 
+                            font-family: 'Arial', 'Traditional Arabic'; 
+                            line-height: 2.4; 
+                            padding: 40px;
+                            direction: rtl;
+                            mso-line-height-rule: exactly;
+                        }
+                        h1 { 
+                            color: ${h1Color}; 
+                            font-size: 26pt; 
+                            font-weight: bold; 
+                            margin: 1.2em 0 0.7em 0;
+                            padding-bottom: 0.5em;
+                            border-bottom: 5pt solid ${h1Color};
+                        }
+                        h2 { 
+                            color: ${h2Color}; 
+                            font-size: 20pt; 
+                            font-weight: bold; 
+                            margin: 1.4em 0 0.6em 0;
+                        }
+                        h3 { 
+                            color: ${h3Color}; 
+                            font-size: 16pt; 
+                            font-weight: bold; 
+                            margin: 1.2em 0 0.5em 0;
+                        }
+                        p, li { 
+                            color: ${textColor}; 
+                            font-size: 13pt; 
+                            margin-bottom: 1.4em;
+                            line-height: 2.4;
+                        }
+                        pre { 
+                            background: ${isDarkTheme ? '#1e1e1e' : '#f6f8fa'}; 
+                            padding: 20pt; 
+                            border: 1pt solid #ccc;
+                            border-right: 6pt solid #667eea;
+                            direction: ltr;
+                            text-align: left;
+                            margin: 1.5em 0;
+                        }
+                        code { 
+                            font-family: 'Courier New', 'Consolas'; 
+                            font-size: 12pt; 
+                            color: ${isDarkTheme ? '#d4d4d4' : '#24292e'};
+                        }
+                        .hljs-keyword { color: ${isDarkTheme ? '#569cd6' : '#d73a49'}; font-weight: bold; }
+                        .hljs-string { color: ${isDarkTheme ? '#ce9178' : '#032f62'}; }
+                        .hljs-comment { color: ${isDarkTheme ? '#6a9955' : '#6a737d'}; font-style: italic; }
+                        .hljs-number { color: ${isDarkTheme ? '#b5cea8' : '#005cc5'}; }
+                        .hljs-function, .hljs-title { color: ${isDarkTheme ? '#dcdcaa' : '#6f42c1'}; font-weight: bold; }
+                        .hljs-built_in { color: ${isDarkTheme ? '#4ec9b0' : '#005cc5'}; }
+                    </style>
+                </head>
+                <body>${preview.innerHTML}</body>
+                </html>
+            `;
+            
+            const blob = new Blob(['\ufeff', htmlContent], { 
+                type: 'application/msword' 
+            });
+            
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `مستند-منسق-${Date.now()}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('✅ تم تحميل ملف Word بنجاح!', 'success');
+        }
+
+        async function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const preview = document.getElementById('preview');
+            
+            showNotification('⏳ جاري إنشاء ملف PDF...', 'info');
+            
+            try {
+                const canvas = await html2canvas(preview, {
+                    scale: 2.5,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
+                });
+                
+                const imgData = canvas.toDataURL('image/png', 1.0);
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4',
+                    compress: true
+                });
+                
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+                    heightLeft -= pageHeight;
+                }
+                
+                pdf.save(`مستند-منسق-${Date.now()}.pdf`);
+                showNotification('✅ تم تصدير PDF بنجاح!', 'success');
+            } catch (err) {
+                console.error('خطأ في إنشاء PDF:', err);
+                showNotification('❌ حدث خطأ في إنشاء PDF - الرجاء المحاولة مرة أخرى', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+// ضيف البلوكات دي جوه match /databases/{database}/documents { ... }
+// ولو بتستخدم نفس مشروع GradeOS: ضيفها جنب القواعد الموجودة، متمسحش اللي عندك.
+// حط الـ UID بتاعك مكان YOUR_ADMIN_UID في كل مكان.
+
+match /site/{doc} {
+  allow read: if true;
+  allow write: if request.auth != null && request.auth.uid == "YOUR_ADMIN_UID";
+}
+
+// أسرار المتجر (روابط التسليم) — أنت بس
+match /private/{doc} {
+  allow read, write: if request.auth != null && request.auth.uid == "YOUR_ADMIN_UID";
+}
+
+// الطلبات: أي عميل يقدر ينشئ طلب (pending بس)، وميقدرش يقرأ غير طلبه لو عارف الـ id الطويل
+match /orders/{id} {
+  allow create: if request.resource.data.keys().hasOnly(['pid','pname','price','name','phone','method','ref','status','created'])
+                && request.resource.data.status == 'pending'
+                && request.resource.data.name is string && request.resource.data.name.size() < 100
+                && request.resource.data.phone is string && request.resource.data.phone.size() < 20
+                && request.resource.data.ref is string && request.resource.data.ref.size() < 80
+                && id.size() >= 20;
+  allow get: if true;
+  allow list, update, delete: if request.auth != null && request.auth.uid == "YOUR_ADMIN_UID";
+}

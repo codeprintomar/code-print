@@ -1,0 +1,293 @@
+{
+  "projects": [
+    {
+      "id": "wave",
+      "name": "Wave",
+      "tagline": "Web • Music",
+      "category": "web",
+      "icon": "🌊",
+      "status": "live",
+      "progress": null,
+      "eta": null,
+      "shortDesc": "مشغّل موسيقى بيشتغل من المتصفح، بتضيف ملفاتك وبتتحكم في الطابور والتكرار والمفضلة.",
+      "description": [
+        "Wave مشغّل موسيقى بيشتغل مباشرة من المتصفح من غير تثبيت: بتختار ملفاتك وبيرتبهم في طابور تشغيل (queue).",
+        "فيه تشغيل عشوائي (shuffle) وتكرار (repeat) ومفضلة والتحكم في الصوت."
+      ],
+      "screenshots": [],
+      "changelog": [],
+      "links": {
+        "play": "projects/wave/index.html",
+        "download": null,
+        "source": "https://github.com/codeprintomar/Wave"
+      },
+      "rev": 3
+    },
+    {
+      "id": "habits-os",
+      "name": "Habits OS",
+      "tagline": "Web • Tool",
+      "category": "tools",
+      "icon": "✅",
+      "status": "live",
+      "progress": null,
+      "eta": null,
+      "shortDesc": "متتبع عادات يومي بإحصائيات وإنجازات وسلاسل التزام (streaks)، وبتقدر تصدّر بياناتك وتستوردها.",
+      "description": [
+        "Habits OS بيساعدك تبني عاداتك وتتابعها يوميًا: سلاسل التزام، صفحة إحصائيات، وإنجازات بتحفزك تكمل.",
+        "البيانات بتتحفظ على جهازك، وفيه تصدير واستيراد للنسخ الاحتياطية وإعدادات للمظهر."
+      ],
+      "screenshots": [],
+      "changelog": [],
+      "links": {
+        "play": "projects/habits-os/index.html",
+        "download": null,
+        "source": "https://github.com/codeprintomar/Habit-os"
+      },
+      "rev": 2
+    },
+    {
+      "id": "time-tracker",
+      "name": "Daily Time Tracker",
+      "tagline": "Web • Tool",
+      "category": "tools",
+      "icon": "⏱️",
+      "status": "live",
+      "progress": null,
+      "eta": null,
+      "shortDesc": "أداة بتوزّع بيها ساعات يومك الـ24 على الأنشطة، وتعدّل الأنشطة وتضيف جديدة.",
+      "description": [
+        "Daily Time Tracker بيخليك تشوف يومك متوزّع على أنشطتك (Time Allocation) وتعدّل الأنشطة وتضيف أنشطة جديدة.",
+        "فيه زر Reset لبداية يوم جديد، والبيانات بتتحفظ على جهازك."
+      ],
+      "screenshots": [],
+      "changelog": [],
+      "links": {
+        "play": "projects/time-tracker/index.html",
+        "download": null,
+        "source": null
+      }
+    },
+    {
+      "id": "outfit-closet",
+      "name": "My Outfit Closet",
+      "tagline": "Web • Tool",
+      "category": "tools",
+      "icon": "👕",
+      "status": "live",
+      "progress": null,
+      "eta": null,
+      "shortDesc": "دولابك الرقمي: سجّل قطع هدومك وجمّع منها أطقم، واقتراح أطقم حسب الموسم والحالة.",
+      "description": [
+        "My Outfit Closet بيخليك تنظّم قطع هدومك بالتصنيف والموسم وحالة القطعة (متاحة، في الغسيل، تالفة).",
+        "بتولّد أطقم بسرعة (Quick Outfit) أو بالاقتراح (Suggest Outfit) أو 5 أطقم مرة واحدة، وتصوّر طقم النهارده.",
+        "الصور والبيانات بتتخزن على جهازك في المتصفح (IndexedDB)، وفيه تصدير واستيراد."
+      ],
+      "screenshots": [],
+      "changelog": [],
+      "links": {
+        "play": "projects/outfit-closet/index.html",
+        "download": null,
+        "source": "https://github.com/codeprintomar/My-Outfit-Closet"
+      },
+      "rev": 2
+    },
+    {
+      "id": "qformat",
+      "name": "QFormat",
+      "tagline": "Web • Tool",
+      "category": "tools",
+      "icon": "📝",
+      "status": "live",
+      "progress": null,
+      "eta": null,
+      "shortDesc": "بتنسّق أسئلتك وإجاباتها وتطلّعها PDF جاهز للطباعة بتصميم A4.",
+      "description": [
+        "QFormat أداة لتنسيق الأسئلة (اختيارات وإجابات) وطباعتها كـ PDF مرتب، بخطوط وثيمات تختار منها.",
+        "بتتبني بـ HTML وJavaScript مع html2canvas وjsPDF، وفيها استيراد للبيانات."
+      ],
+      "screenshots": [],
+      "changelog": [],
+      "links": {
+        "play": "projects/qformat/index.html",
+        "download": null,
+        "source": "https://github.com/codeprintomar/Q-Format"
+      },
+      "rev": 2
+    },
+    {
+      "id": "code-formatter",
+      "name": "منسّق الأكواد والنصوص",
+      "tagline": "Web • Tool",
+      "category": "tools",
+      "icon": "🎨",
+      "status": "live",
+      "progress": null,
+      "eta": null,
+      "shortDesc": "أداة عربي لتنسيق وتلوين النصوص والأكواد بمعاينة مباشرة، وتصديرها PDF أو صورة.",
+      "description": [
+        "أداة بتحرر فيها النص أو الكود وتشوف المعاينة المباشرة بتلوين الأكواد (highlight.js) وثيمات متعددة.",
+        "تقدر تصدّر النتيجة PDF أو صورة PNG، والواجهة عربي بالكامل."
+      ],
+      "screenshots": [],
+      "changelog": [],
+      "links": {
+        "play": "projects/code-formatter/index.html",
+        "download": null,
+        "source": "https://github.com/codeprintomar/Code-and-Text-Formatter"
+      },
+      "rev": 2
+    },
+    {
+      "id": "todo-web",
+      "name": "قائمة المهام اليومية",
+      "tagline": "Web • Tool",
+      "category": "tools",
+      "icon": "📋",
+      "status": "live",
+      "progress": null,
+      "eta": null,
+      "shortDesc": "موقع لإدارة المهام اليومية بقاعدة بيانات سحابية.",
+      "description": [
+        "قائمة مهام يومية بواجهة عربي، بتحفظ مهامك على قاعدة بيانات سحابية (Neon) عن طريق Netlify Functions."
+      ],
+      "screenshots": [],
+      "changelog": [],
+      "links": {
+        "play": null,
+        "download": null,
+        "source": "https://github.com/codeprintomar/to-do-list-web"
+      },
+      "rev": 2
+    },
+    {
+      "id": "lohaty",
+      "name": "لوحتي",
+      "tagline": "Web • PWA",
+      "category": "tools",
+      "icon": "🗂️",
+      "status": "live",
+      "progress": null,
+      "eta": null,
+      "shortDesc": "لوحة شخصية للمواعيد والمهام والمحاضرات بتزامن بين أجهزتك وإشعارات تفتكرك.",
+      "description": [
+        "لوحتي تطبيق ويب (PWA) بيجمع مواعيدك ومهامك ومحاضراتك في مكان واحد، وبيتثبت على الموبايل.",
+        "الدخول بجوجل أو إيميل وباسورد، والبيانات بتتزامن لحظيًا بين كل أجهزتك عبر Firebase.",
+        "فيه إشعارات من السيرفر: تذكير المواعيد، وتسليم المهام، ونزول المحاضرات، وكمان نسخة احتياطية (تصدير واسترجاع)."
+      ],
+      "screenshots": [],
+      "changelog": [],
+      "links": {
+        "play": null,
+        "download": null,
+        "source": "https://github.com/codeprintomar/Orbit"
+      },
+      "rev": 2
+    },
+    {
+      "id": "todo-desktop",
+      "name": "Advanced To-Do List",
+      "tagline": "Desktop • Python",
+      "category": "tools",
+      "icon": "🖥️",
+      "status": "live",
+      "progress": null,
+      "eta": null,
+      "shortDesc": "برنامج مهام للكمبيوتر بـ Python وPyQt5: تسجيل دخول، تذكيرات، وتصدير PDF وExcel.",
+      "description": [
+        "Advanced To-Do List برنامج مكتبي مكتوب بـ Python وPyQt5، فيه حسابات مستخدمين بتشفير كلمات السر (bcrypt) وصورة بروفايل.",
+        "بيدعم تذكيرات بإشعارات سطح المكتب، وتصدير المهام لملفات PDF وExcel."
+      ],
+      "screenshots": [],
+      "changelog": [],
+      "links": {
+        "play": null,
+        "download": null,
+        "source": "https://github.com/codeprintomar/Advanced-To-Do-List-app"
+      },
+      "rev": 2
+    },
+    {
+      "id": "focus-tracker",
+      "name": "Focus Tracker",
+      "tagline": "Desktop • Python",
+      "category": "tools",
+      "icon": "🍅",
+      "status": "live",
+      "progress": null,
+      "eta": null,
+      "shortDesc": "برنامج Pomodoro احترافي لويندوز: تسجيل دخول، جلسات تركيز، وإحصائيات برسوم بيانية.",
+      "description": [
+        "Focus Tracker برنامج Pomodoro مكتوب بـ Python وCustomTkinter، بيسجل جلسات التركيز في قاعدة بيانات SQLite.",
+        "فيه تسجيل دخول، وإحصائيات برسوم بيانية (Matplotlib)، وإشعارات وأصوات، وخيار بدء الاستراحة تلقائيًا.",
+        "نسخة EXE كاملة جاهزة للتحميل وتشتغل على ويندوز من غير تثبيت Python."
+      ],
+      "screenshots": [],
+      "changelog": [],
+      "links": {
+        "play": null,
+        "download": "downloads/FocusTracker.exe",
+        "source": "https://github.com/codeprintomar/Focus-Tracker"
+      },
+      "rev": 2
+    }
+  ],
+  "links": [
+    {
+      "title": "Websites",
+      "icon": "🌐",
+      "items": [
+        {
+          "icon": "🌊",
+          "name": "Wave",
+          "description": "مشغّل موسيقى من المتصفح",
+          "url": "projects/wave/index.html",
+          "rev": 2
+        },
+        {
+          "icon": "✅",
+          "name": "Habits OS",
+          "description": "متتبع عادات بإحصائيات وإنجازات",
+          "url": "projects/habits-os/index.html"
+        },
+        {
+          "icon": "⏱️",
+          "name": "Daily Time Tracker",
+          "description": "وزّع ساعات يومك على أنشطتك",
+          "url": "projects/time-tracker/index.html"
+        },
+        {
+          "icon": "👕",
+          "name": "My Outfit Closet",
+          "description": "دولابك الرقمي وتنسيق الأطقم",
+          "url": "projects/outfit-closet/index.html"
+        },
+        {
+          "icon": "📝",
+          "name": "QFormat",
+          "description": "نسّق أسئلتك واطبعها PDF",
+          "url": "projects/qformat/index.html"
+        },
+        {
+          "icon": "🎨",
+          "name": "منسّق الأكواد والنصوص",
+          "description": "تلوين وتنسيق الأكواد وتصديرها PDF",
+          "url": "projects/code-formatter/index.html"
+        }
+      ]
+    },
+    {
+      "title": "Apps & Downloads",
+      "icon": "📱",
+      "items": [
+        {
+          "icon": "🍅",
+          "name": "Focus Tracker — Windows",
+          "description": "برنامج Pomodoro لويندوز (ملف EXE)",
+          "url": "downloads/FocusTracker.exe",
+          "type": "download"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && request.auth.uid in ["ADD_YOUR_ADMIN_UID"];
+    }
+    match /site/content {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    match /orders/{orderId} {
+      allow create: if request.resource.data.keys().hasAll(['productId','productName','customerName','email','createdAt','status'])
+        && request.resource.data.customerName is string
+        && request.resource.data.customerName.size() <= 100
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 180
+        && request.resource.data.productName is string
+        && request.resource.data.productName.size() <= 120;
+      allow read, update, delete: if isAdmin();
+    }
+    match /messages/{messageId} {
+      allow create: if request.resource.data.keys().hasAll(['name','email','topic','message','createdAt','status'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 100
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 180
+        && request.resource.data.message is string
+        && request.resource.data.message.size() <= 4000;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
